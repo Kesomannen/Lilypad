@@ -2,29 +2,29 @@
 
 namespace Lilypad.Text; 
 
-public class StyleTagParser : FormatTagParser {
-    bool _active;
-    bool _set;
+public class StyleParser : FormatParser {
+    bool? _active;
     
     readonly TextStyle _style;
     
-    public StyleTagParser(TextStyle style) {
+    public StyleParser(TextStyle style) {
         _style = style;
     }
 
     public override void Reset() {
-        _active = false;
+        _active = null;
     }
 
     public override ITextFormat? GetState() {
-        return _set ? new StyleFormat { Style = _style, Active = _active } : null;
+        return _active.HasValue ? new StyleFormat {
+            Style = _style, Active = _active.Value
+        } : null;
     }
     
     public override bool OnOpeningTag(string tag, string[] arguments) {
         if (!Matches(tag)) return false;
         
         AssertArgumentCount(arguments, 0);
-        _set = true;
         _active = true;
         return true;
     }

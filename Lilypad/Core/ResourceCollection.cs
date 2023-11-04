@@ -12,7 +12,7 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     }
 
     public T Create(string? name = null, string? @namespace = null) {
-        name ??= Names.Get();
+        name ??= Names.Get<T>();
         
         var instance = Activator.CreateInstance(typeof(T), name, _datapack);
         if (instance is not T resource) {

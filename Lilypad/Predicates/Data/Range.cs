@@ -18,4 +18,6 @@ public struct Range<T> {
     
     public static implicit operator Range<T>(T? value) => new(value, value);
     public static implicit operator Range<T>((T? min, T? max) value) => new(value.min, value.max);
+    
+    public string Type => "uniform";
 }

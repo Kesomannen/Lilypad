@@ -2,11 +2,16 @@
 
 namespace Lilypad.Text; 
 
-public class ColorTagParser : FormatTagParser {
+public class ColorParser : FormatParser {
     readonly Stack<ColorFormat> _formats = new();
+    
+    bool _set;
+    
+    static readonly ColorFormat _defaultFormat = new(TextColor.White);
 
     public override ITextFormat? GetState() {
-        if (!_formats.TryPeek(out var format)) return null;
+        if (!_set) return null;
+        var format = _formats.Count > 0 ? _formats.Peek() : _defaultFormat;
         
         return format.Type switch {
             ColorType.ChatColor => new Text.ColorFormat { Color = format.Color!.Value },
@@ -31,12 +36,15 @@ public class ColorTagParser : FormatTagParser {
                 throw new ArgumentException($"Invalid color argument: {arg}");
             }
 
+            _set = true;
             return true;
         }
 
         if (Enum.TryParse(tag.ToCamelCase(), out color)) {
             AssertArgumentCount(arguments, 0);
             _formats.Push(new ColorFormat(color));
+            
+            _set = true;
             return true;
         }
         
@@ -52,6 +60,7 @@ public class ColorTagParser : FormatTagParser {
 
     public override void Reset() {
         _formats.Clear();
+        _set = false;
     }
 
     enum ColorType {

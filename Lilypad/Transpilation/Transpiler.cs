@@ -4,16 +4,23 @@ namespace Lilypad;
 
 internal static class Transpiler {
     static Datapack _datapack = null!;
-    static string _path = null!;
+    static TranspilationOptions _options;
     
-    public static void Transpile(Datapack datapack, string path) {
+    static string Root => _options.OutputPath;
+    
+    public static void Transpile(Datapack datapack, in TranspilationOptions options) {
         _datapack = datapack;
-        _path = path;
+        _options = options;
         
-        if (Directory.Exists(_path)) {
-            Directory.Delete(_path, true);
+        if (Directory.Exists(Root)) {
+            if (options.Overwrite) {
+                Console.WriteLine($"Overwriting {Root}");
+                Directory.Delete(Root, true);
+            } else {
+                throw new Exception($"Directory {Root} already exists. Enable overwrite to delete it.");
+            }
         }
-        Directory.CreateDirectory(_path);
+        Directory.CreateDirectory(Root);
         
         WriteMetadata();
         
@@ -21,7 +28,7 @@ internal static class Transpiler {
         WriteResourcesJson(_datapack.Predicates, "predicates");
         WriteResourcesJson(_datapack.FunctionTags, "tags/functions");
         
-        Console.WriteLine($"Transpiled to {_path} successfully");
+        Console.WriteLine($"Transpiled to {Root} successfully");
     }
 
     static void WriteMetadata() {
@@ -32,11 +39,11 @@ internal static class Transpiler {
             }
         };
         
-        Write(Json.Serialize(pack), "pack.mcmeta");
+        Write(Serialize(pack), "pack.mcmeta");
     }
     
     static void WriteResourcesJson<T>(IEnumerable<T> resources, string path) where T : Resource {
-        WriteResources(resources, path, "json", Json.Serialize);
+        WriteResources(resources, path, "json", Serialize);
     }
     
     static void WriteResources<T>(
@@ -73,6 +80,10 @@ internal static class Transpiler {
     }
     
     static string GetPath(params string[] path) {
-        return Path.Combine(_path, Path.Combine(path));
+        return Path.Combine(Root, Path.Combine(path));
+    }
+    
+    static string Serialize(object value) {
+        return Json.Serialize(value, _options.PrettyPrint);
     }
 }

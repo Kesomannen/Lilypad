@@ -5,8 +5,8 @@ using Newtonsoft.Json.Serialization;
 namespace Lilypad; 
 
 internal static class Json {
-    public static string Serialize(object value) {
-        return JsonConvert.SerializeObject(value, Settings);
+    public static string Serialize(object value, bool pretty = false) {
+        return JsonConvert.SerializeObject(value, pretty ? Formatting.Indented : Formatting.None, Settings);
     }
     
     public static readonly JsonSerializerSettings Settings = new() {

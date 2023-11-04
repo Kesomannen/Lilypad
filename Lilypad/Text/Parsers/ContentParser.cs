@@ -2,7 +2,7 @@
 
 namespace Lilypad.Text; 
 
-public abstract class ContentTagParser {
+public abstract class ContentParser {
     public abstract bool TryParse(string tag, string[] arguments, [NotNullWhen(true)] out ITextContent? content);
     public abstract void Reset();
 

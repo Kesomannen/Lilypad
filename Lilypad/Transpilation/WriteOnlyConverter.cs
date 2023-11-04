@@ -2,7 +2,7 @@
 
 namespace Lilypad;
 
-public abstract class WriteOnlyConverter<T> : JsonConverter {
+internal abstract class WriteOnlyConverter<T> : JsonConverter {
     protected virtual bool SerializeDerivedTypes => false;
         
     public override bool CanConvert(Type objectType) {

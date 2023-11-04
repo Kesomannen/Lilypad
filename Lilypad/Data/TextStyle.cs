@@ -3,7 +3,7 @@
 public enum TextStyle {
     Bold,
     Italic,
-    Underline,
+    Underlined,
     Strikethrough,
     Obfuscated
 }

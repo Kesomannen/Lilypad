@@ -6,11 +6,15 @@ public class Tag<T> : Resource {
     [JsonProperty] 
     List<TagValue> Values { get; } = new();
     
-    public bool Replace { get; set; }
+    public bool? Replace { get; set; }
 
     protected override string Prefix => "#";
     
     public void Add(string resourceLocation, bool required = true) {
+        if (Values.Any(x => x.Location == resourceLocation)) {
+            return;
+        }
+        
         Values.Add(new TagValue {
             Location = resourceLocation,
             Required = required

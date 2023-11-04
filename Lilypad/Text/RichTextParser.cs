@@ -10,17 +10,19 @@ public static class RichTextParser {
 
     static bool EndOfInput => _index >= _input.Length;
 
-    static readonly List<FormatTagParser> _formatTagParsers;
-    static readonly List<ContentTagParser> _contentTagParsers;
+    static readonly List<FormatParser> _formatTagParsers;
+    static readonly List<ContentParser> _contentTagParsers;
     
     static RichTextParser() {
-        _formatTagParsers = new List<FormatTagParser> {
-            new ColorTagParser()
+        _formatTagParsers = new List<FormatParser> {
+            new ColorParser(),
+            new InsertionParser(),
+            new ClickEventParser()
         };
         
-        _formatTagParsers.AddRange(Enum.GetValues<TextStyle>().Select(style => new StyleTagParser(style)));
+        _formatTagParsers.AddRange(Enum.GetValues<TextStyle>().Select(style => new StyleParser(style)));
         
-        _contentTagParsers = new List<ContentTagParser> {
+        _contentTagParsers = new List<ContentParser> {
             
         };
     }

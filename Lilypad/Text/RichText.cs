@@ -2,8 +2,8 @@
 
 public class RichText {
     public ITextContent? Content { get; set; }
-    public List<ITextFormat> Formatting { get; } = new();
-    public List<RichText> Children { get; } = new();
+    public List<ITextFormat> Formatting { get; set; } = new();
+    public List<RichText> Children { get; set; } = new();
     
     object ToJson() {
         if (Content == null) {
