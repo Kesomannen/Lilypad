@@ -2,7 +2,7 @@
 
 namespace Lilypad; 
 
-internal static class Names {
+public static class Names {
     static readonly Dictionary<string, int> _counts = new();
     static readonly Dictionary<Type, string> _typeNames = new();
 

@@ -4,24 +4,32 @@ namespace Lilypad;
 
 public class Tag<T> : Resource {
     [JsonProperty] 
-    List<TagValue> Values { get; } = new();
+    List<Value> Values { get; } = new();
     
     public bool? Replace { get; set; }
-
-    protected override string Prefix => "#";
     
     public void Add(string resourceLocation, bool required = true) {
         if (Values.Any(x => x.Location == resourceLocation)) {
             return;
         }
         
-        Values.Add(new TagValue {
+        Values.Add(new Value {
             Location = resourceLocation,
             Required = required
         });
     }
     
-    public Tag(string name, Datapack datapack) : base(name, datapack) { }
+    internal Tag(string name, Datapack datapack) : base(name, datapack) { }
+
+    protected override string GetLocation() {
+        return $"#{Namespace}:{Name}";
+    }
+    
+    public struct Value {
+        [JsonProperty("id")]
+        public string Location;
+        public bool Required;
+    }
 }
 
 public static class TagExtensions {

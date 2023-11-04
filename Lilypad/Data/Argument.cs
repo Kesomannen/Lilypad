@@ -1,6 +1,6 @@
 ﻿namespace Lilypad; 
 
-public readonly struct Argument<T> {
+public readonly struct Argument<T> : ISerializeInner {
     public string Text { get; }
 
     public Argument(string text) {
@@ -11,4 +11,6 @@ public readonly struct Argument<T> {
     public static implicit operator Argument<T>(T value) => new(value.ToString());
 
     public override string ToString() => Text;
+    
+    public object? SerializedData => Text;
 }

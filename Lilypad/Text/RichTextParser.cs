@@ -1,4 +1,6 @@
-﻿namespace Lilypad.Text; 
+﻿using System.Collections;
+
+namespace Lilypad.Text; 
 
 public static class RichTextParser {
     static int _index;
@@ -10,20 +12,20 @@ public static class RichTextParser {
 
     static bool EndOfInput => _index >= _input.Length;
 
-    static readonly List<FormatParser> _formatTagParsers;
-    static readonly List<ContentParser> _contentTagParsers;
+    static readonly List<FormatParser> _formatParsers;
+    static readonly List<ContentParser> _contentParsers;
     
     static RichTextParser() {
-        _formatTagParsers = new List<FormatParser> {
+        _formatParsers = new List<FormatParser> {
             new ColorParser(),
             new InsertionParser(),
             new ClickEventParser()
         };
         
-        _formatTagParsers.AddRange(Enum.GetValues<TextStyle>().Select(style => new StyleParser(style)));
+        _formatParsers.AddRange(Enum.GetValues<TextStyle>().Select(style => new StyleParser(style)));
         
-        _contentTagParsers = new List<ContentParser> {
-            
+        _contentParsers = new List<ContentParser> {
+            new EntityNameParser()
         };
     }
     
@@ -32,10 +34,7 @@ public static class RichTextParser {
         _result = new List<RichText>();
         _rawText = "";
         
-        foreach (var tagParser in _formatTagParsers) {
-            tagParser.Reset();
-        }
-        foreach (var tagParser in _contentTagParsers) {
+        foreach (var tagParser in _formatParsers) {
             tagParser.Reset();
         }
     }
@@ -50,21 +49,22 @@ public static class RichTextParser {
                 var tag = ParseTag(out var arguments, out var isClosing);
                 
                 if (isClosing) {
-                    if (!_formatTagParsers.Any(tagParser => tagParser.OnClosingTag(tag))) {
+                    if (!_formatParsers.Any(tagParser => tagParser.OnClosingTag(tag))) {
                         throw new ArgumentException($"Invalid closing tag: {tag}");
                     }
                     AddText();
                 } else {
-                    var found = _formatTagParsers.Any(tagParser => tagParser.OnOpeningTag(tag, arguments));
+                    var found = _formatParsers.Any(tagParser => tagParser.OnOpeningTag(tag, arguments));
 
                     if (found) {
                         AddText();
                     } else {
-                        foreach (var tagParser in _contentTagParsers) {
+                        foreach (var tagParser in _contentParsers) {
                             if (!tagParser.TryParse(tag, arguments, out var content)) continue;
+                            var tags = content.ToArray();
 
                             AddText();
-                            AddComponent(content);
+                            AddComponent(tags.First(), tags.Skip(1));
                             found = true;
                             break;
                         }
@@ -98,14 +98,19 @@ public static class RichTextParser {
         return tag;
     }
     
-    static void AddComponent(ITextContent content) {
+    static void AddComponent(TextTag content, IEnumerable<TextTag>? extraFormats = null) {
         var text = new RichText {
             Content = content,
         };
 
-        var formats = _formatTagParsers
+        var formats = _formatParsers
             .Select(parser => parser.GetState())
-            .Where(state => state != null);
+            .Where(state => state != null)
+            .SelectMany(state => state!);
+        
+        if (extraFormats != null) {
+            formats = formats.Concat(extraFormats);
+        }
         
         text.Formatting.AddRange(formats);
         _result.Add(text);
@@ -113,7 +118,7 @@ public static class RichTextParser {
     
     static void AddText() {
         if (_rawText.Length == 0) return;
-        AddComponent(new RawTextContent { Text = _rawText });
+        AddComponent(("text", _rawText));
         _rawText = "";
     }
     

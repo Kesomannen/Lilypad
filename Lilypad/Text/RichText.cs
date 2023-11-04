@@ -1,8 +1,8 @@
 ﻿namespace Lilypad.Text; 
 
 public class RichText {
-    public ITextContent? Content { get; set; }
-    public List<ITextFormat> Formatting { get; set; } = new();
+    public TextTag? Content { get; set; }
+    public List<TextTag> Formatting { get; set; } = new();
     public List<RichText> Children { get; set; } = new();
     
     object ToJson() {
@@ -11,7 +11,7 @@ public class RichText {
         }
 
         var json = new Dictionary<string, object> {
-            [Content.Name] = Content.Value
+            [Content.Value.Name] = Content.Value.Value
         };
         
         foreach (var textFormat in Formatting) {
@@ -32,6 +32,10 @@ public class RichText {
     }
 
     public static implicit operator RichText(string text) {
+        return Parse(text);
+    }
+    
+    public static RichText Parse(string text) {
         var children = RichTextParser.Parse(text);
         if (children.Count == 1) {
             return children[0];

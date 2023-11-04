@@ -25,8 +25,12 @@ internal static class Transpiler {
         WriteMetadata();
         
         WriteResources(_datapack.Functions, "functions", "mcfunction");
+        WriteResourcesJson(_datapack.Advancements, "advancements");
+        WriteResourcesJson(_datapack.Recipes, "recipes");
         WriteResourcesJson(_datapack.Predicates, "predicates");
+        
         WriteResourcesJson(_datapack.FunctionTags, "tags/functions");
+        WriteResourcesJson(_datapack.ItemTags, "tags/items");
         
         Console.WriteLine($"Transpiled to {Root} successfully");
     }
@@ -39,7 +43,7 @@ internal static class Transpiler {
             }
         };
         
-        Write(Serialize(pack), "pack.mcmeta");
+        File.WriteAllText(GetAbsolute("pack.mcmeta"), Serialize(pack));
     }
     
     static void WriteResourcesJson<T>(IEnumerable<T> resources, string path) where T : Resource {
@@ -59,27 +63,23 @@ internal static class Transpiler {
         }
     }
 
+    static readonly List<string> _steps = new();
+    
     static void WriteResource(Resource resource, string path, string content, string fileExtension) {
-        var steps = path.Split("/");
-        var dir = OpenDirectory(steps.Prepend(resource.Namespace).Prepend("data").ToArray());
+        _steps.Clear();
         
-        path = Path.Combine(dir, $"{resource.Name}.{fileExtension}");
-        Write(content, path);
+        _steps.Add("data");
+        _steps.Add(resource.Namespace);
+        _steps.AddRange(path.Split("/"));
+        _steps.AddRange(resource.Name.Split("/"));
+
+        path = $"{GetAbsolute(_steps.ToArray())}.{fileExtension}";
+        var parent = Path.GetDirectoryName(path);
+        Directory.CreateDirectory(parent!);
+        File.WriteAllText(path, content);
     }
     
-    static void Write(string content, params string[] path) {
-        File.WriteAllText(GetPath(path), content);
-    }
-    
-    static string OpenDirectory(params string[] path) {
-        var directory = GetPath(path);
-        if (!Directory.Exists(directory)) {
-            Directory.CreateDirectory(directory);
-        }
-        return directory;
-    }
-    
-    static string GetPath(params string[] path) {
+    static string GetAbsolute(params string[] path) {
         return Path.Combine(Root, Path.Combine(path));
     }
     

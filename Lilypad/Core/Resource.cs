@@ -2,7 +2,7 @@
 
 namespace Lilypad; 
 
-public class Resource {
+public abstract class Resource {
     bool _accessed;
     
     string _name;
@@ -24,16 +24,14 @@ public class Resource {
     public string Location {
         get {
             _accessed = true;
-            return $"{Prefix}{Namespace}:{Name}";
+            return GetLocation();
         }
     }
     
     [JsonIgnore]
     public Datapack Datapack { get; }
-    
-    protected virtual string Prefix => string.Empty;
 
-    public Resource(string name, Datapack datapack) {
+    protected Resource(string name, Datapack datapack) {
         _name = name;
         Datapack = datapack;
     }
@@ -45,5 +43,9 @@ public class Resource {
             throw new InvalidOperationException("Cannot change namespace after resource has been accessed.");
         }
         return value;
+    }
+
+    protected virtual string GetLocation() {
+        return $"{Namespace}:{Name}";
     }
 }

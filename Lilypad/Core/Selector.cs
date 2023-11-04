@@ -29,7 +29,7 @@ public class Selector {
     
     public Selector Scores(params (Argument<Objective> Objective, Argument<Range<int>> Range)[] scores) {
         _builder.Clear();
-        _builder.Append("scores={");
+        _builder.Append('{');
         
         for (var i = 0; i < scores.Length; i++) {
             var (objective, range) = scores[i];

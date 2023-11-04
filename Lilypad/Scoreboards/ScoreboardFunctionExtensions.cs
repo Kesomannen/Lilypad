@@ -2,7 +2,7 @@
 
 public static class ScoreboardFunctionExtensions {
     public static ObjectiveCommand Scoreboard(this Function function, Argument<Objective> objective) {
-        return function.AddAndReturn(new ObjectiveCommand(function, objective));
+        return new ObjectiveCommand(function, objective);
     }
     
     public static Function ClearScoreboard(this Function function, DisplaySlotArgument displaySlot) {

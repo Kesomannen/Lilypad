@@ -2,7 +2,7 @@
 
 namespace Lilypad.Scoreboards;
 
-public class ObjectiveCommand : GeneratedCommand<ObjectiveCommand> {
+public class ObjectiveCommand : CommandGenerator<ObjectiveCommand> {
     protected override string BaseCommand => "scoreboard";
     
     readonly Argument<Objective> _objective;
@@ -21,10 +21,6 @@ public class ObjectiveCommand : GeneratedCommand<ObjectiveCommand> {
     
     public ObjectiveCommand SetRenderType(EnumReference<ObjectiveRenderType> renderType) {
         return AddLine($"objectives modify {_objective} rendertype {renderType}");
-    }
-    
-    public Targetted Select(Argument<Selector> target) {
-        return new Targetted(this, target);
     }
 
     public ObjectiveCommand Get(Argument<Selector> target) {
@@ -55,8 +51,9 @@ public class ObjectiveCommand : GeneratedCommand<ObjectiveCommand> {
         Argument<Selector> target, 
         EnumReference<Operation> operation, 
         Argument<Selector> source, 
-        Argument<Objective> sourceObjective
+        Argument<Objective>? sourceObjective = null
     ) {
+        sourceObjective ??= _objective;
         var op = operation.Value switch {
             Scoreboards.Operation.Add => "+=",
             Scoreboards.Operation.Subtract => "-=",
@@ -71,28 +68,6 @@ public class ObjectiveCommand : GeneratedCommand<ObjectiveCommand> {
         };
         
         return AddLine($"players operation {target} {_objective} {op} {source} {sourceObjective}");
-    }
-
-    public class Targetted {
-        readonly ObjectiveCommand _command;
-        readonly Argument<Selector> _target;
-        
-        public Targetted(ObjectiveCommand command, Argument<Selector> target) {
-            _command = command;
-            _target = target;
-        }
-        
-        public ObjectiveCommand Set(int score) => _command.Set(_target, score);
-        public ObjectiveCommand Add(int score) => _command.Add(_target, score);
-        public ObjectiveCommand Remove(int score) => _command.Remove(_target, score);
-        public ObjectiveCommand Reset() => _command.Reset(_target);
-        public ObjectiveCommand Enable() => _command.Enable(_target);
-        public ObjectiveCommand Get() => _command.Get(_target);
-        public ObjectiveCommand Operation(
-            EnumReference<Operation> operation, 
-            Argument<Selector> source, 
-            Argument<Objective> sourceObjective
-        ) => _command.Operation(_target, operation, source, sourceObjective);
     }
 }
 

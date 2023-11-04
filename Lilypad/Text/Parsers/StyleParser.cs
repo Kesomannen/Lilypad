@@ -15,10 +15,9 @@ public class StyleParser : FormatParser {
         _active = null;
     }
 
-    public override ITextFormat? GetState() {
-        return _active.HasValue ? new StyleFormat {
-            Style = _style, Active = _active.Value
-        } : null;
+    public override IEnumerable<TextTag>? GetState() {
+        return _active == null ? null : 
+            GetState((_style.ToString().ToSnakeCase(), _active.Value));
     }
     
     public override bool OnOpeningTag(string tag, string[] arguments) {

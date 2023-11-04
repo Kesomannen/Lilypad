@@ -1,4 +1,5 @@
-﻿using Lilypad.Extensions;
+﻿using System.Collections;
+using Lilypad.Extensions;
 
 namespace Lilypad.Text; 
 
@@ -9,13 +10,13 @@ public class ColorParser : FormatParser {
     
     static readonly ColorFormat _defaultFormat = new(TextColor.White);
 
-    public override ITextFormat? GetState() {
+    public override IEnumerable<TextTag>? GetState() {
         if (!_set) return null;
         var format = _formats.Count > 0 ? _formats.Peek() : _defaultFormat;
         
         return format.Type switch {
-            ColorType.ChatColor => new Text.ColorFormat { Color = format.Color!.Value },
-            ColorType.Hex => new HexColorFormat { HexString = format.HexString! },
+            ColorType.ChatColor => GetState(("color", format.Color!.Value)),
+            ColorType.Hex => GetState(("color", "#" + format.HexString!)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

@@ -25,7 +25,7 @@ public class ClickEventParser : FormatParser {
         
         var value = arguments[isExplicit ? 1 : 0];
         _clickEvent = new ClickEvent {
-            Action = clickAction,
+            Action = clickAction, 
             Value = value
         };
         return true;
@@ -38,8 +38,8 @@ public class ClickEventParser : FormatParser {
         return true;
     }
 
-    public override ITextFormat? GetState() {
-        return _clickEvent.HasValue ? new ClickEventFormat { ClickEvent = _clickEvent.Value } : null;
+    public override IEnumerable<TextTag>? GetState() {
+        return _clickEvent == null ? null : GetState(("click_event", _clickEvent.Value));
     }
 
     public override void Reset() {
@@ -65,4 +65,17 @@ public class ClickEventParser : FormatParser {
         
         return true;
     }
+}
+
+public struct ClickEvent {
+    public EnumReference<ClickAction> Action;
+    public string Value;
+}
+
+public enum ClickAction {
+    OpenUrl,
+    RunCommand,
+    SuggestCommand,
+    ChangePage,
+    CopyToClipboard
 }

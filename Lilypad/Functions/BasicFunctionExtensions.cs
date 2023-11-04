@@ -1,8 +1,8 @@
 ﻿namespace Lilypad; 
 
 public static class BasicFunctionExtensions {
-    public static Execute Execute(this Function function) {
-        return function.AddAndReturn(new Execute(function));
+    public static ExecuteCommand Execute(this Function function) {
+        return new ExecuteCommand(function);
     }
 
     public static Function Effect(
@@ -44,5 +44,13 @@ public static class BasicFunctionExtensions {
 
     public static Function Say(this Function function, string message) {
         return function.Add($"say {message}");
+    }
+    
+    public static Function Kill(this Function function, Argument<Selector> selector) {
+        return function.Add($"kill {selector}");
+    }
+    
+    public static Function Kill(this Function function) {
+        return function.Kill(Selector.Self);
     }
 }

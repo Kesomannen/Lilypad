@@ -18,8 +18,8 @@ public class InsertionParser : FormatParser {
         return true;
     }
 
-    public override ITextFormat? GetState() {
-        return _text != null ? new InsertionFormat { Text = _text } : null;
+    public override IEnumerable<TextTag>? GetState() {
+        return _text == null ? null : GetState(("insert", _text));
     }
 
     public override void Reset() {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace Lilypad; 
 
@@ -13,8 +14,14 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
 
     public T Create(string? name = null, string? @namespace = null) {
         name ??= Names.Get<T>();
-        
-        var instance = Activator.CreateInstance(typeof(T), name, _datapack);
+
+        var instance = Activator.CreateInstance(
+            typeof(T),
+            BindingFlags.NonPublic | BindingFlags.Instance, 
+            null,
+            new object[] { name, _datapack }, 
+            null
+        );
         if (instance is not T resource) {
             throw new Exception($"Failed to create resource of type {typeof(T)}");
         }
