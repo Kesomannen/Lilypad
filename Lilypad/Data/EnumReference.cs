@@ -20,6 +20,14 @@ public readonly struct EnumReference<T> : ISerializeInner where T : struct, Enum
     public static implicit operator EnumReference<T>(T enumValue) {
         return new EnumReference<T>(enumValue);
     }
+    
+    public static bool operator ==(EnumReference<T> a, T b) {
+        return a.Value.Equals(b);
+    }
+    
+    public static bool operator !=(EnumReference<T> a, T b) {
+        return !a.Value.Equals(b);
+    }
 
     public override string ToString() {
         return Value.ToString().ToSnakeCase();

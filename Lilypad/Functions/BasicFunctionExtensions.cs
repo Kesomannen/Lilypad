@@ -1,4 +1,7 @@
-﻿namespace Lilypad; 
+﻿using Lilypad.Extensions;
+using Lilypad.NBT;
+
+namespace Lilypad; 
 
 public static class BasicFunctionExtensions {
     public static ExecuteCommand Execute(this Function function) {
@@ -52,5 +55,15 @@ public static class BasicFunctionExtensions {
     
     public static Function Kill(this Function function) {
         return function.Kill(Selector.Self);
+    }
+
+    public static Function Give(
+        this Function function,
+        Argument<Selector> selector,
+        EnumReference<Item> item,
+        NBTCompound? nbt = null,
+        int count = 1
+    ) {
+        return function.Add($"give {selector} {item}{nbt.ToStringOrEmpty()} {count}");
     }
 }

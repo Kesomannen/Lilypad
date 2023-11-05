@@ -93,9 +93,33 @@ public static class RichTextParser {
         }
         Advance();
         
-        var tag = body.Split(' ')[0];
-        arguments = body.Split(' ').Skip(1).ToArray();
-        return tag;
+        var argList = new List<string>();
+        
+        var arg = "";
+        var inQuotes = false;
+        
+        foreach (var c in body) {
+            switch (c) {
+                case ' ' when !inQuotes: {
+                    if (arg.Length > 0) {
+                        argList.Add(arg);
+                        arg = "";
+                    }
+
+                    break;
+                }
+                
+                case '\'':
+                    inQuotes = !inQuotes; break;
+                default:
+                    arg += c; break;
+            }
+        }
+        
+        if (arg.Length > 0) argList.Add(arg);
+        arguments = argList.Skip(1).ToArray();
+        
+        return argList[0];
     }
     
     static void AddComponent(TextTag content, IEnumerable<TextTag>? extraFormats = null) {

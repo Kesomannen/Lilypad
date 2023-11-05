@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lilypad", "Lilypad\Lilypad.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{C858E438-7190-4713-A3C9-84B08CA21DDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{3C4CF9F5-59DE-4BCF-956B-642E7CBB0722}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C858E438-7190-4713-A3C9-84B08CA21DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C858E438-7190-4713-A3C9-84B08CA21DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C858E438-7190-4713-A3C9-84B08CA21DDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C4CF9F5-59DE-4BCF-956B-642E7CBB0722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C4CF9F5-59DE-4BCF-956B-642E7CBB0722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C4CF9F5-59DE-4BCF-956B-642E7CBB0722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C4CF9F5-59DE-4BCF-956B-642E7CBB0722}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

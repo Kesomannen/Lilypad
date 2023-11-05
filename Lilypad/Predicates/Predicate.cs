@@ -10,8 +10,4 @@ public abstract class Predicate {
     public Predicate Inverted() {
         return new Inverted(this);
     }
-    
-    public static implicit operator Predicate(EntityConditions predicate) {
-        return new EntityProperties { Predicate = predicate };
-    }
 }

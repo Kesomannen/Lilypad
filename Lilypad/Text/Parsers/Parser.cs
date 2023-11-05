@@ -3,7 +3,7 @@
 public abstract class Parser {
     protected static void AssertArgumentCount(string[] arguments, int count) {
         if (arguments.Length != count) {
-            throw new ArgumentException($"Expected {count} arguments, got {arguments.Length}.");
+            throw new ArgumentException($"Expected {count} arguments, got {arguments.Length} instead. Arguments: {string.Join(", ", arguments)}");
         }
     }
     

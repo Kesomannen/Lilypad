@@ -34,4 +34,8 @@ public class Datapack {
     public void Transpile(in TranspilationOptions options) {
         Transpiler.Transpile(this, options);
     }
+    
+    public void Transpile(string path) {
+        Transpile(new TranspilationOptions(path));
+    }
 }

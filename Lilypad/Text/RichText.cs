@@ -5,6 +5,16 @@ public class RichText {
     public List<TextTag> Formatting { get; set; } = new();
     public List<RichText> Children { get; set; } = new();
     
+    public RichText() { }
+
+    public RichText(params RichText[] children) {
+        Children.AddRange(children);
+    }
+    
+    public RichText(string text) {
+        Content = ("text", text);
+    }
+    
     object ToJson() {
         if (Content == null) {
             return GetChildJson();

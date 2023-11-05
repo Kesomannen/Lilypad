@@ -39,7 +39,7 @@ public class ClickEventParser : FormatParser {
     }
 
     public override IEnumerable<TextTag>? GetState() {
-        return _clickEvent == null ? null : GetState(("click_event", _clickEvent.Value));
+        return _clickEvent == null ? null : GetState(("clickEvent", _clickEvent.Value));
     }
 
     public override void Reset() {
