@@ -66,14 +66,13 @@ internal static class ExampleUtil {
             message,
             "\n \n--------------------------------------\n"
         );
-        var helperFunction = datapack.Functions.Create("help").Tellraw("@s", text);
+        var helperFunction = datapack.Functions.Create("help").Tellraw(text);
         datapack.Functions.Create(f => {
             f.Tellraw("@a",
                 $"<green>Lilypad </green>| Example <yellow>{example}</yellow> loaded! " +
-                  $"<u><run '/function {helperFunction.Location}'>Click here</u></run> " +
+                  $"<u><run {helperFunction.Location}>Click here</u></run> " +
                   $"or run <i>'/function {helperFunction.Location}'</i> for more information."
             );
         });
-        return;
     }
 }

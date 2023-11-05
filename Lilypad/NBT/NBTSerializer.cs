@@ -12,8 +12,8 @@ public static class NBTSerializer {
         foreach (var (name, tag) in compound) {
             if (!first) {
                 builder.Append(',');
-                first = false;
             }
+            first = false;
             
             builder.Append(name);
             builder.Append(':');
@@ -33,7 +33,7 @@ public static class NBTSerializer {
             
             case NBTValueType.Boolean:
                 AssertType<bool>();
-                return str!;
+                return str!.ToLower();
             
             case NBTValueType.Short:
                 AssertType<short>();
@@ -57,11 +57,12 @@ public static class NBTSerializer {
             
             case NBTValueType.String:
                 AssertType<string>();
-                return $"\"{str}\"";
+                var escaped = str!.Replace("\"", "\\\"");
+                return $"\"{escaped}\"";
             
             case NBTValueType.List:
-                var enumerable = AssertType<IEnumerable<NBTValue>>(true);
-                return SerializeArray(enumerable);
+                var enumerable = AssertType<IEnumerable<NBTValue>>();
+                return SerializeArray(enumerable, SerializeValue);
                 
             case NBTValueType.Compound:
                 var compound = AssertType<NBTCompound>();
@@ -69,36 +70,38 @@ public static class NBTSerializer {
             
             case NBTValueType.ByteArray:
                 var byteArray = AssertType<IEnumerable<sbyte>>();
-                return SerializeArray(byteArray, "B");
+                return SerializeArray(byteArray, prefix: "B");
                 
             case NBTValueType.IntArray:
                 var intArray = AssertType<IEnumerable<int>>();
-                return SerializeArray(intArray, "I");
+                return SerializeArray(intArray, prefix: "I");
                 
             case NBTValueType.LongArray:
                 var longArray = AssertType<IEnumerable<long>>();
-                return SerializeArray(longArray, "L");
+                return SerializeArray(longArray, prefix: "L");
 
             case NBTValueType.Json:
                 var richText = AssertType<RichText>();
-                return $"'{richText}'";
+                return $"'{richText.ToString().Replace("'", "\\'")}'";
             
             default: throw new ArgumentOutOfRangeException();
         }
         
-        T AssertType<T>(bool derived = false) {
+        T AssertType<T>() {
             var expectedType = typeof(T);
             var type = value.Value.GetType();
-            if (derived ? !expectedType.IsAssignableFrom(type) : type != expectedType) {
+            if (!expectedType.IsAssignableFrom(type)) {
                 throw new ArgumentException($"Expected {expectedType} but got {type}");
             }
             return (T) value.Value;
         }
         
-        string SerializeArray<T>(IEnumerable<T> items, string? prefix = null) {
+        string SerializeArray<T>(IEnumerable<T> items, Func<T, string>? serialize = null, string? prefix = null) {
+            serialize ??= item => item.ToString();
+            var serialized = items.Select(serialize);
             return prefix == null ? 
-                $"[{string.Join(',', items)}]" : 
-                $"[{prefix};{string.Join(',', items)}]";
+                $"[{string.Join(',', serialized)}]" : 
+                $"[{prefix};{string.Join(',', serialized)}]";
         }
     }
 }

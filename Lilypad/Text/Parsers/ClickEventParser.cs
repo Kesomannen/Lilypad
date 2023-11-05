@@ -24,6 +24,11 @@ public class ClickEventParser : FormatParser {
         }
         
         var value = arguments[isExplicit ? 1 : 0];
+        
+        if (clickAction == ClickAction.RunCommand && value[0] != '/') {
+            value = $"/function {value}";
+        }
+        
         _clickEvent = new ClickEvent {
             Action = clickAction, 
             Value = value

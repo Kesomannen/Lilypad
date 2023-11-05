@@ -28,6 +28,18 @@ public readonly struct EnumReference<T> : ISerializeInner where T : struct, Enum
     public static bool operator !=(EnumReference<T> a, T b) {
         return !a.Value.Equals(b);
     }
+    
+    public bool Equals(EnumReference<T> other) {
+        return Value.Equals(other.Value);
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is EnumReference<T> other && Equals(other);
+    }
+
+    public override int GetHashCode() {
+        return Value.GetHashCode();
+    }
 
     public override string ToString() {
         return Value.ToString().ToSnakeCase();

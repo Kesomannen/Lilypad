@@ -20,7 +20,7 @@ public class Selector {
     static readonly StringBuilder _builder = new();
     
     public Selector Gamemode(EnumReference<Gamemode> gamemode) {
-        return AddJson("gamemode", gamemode);
+        return Add("gamemode", gamemode);
     }
     
     public Selector Predicate(Reference<DataResource<Predicate>> predicate) {
@@ -49,7 +49,17 @@ public class Selector {
     }
     
     public Selector Type(EnumReference<Entity> type) {
-        return AddJson("type", type);
+        return Add("type", type);
+    }
+    
+    public Selector Limit(int limit) {
+        return Add("limit", limit);
+    }
+    
+    public Selector One => Limit(1);
+    
+    public Selector Sort(EnumReference<Sort> sort) {
+        return Add("sort", sort);
     }
 
     Selector AddJson(string key, object value) {
@@ -86,4 +96,11 @@ public class Selector {
 
         return _builder.ToString();
     }
+}
+
+public enum Sort {
+    Arbitrary,
+    Furthest,
+    Nearest,
+    Random
 }

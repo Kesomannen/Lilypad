@@ -27,8 +27,11 @@ internal static class Transpiler {
         WriteResources(_datapack.Functions, "functions", "mcfunction");
         WriteResourcesJson(_datapack.Advancements, "advancements");
         WriteResourcesJson(_datapack.Recipes, "recipes");
-        WriteResourcesJson(_datapack.Predicates, "predicates");
+        WriteResourcesJson(_datapack.LootTables, "loot_tables");
+        WriteResourcesJson(_datapack.ItemModifiers, "item_modifiers");
         
+        WriteResourcesJson(_datapack.Predicates, "predicates");
+
         WriteResourcesJson(_datapack.FunctionTags, "tags/functions");
         WriteResourcesJson(_datapack.ItemTags, "tags/items");
         

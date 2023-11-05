@@ -1,3 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Lilypad;
 
-Console.WriteLine("Hello, World!");
+const string outputPath = @"C:\Users\bobbo\AppData\Roaming\PrismLauncher\instances\Default 1.20.1\.minecraft\saves\Testing\datapacks\lilypad-example";
+
+var datapack = new Datapack();
+
+
+datapack.Transpile(outputPath);

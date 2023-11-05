@@ -32,7 +32,27 @@ public class Objective : Resource {
     }
 
     protected override string GetLocation() {
-        return Name;
+        return $"{Namespace}_{Name}";
+    }
+    
+    public Objective SetDisplayName(RichText displayName) {
+        DisplayName = displayName;
+        return this;
+    }
+    
+    public Objective SetCriterion(Criterion criterion) {
+        Criterion = criterion;
+        return this;
+    }
+    
+    public Objective SetDisplaySlot(DisplaySlotArgument displaySlot) {
+        DisplaySlot = displaySlot;
+        return this;
+    }
+    
+    public Objective SetRenderType(EnumReference<ObjectiveRenderType> renderType) {
+        RenderType = renderType;
+        return this;
     }
 
     public Function CreateRewardFunction(Argument<Range<int>> range, int resetValue, Action<Function> build) {

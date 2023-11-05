@@ -1,4 +1,6 @@
 ﻿using Lilypad.Advancements;
+using Lilypad.ItemModifiers;
+using Lilypad.Loot;
 using Lilypad.Predicates;
 using Lilypad.Recipes;
 using Lilypad.Scoreboards;
@@ -12,6 +14,9 @@ public class Datapack {
     public ResourceCollection<Function> Functions { get; }
     public ResourceCollection<Advancement> Advancements { get; }
     public ResourceCollection<Recipe> Recipes { get; }
+    public ResourceCollection<LootTable> LootTables { get; }
+    public ResourceCollection<ItemModifier> ItemModifiers { get; }
+    
     public ResourceCollection<DataResource<Predicate>> Predicates { get; }
 
     public ResourceCollection<Tag<Function>> FunctionTags { get; }
@@ -23,6 +28,9 @@ public class Datapack {
         Functions = new ResourceCollection<Function>(this);
         Advancements = new ResourceCollection<Advancement>(this);
         Recipes = new ResourceCollection<Recipe>(this);
+        LootTables = new ResourceCollection<LootTable>(this);
+        ItemModifiers = new ResourceCollection<ItemModifier>(this);
+        
         Predicates = new ResourceCollection<DataResource<Predicate>>(this);
         
         FunctionTags = new ResourceCollection<Tag<Function>>(this);

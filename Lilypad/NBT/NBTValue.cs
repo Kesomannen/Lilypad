@@ -23,8 +23,10 @@ public readonly struct NBTValue {
     public static implicit operator NBTValue((string, NBTValue) pair) => NBTCompound.From(pair);
     public static implicit operator NBTValue((string, NBTValue)[] pairs) => NBTCompound.From(pairs);
     public static implicit operator NBTValue(NBTValue[] values) => new(values, NBTValueType.List);
+    public static implicit operator NBTValue(NBTCompound[] values) => new(values.Select(compound => (NBTValue) compound), NBTValueType.List);
     public static implicit operator NBTValue(byte[] value) => new(value, NBTValueType.ByteArray);
     public static implicit operator NBTValue(int[] value) => new(value, NBTValueType.IntArray);
+    public static implicit operator NBTValue(Uuid value) => new(value.ToIntArray(), NBTValueType.IntArray);
     public static implicit operator NBTValue(long[] value) => new(value, NBTValueType.LongArray);
     public static implicit operator NBTValue(RichText value) => new(value, NBTValueType.Json);
 }
