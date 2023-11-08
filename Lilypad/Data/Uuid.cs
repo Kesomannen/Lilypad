@@ -1,4 +1,4 @@
-﻿using Lilypad.Extensions;
+﻿using Lilypad;
 using Random = Lilypad.Extensions.Random;
 
 namespace Lilypad; 
@@ -13,8 +13,22 @@ public readonly struct Uuid {
         D = d;
     }
     
+    public int[] ToIntArray() {
+        return new[] { A, B, C, D };
+    }
+
+    public string ToHyphenatedHexadecimal() {
+        var bytes = new byte[16];
+        BitConverter.TryWriteBytes(bytes.AsSpan(0, 4), A);
+        BitConverter.TryWriteBytes(bytes.AsSpan(4, 4), B);
+        BitConverter.TryWriteBytes(bytes.AsSpan(8, 4), C);
+        BitConverter.TryWriteBytes(bytes.AsSpan(12, 4), D);
+        
+        return new Guid(bytes).ToString("D");
+    }
+    
     public override string ToString() {
-        return $"{A:X8}-{B:X8}-{C:X8}-{D:X8}";
+        return ToHyphenatedHexadecimal();
     }
     
     public static Uuid Parse(string value) {
@@ -25,10 +39,8 @@ public readonly struct Uuid {
     public static Uuid New() {
         return new Uuid(Random.NextInt(), Random.NextInt(), Random.NextInt(), Random.NextInt());
     }
-    
-    public int[] ToIntArray() {
-        return new[] { A, B, C, D };
-    }
+
+    public static implicit operator NBTValue(Uuid uuid) => uuid.ToIntArray();
     
     public static bool operator ==(Uuid a, Uuid b) {
         return a.A == b.A && a.B == b.B && a.C == b.C && a.D == b.D;

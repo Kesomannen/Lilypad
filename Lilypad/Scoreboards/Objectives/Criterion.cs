@@ -1,6 +1,6 @@
-﻿namespace Lilypad.Scoreboards;
+﻿namespace Lilypad;
 
-public abstract class Criterion {
+public abstract class ObjectiveCriterion {
     protected abstract string Name { get; }
     
     public virtual bool CanBeModified => true;

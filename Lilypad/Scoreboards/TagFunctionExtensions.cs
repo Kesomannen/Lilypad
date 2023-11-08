@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Scoreboards; 
+﻿namespace Lilypad; 
 
 public static class TagFunctionExtensions {
     public static Function AddTag(this Function function, Argument<Selector> target, string tag) {

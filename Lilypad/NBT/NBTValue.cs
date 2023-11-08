@@ -1,34 +1,59 @@
 ﻿using Lilypad.Text;
+using Newtonsoft.Json;
 
-namespace Lilypad.NBT;
+namespace Lilypad;
 
 public readonly struct NBTValue {
     public readonly object Value;
     public readonly NBTValueType Type;
 
-    NBTValue(object value, NBTValueType type) {
+    public NBTValue(object value, NBTValueType type) {
         Value = value;
         Type = type;
     }
+
+    public static NBTValue FromObject(object obj) {
+        return obj switch {
+            sbyte => new NBTValue(obj, NBTValueType.Byte),
+            bool => new NBTValue(obj, NBTValueType.Boolean),
+            short => new NBTValue(obj, NBTValueType.Short),
+            int => new NBTValue(obj, NBTValueType.Int),
+            long => new NBTValue(obj, NBTValueType.Long),
+            float => new NBTValue(obj, NBTValueType.Float),
+            double => new NBTValue(obj, NBTValueType.Double),
+            string => new NBTValue(obj, NBTValueType.String),
+            RichText => new NBTValue(obj, NBTValueType.Json),
+            NBTCompound => new NBTValue(obj, NBTValueType.Compound),
+            Enum => new NBTValue((int) obj, NBTValueType.Int),
+            IEnumerable<byte> => new NBTValue(obj, NBTValueType.ByteArray),
+            IEnumerable<int> => new NBTValue(obj, NBTValueType.IntArray),
+            IEnumerable<long> => new NBTValue(obj, NBTValueType.LongArray),
+            IEnumerable<NBTValue> => new NBTValue(obj, NBTValueType.List),
+            IEnumerable<object> => new NBTValue(obj, NBTValueType.List),
+            _ => new NBTValue(obj, NBTValueType.Object)
+        };
+    }
     
-    public static implicit operator NBTValue(sbyte value) => new(value, NBTValueType.Byte);
-    public static implicit operator NBTValue(bool value) => new(value, NBTValueType.Boolean);
-    public static implicit operator NBTValue(short value) => new(value, NBTValueType.Short);
-    public static implicit operator NBTValue(int value) => new(value, NBTValueType.Int);
-    public static implicit operator NBTValue(long value) => new(value, NBTValueType.Long);
-    public static implicit operator NBTValue(float value) => new(value, NBTValueType.Float);
-    public static implicit operator NBTValue(double value) => new(value, NBTValueType.Double);
-    public static implicit operator NBTValue(string value) => new(value, NBTValueType.String);
-    public static implicit operator NBTValue(NBTCompound value) => new(value, NBTValueType.Compound);
-    public static implicit operator NBTValue((string, NBTValue) pair) => NBTCompound.From(pair);
-    public static implicit operator NBTValue((string, NBTValue)[] pairs) => NBTCompound.From(pairs);
-    public static implicit operator NBTValue(NBTValue[] values) => new(values, NBTValueType.List);
-    public static implicit operator NBTValue(NBTCompound[] values) => new(values.Select(compound => (NBTValue) compound), NBTValueType.List);
-    public static implicit operator NBTValue(byte[] value) => new(value, NBTValueType.ByteArray);
-    public static implicit operator NBTValue(int[] value) => new(value, NBTValueType.IntArray);
-    public static implicit operator NBTValue(Uuid value) => new(value.ToIntArray(), NBTValueType.IntArray);
-    public static implicit operator NBTValue(long[] value) => new(value, NBTValueType.LongArray);
-    public static implicit operator NBTValue(RichText value) => new(value, NBTValueType.Json);
+    public static NBTValue FromObjects(params object[] objs) {
+        return new NBTValue(objs.Select(FromObject), NBTValueType.List);
+    }
+    
+    public static implicit operator NBTValue(sbyte value) => FromObject(value);
+    public static implicit operator NBTValue(bool value) => FromObject(value);
+    public static implicit operator NBTValue(short value) => FromObject(value);
+    public static implicit operator NBTValue(int value) => FromObject(value);
+    public static implicit operator NBTValue(long value) => FromObject(value);
+    public static implicit operator NBTValue(float value) => FromObject(value);
+    public static implicit operator NBTValue(double value) => FromObject(value);
+    public static implicit operator NBTValue(string value) => FromObject(value);
+    public static implicit operator NBTValue(RichText value) => FromObject(value);
+    public static implicit operator NBTValue(NBTCompound value) => FromObject(value);
+    public static implicit operator NBTValue(byte[] value) => FromObject(value);
+    public static implicit operator NBTValue(int[] value) => FromObject(value);
+    public static implicit operator NBTValue(long[] value) => FromObject(value);
+    public static implicit operator NBTValue(NBTValue[] value) => FromObject(value);
+    public static implicit operator NBTValue(object[] value) => FromObjects(value);
+    public static implicit operator NBTValue(Enum value) => FromObject(value);
 }
 
 public enum NBTValueType {
@@ -45,5 +70,6 @@ public enum NBTValueType {
     Compound,
     ByteArray,
     IntArray,
-    LongArray
+    LongArray,
+    Object
 }

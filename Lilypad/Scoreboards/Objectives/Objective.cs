@@ -1,22 +1,22 @@
 ﻿using Lilypad.Helpers;
-using Lilypad.Predicates;
+using Lilypad;
 using Lilypad.Text;
 
-namespace Lilypad.Scoreboards; 
+namespace Lilypad; 
 
 public class Objective : Resource {
     public RichText? DisplayName { get; set; }
-    public Criterion? Criterion { get; set; }
+    public ObjectiveCriterion? Criterion { get; set; }
     public DisplaySlotArgument? DisplaySlot { get; set; }
     public EnumReference<ObjectiveRenderType>? RenderType { get; set; }
     
-    internal Objective(string name, Datapack datapack) : base(name, datapack) {
+    internal Objective(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) {
         datapack.RegisterInstallation(
             install: f => f.Add(_ => {
                 DisplayName ??= Name;
                 Criterion ??= SingleCriterion.Dummy;
                 
-                f.Add($"scoreboard objectives add {Name} {Criterion} {DisplayName}");
+                f.Add($"scoreboard objectives add {this} {Criterion} {DisplayName}");
                 var scoreboard = f.Scoreboard(this);
                 if (DisplaySlot.HasValue) {
                     scoreboard.SetDisplay(DisplaySlot.Value);
@@ -25,9 +25,9 @@ public class Objective : Resource {
                     scoreboard.SetRenderType(RenderType.Value);
                 }
             }),
-            uninstall: f => {
-                f.Add($"scoreboard objectives remove {Name}");
-            }
+            uninstall: f => f.Add(_ => {
+                f.Add($"scoreboard objectives remove {this}");
+            })
         );
     }
 
@@ -40,7 +40,7 @@ public class Objective : Resource {
         return this;
     }
     
-    public Objective SetCriterion(Criterion criterion) {
+    public Objective SetCriterion(ObjectiveCriterion criterion) {
         Criterion = criterion;
         return this;
     }

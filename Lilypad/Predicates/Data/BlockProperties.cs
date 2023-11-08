@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Predicates; 
+﻿namespace Lilypad; 
 
 public class BlockProperties {
     internal Dictionary<string, object> Properties { get; } = new();

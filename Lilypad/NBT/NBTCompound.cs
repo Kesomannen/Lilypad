@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using Newtonsoft.Json;
 
-namespace Lilypad.NBT;
+namespace Lilypad;
 
+[JsonConverter(typeof(JsonConverter))]
 public class NBTCompound : IEnumerable<KeyValuePair<string, NBTValue>> {
     readonly Dictionary<string, NBTValue> _pairs = new();
     
@@ -47,4 +49,11 @@ public class NBTCompound : IEnumerable<KeyValuePair<string, NBTValue>> {
     
     public static implicit operator NBTCompound((string, NBTValue)[] pairs) => From(pairs);
     public static implicit operator NBTCompound((string, NBTValue) pair) => From(pair);
+    
+    
+    class JsonConverter : WriteOnlyConverter<NBTCompound> {
+        protected override void WriteJson(JsonWriter writer, NBTCompound value, JsonSerializer serializer) {
+            writer.WriteValue(value.ToString().Replace("\"", "\\\""));
+        }
+    }
 }

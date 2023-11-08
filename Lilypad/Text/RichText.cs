@@ -11,8 +11,11 @@ public class RichText {
         Children.AddRange(children);
     }
     
-    public RichText(string text) {
-        Content = ("text", text);
+    public RichText(string text) : this(("text", text)) { }
+
+    public RichText(TextTag content, params TextTag[] formatting) {
+        Content = content;
+        Formatting.AddRange(formatting);
     }
     
     object ToJson() {

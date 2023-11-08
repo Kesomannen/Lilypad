@@ -1,12 +1,19 @@
 ﻿using Lilypad.Extensions;
-using Lilypad.ItemModifiers;
-using Lilypad.NBT;
+using Lilypad;
 
 namespace Lilypad; 
 
 public static class DefaultFunctionExtensions {
     public static ExecuteCommand Execute(this Function function) {
         return new ExecuteCommand(function);
+    }
+    
+    public static IfElse If(this Function function, string[] conditions, Action<Function> build) {
+        return new IfElse(function, conditions, build);
+    }
+    
+    public static IfElse If(this Function function, string condition, Action<Function> build) {
+        return function.If(new[] { condition }, build);
     }
 
     public static Function Effect(
@@ -106,11 +113,11 @@ public static class DefaultFunctionExtensions {
         return function.Clear(Selector.Self);
     }
     
-    public static Function Teleport(this Function function, Argument<Selector> selector, Coordinate destination) {
+    public static Function Teleport(this Function function, Argument<Selector> selector, Vector3 destination) {
         return function.Add($"tp {selector} {destination}");
     }
     
-    public static Function Teleport(this Function function, Coordinate destination) {
+    public static Function Teleport(this Function function, Vector3 destination) {
         return function.Teleport(Selector.Self, destination);
     }
     
@@ -120,5 +127,9 @@ public static class DefaultFunctionExtensions {
     
     public static Function Schedule(this Function function, float seconds, Reference<Function> functionRef) {
         return function.Add($"schedule function {functionRef} {(int)seconds * 20}t");
+    }
+    
+    public static Function Gamerule(this Function function, string gamerule, object value) {
+        return function.Add($"gamerule {gamerule} {value}");
     }
 }

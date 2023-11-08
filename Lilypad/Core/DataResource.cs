@@ -2,8 +2,8 @@
 
 public class DataResource<T> : Resource, ISerializeInner {
     public T? Data { get; set; }
-
-    internal DataResource(string name, Datapack datapack) : base(name, datapack) { }
     
     object ISerializeInner.SerializedData => Data;
+
+    internal DataResource(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
 }

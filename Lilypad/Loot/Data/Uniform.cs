@@ -1,7 +1,7 @@
-﻿using Lilypad.Predicates;
+﻿using Lilypad;
 using Newtonsoft.Json;
 
-namespace Lilypad.Loot;
+namespace Lilypad;
 
 [JsonConverter(typeof(Converter))]
 public class Uniform : NumberProvider {

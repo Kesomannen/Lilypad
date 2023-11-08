@@ -1,7 +1,7 @@
-﻿namespace Lilypad.Scoreboards; 
+﻿namespace Lilypad; 
 
 public static class ScoreboardFunctionExtensions {
-    public static ObjectiveCommand Scoreboard(this Function function, Argument<Objective> objective) {
+    public static ObjectiveCommand Scoreboard(this Function function, Reference<Objective> objective) {
         return new ObjectiveCommand(function, objective);
     }
     

@@ -1,6 +1,6 @@
-﻿using Lilypad.Predicates;
+﻿using Lilypad;
 
-namespace Lilypad.Advancements; 
+namespace Lilypad; 
 
 public class Slots {
     public Range<int>? Empty, Full, Occupied;

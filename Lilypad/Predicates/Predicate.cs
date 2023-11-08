@@ -1,11 +1,11 @@
 ﻿using Lilypad.Extensions;
 using Newtonsoft.Json;
 
-namespace Lilypad.Predicates; 
+namespace Lilypad; 
 
 public abstract class Predicate {
     [JsonProperty]
-    string Condition => GetType().Name.ToSnakeCase();
+    protected virtual string Condition => GetType().Name.ToSnakeCase();
     
     public Predicate Inverted() {
         return new Inverted(this);

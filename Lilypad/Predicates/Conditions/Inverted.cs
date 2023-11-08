@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Predicates; 
+﻿namespace Lilypad; 
 
 public class Inverted : Predicate {
     public Predicate Term;

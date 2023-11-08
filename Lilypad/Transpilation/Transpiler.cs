@@ -24,7 +24,12 @@ internal static class Transpiler {
         
         WriteMetadata();
         
+        for (var i = 0; i < _datapack.Functions.Values.Count; i++) {
+            var function = _datapack.Functions.Values[i];
+            function.Generate();
+        }
         WriteResources(_datapack.Functions, "functions", "mcfunction");
+        
         WriteResourcesJson(_datapack.Advancements, "advancements");
         WriteResourcesJson(_datapack.Recipes, "recipes");
         WriteResourcesJson(_datapack.LootTables, "loot_tables");
@@ -49,19 +54,19 @@ internal static class Transpiler {
         File.WriteAllText(GetAbsolute("pack.mcmeta"), Serialize(pack));
     }
     
-    static void WriteResourcesJson<T>(IEnumerable<T> resources, string path) where T : Resource {
-        WriteResources(resources, path, "json", Serialize);
+    static void WriteResourcesJson<T>(ResourceCollection<T> collection, string path) where T : Resource {
+        WriteResources(collection, path, "json", Serialize);
     }
     
     static void WriteResources<T>(
-        IEnumerable<T> resources,
+        ResourceCollection<T> collection,
         string path,
         string fileExtension, 
         Func<T, string>? getContent = null
     ) where T : Resource {
         getContent ??= resource => resource.ToString();
-        
-        foreach (var resource in resources) {
+
+        foreach (var resource in collection) {
             WriteResource(resource, path, getContent(resource), fileExtension);
         }
     }
@@ -78,6 +83,7 @@ internal static class Transpiler {
 
         path = $"{GetAbsolute(_steps.ToArray())}.{fileExtension}";
         var parent = Path.GetDirectoryName(path);
+        
         Directory.CreateDirectory(parent!);
         File.WriteAllText(path, content);
     }

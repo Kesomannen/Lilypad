@@ -1,13 +1,13 @@
 ﻿using System.Text;
 
-namespace Lilypad.NBT; 
+namespace Lilypad; 
 
 public readonly struct DataOperation {
     readonly EnumReference<DataOperationType> _operationType;
     readonly EnumReference<DataOperationSourceType> _sourceType;
     
     readonly DataSource? _source;
-    readonly string? _sourcePath;
+    readonly NBTPath? _sourcePath;
     readonly NBTValue? _value;
 
     readonly int? _index;
@@ -17,7 +17,7 @@ public readonly struct DataOperation {
     public DataOperation(
         EnumReference<DataOperationType> operation, 
         DataSource source, 
-        string? sourcePath = null, 
+        NBTPath? sourcePath = null, 
         int? index = null
     ) {
         _operationType = operation;
@@ -79,7 +79,7 @@ public readonly struct DataOperation {
         return new DataOperation(operation, value, index);
     }
     
-    public static DataOperation From(EnumReference<DataOperationType> operation, DataSource source, string? sourcePath = null, int? index = null) {
+    public static DataOperation From(EnumReference<DataOperationType> operation, DataSource source, NBTPath? sourcePath = null, int? index = null) {
         return new DataOperation(operation, source, sourcePath, index);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Lilypad.Predicates; 
+namespace Lilypad; 
 
 public struct EffectProperty {
     public bool? Ambient;

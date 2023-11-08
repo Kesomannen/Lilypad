@@ -1,9 +1,5 @@
-﻿using Lilypad.Advancements;
-using Lilypad.ItemModifiers;
-using Lilypad.Loot;
-using Lilypad.Predicates;
-using Lilypad.Recipes;
-using Lilypad.Scoreboards;
+﻿using Lilypad.Recipes;
+using Lilypad;
 
 namespace Lilypad;
 
@@ -23,8 +19,15 @@ public class Datapack {
     public ResourceCollection<Tag<Item>> ItemTags { get; }
     
     public ResourceCollection<Objective> Objectives { get; }
+
+    public string DefaultNamespace { get; }
     
-    public Datapack() {
+    public const string DefaultNamespaceName = "generated";
+
+    public Datapack(string defaultNamespace = DefaultNamespaceName) {
+        Culture.Initialize();
+        DefaultNamespace = defaultNamespace;
+        
         Functions = new ResourceCollection<Function>(this);
         Advancements = new ResourceCollection<Advancement>(this);
         Recipes = new ResourceCollection<Recipe>(this);

@@ -1,6 +1,6 @@
-﻿using Lilypad.Loot;
+﻿using Lilypad;
 
-namespace Lilypad.Predicates; 
+namespace Lilypad; 
 
 public class TimeCheck : Predicate {
     public Range<NumberProvider> Value;

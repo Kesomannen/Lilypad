@@ -17,6 +17,7 @@ public enum Item {
     AcaciaTrapdoor,
     AcaciaWood,
     ActivatorRail,
+    Air,
     Allium,
     AmethystCluster,
     AncientDebris,

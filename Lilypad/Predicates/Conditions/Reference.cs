@@ -1,5 +1,7 @@
-﻿namespace Lilypad.Predicates; 
+﻿namespace Lilypad; 
 
-public class Reference : Predicate {
+public class ReferencePredicate : Predicate {
+    protected override string Condition => "reference";
+
     public Reference<DataResource<Predicate>> Name;
 }

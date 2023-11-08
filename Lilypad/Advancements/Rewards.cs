@@ -1,7 +1,7 @@
-﻿using Lilypad.Loot;
+﻿using Lilypad;
 using Lilypad.Recipes;
 
-namespace Lilypad.Advancements; 
+namespace Lilypad; 
 
 public class Rewards {
     public List<Reference<Recipe>>? Recipes;

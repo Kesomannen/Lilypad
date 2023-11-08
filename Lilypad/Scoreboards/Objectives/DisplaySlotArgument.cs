@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Scoreboards; 
+﻿namespace Lilypad; 
 
 public struct DisplaySlotArgument {
     public EnumReference<DisplaySlot> Type;

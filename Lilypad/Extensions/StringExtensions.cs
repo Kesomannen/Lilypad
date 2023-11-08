@@ -8,4 +8,12 @@ internal static class StringExtensions {
     public static string ToSnakeCase(this string text) {
         return string.Concat(text.Select((character, index) => index > 0 && char.IsUpper(character) ? "_" + character : character.ToString())).ToLower();
     }
+    
+    public static string Escape(this string text, char[] charsToEscape, char escapeChar = '\\') {
+        return string.Concat(text.Select(c => charsToEscape.Contains(c) ? $"{escapeChar}{c}" : c.ToString()));
+    }
+    
+    public static string Escape(this string text, char charToEscape, char escapeChar = '\\') {
+        return text.Escape(new[] { charToEscape }, escapeChar);
+    }
 }

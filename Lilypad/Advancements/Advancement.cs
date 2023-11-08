@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Advancements;
+﻿namespace Lilypad;
 
 public class Advancement : Resource {
     public string[][]? Requirements;
@@ -7,28 +7,24 @@ public class Advancement : Resource {
     public Display? Display;
 
     public Rewards Rewards = new();
-    public Dictionary<string, Criterion> Criteria = new();
     
-    internal Advancement(string name, Datapack datapack) : base(name, datapack) { }
+    Dictionary<string, Criterion> Criteria { get; } = new();
+    
+    internal Advancement(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
     
     public Advancement SetRequirements(params Criterion[][] requirements) {
         Requirements = requirements.Select(array => array.Select(criterion => criterion.Name).ToArray()).ToArray();
         return this;
     }
 
-    public Advancement AddRewardFunction(Function function) {
-        var func = (Rewards.Function ??= Datapack.Functions.Create($"{Name}_reward")).Resource;
-        if (func == null) {
-            throw new InvalidOperationException("Reward function is null");
-        }
-        func.Call(function);
-        return this;
+    public Function GetRewardFunction() {
+        return (Rewards.Function ??= Datapack.Functions.Create($"{Name}/reward")).Resource!;
     }
     
     public Function CreateRewardFunction(Action<Function> build) {
-        var name = Names.Get($"{Name}_reward");
+        var name = Names.Get($"{Name}/reward/");
         var function = Datapack.Functions.Create(name, build, Namespace);
-        AddRewardFunction(function);
+        GetRewardFunction().Call(function);
         return function;
     }
     
@@ -55,8 +51,18 @@ public class Advancement : Resource {
         return this;
     }
     
-    public Advancement SetParent(Advancement parent) {
+    public Advancement SetParent(Reference<Advancement> parent) {
         Parent = parent;
+        return this;
+    }
+    
+    public Advancement SetSendsTelemetryEvent(bool sendsTelemetryEvent) {
+        SendsTelemetryEvent = sendsTelemetryEvent;
+        return this;
+    }
+    
+    public Advancement SetRewards(Rewards rewards) {
+        Rewards = rewards;
         return this;
     }
 }

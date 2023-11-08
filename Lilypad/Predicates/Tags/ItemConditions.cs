@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Lilypad;
+using Newtonsoft.Json;
 
-namespace Lilypad.Predicates; 
+namespace Lilypad; 
 
 public class ItemConditions {
     public Range<int>? Count;
@@ -8,9 +9,9 @@ public class ItemConditions {
     public List<EnchantmentPredicate>? Enchantments;
     public List<EnchantmentPredicate>? StoredEnchantments;
     public List<EnumReference<Item>>? Items;
-    public string? Nbt;
+    public NBTCompound? Nbt;
     //public Reference<Potion> Potion;
-    public Reference<Tag<Item>> Tag;
+    public Reference<Tag<Item>>? Tag;
 }
 
 public struct EnchantmentPredicate {

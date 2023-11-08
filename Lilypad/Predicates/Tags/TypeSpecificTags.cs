@@ -1,8 +1,8 @@
-﻿using Lilypad.Advancements;
+﻿using Lilypad;
 using Lilypad.Extensions;
 using Lilypad.Recipes;
 
-namespace Lilypad.Predicates;
+namespace Lilypad;
 
 public interface ITypeSpecificTag {
     string Type => GetType().Name.ToSnakeCase();

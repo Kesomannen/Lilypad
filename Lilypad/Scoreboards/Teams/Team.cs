@@ -1,7 +1,7 @@
 ﻿using Lilypad.Helpers;
 using Lilypad.Text;
 
-namespace Lilypad.Scoreboards; 
+namespace Lilypad; 
 
 public class Team {
     public string Name { get; }

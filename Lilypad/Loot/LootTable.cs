@@ -1,5 +1,5 @@
-﻿namespace Lilypad.Loot; 
+﻿namespace Lilypad; 
 
 public class LootTable : Resource {
-    internal LootTable(string name, Datapack datapack) : base(name, datapack) { }
+    internal LootTable(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
 }

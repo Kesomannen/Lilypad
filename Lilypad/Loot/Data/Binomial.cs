@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Loot; 
+﻿namespace Lilypad; 
 
 public class Binomial : NumberProvider {
     public NumberProvider N;

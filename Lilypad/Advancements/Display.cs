@@ -1,6 +1,6 @@
 ﻿using Lilypad.Text;
 
-namespace Lilypad.Advancements; 
+namespace Lilypad; 
 
 public class Display {
     public Icon Icon;

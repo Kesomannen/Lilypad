@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Predicates;
+﻿namespace Lilypad;
 
 public class EntityConditions {
     public DistanceTags? Distance;

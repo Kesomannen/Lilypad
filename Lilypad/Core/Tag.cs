@@ -8,6 +8,8 @@ public class Tag<T> : Resource {
     
     public bool? Replace { get; set; }
     
+    internal Tag(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
+    
     public void Add(string resourceLocation, bool required = true) {
         if (Values.Any(x => x.Location == resourceLocation)) {
             return;
@@ -18,8 +20,6 @@ public class Tag<T> : Resource {
             Required = required
         });
     }
-    
-    internal Tag(string name, Datapack datapack) : base(name, datapack) { }
 
     protected override string GetLocation() {
         return $"#{Namespace}:{Name}";

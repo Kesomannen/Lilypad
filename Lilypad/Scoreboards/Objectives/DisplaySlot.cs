@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Scoreboards; 
+﻿namespace Lilypad; 
 
 public enum DisplaySlot {
     List,

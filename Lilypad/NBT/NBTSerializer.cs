@@ -1,7 +1,8 @@
 ﻿using System.Text;
+using Lilypad.Extensions;
 using Lilypad.Text;
 
-namespace Lilypad.NBT; 
+namespace Lilypad; 
 
 public static class NBTSerializer {
     public static string Serialize(NBTCompound compound) {
@@ -57,8 +58,7 @@ public static class NBTSerializer {
             
             case NBTValueType.String:
                 AssertType<string>();
-                var escaped = str!.Replace("\"", "\\\"");
-                return $"\"{escaped}\"";
+                return SerializeString();
             
             case NBTValueType.List:
                 var enumerable = AssertType<IEnumerable<NBTValue>>();
@@ -82,8 +82,11 @@ public static class NBTSerializer {
 
             case NBTValueType.Json:
                 var richText = AssertType<RichText>();
-                return $"'{richText.ToString().Replace("'", "\\'")}'";
-            
+                return $"'{richText.ToString().Escape('\'')}'";
+
+            case NBTValueType.Object:
+                return SerializeString();
+                    
             default: throw new ArgumentOutOfRangeException();
         }
         
@@ -103,5 +106,7 @@ public static class NBTSerializer {
                 $"[{string.Join(',', serialized)}]" : 
                 $"[{prefix};{string.Join(',', serialized)}]";
         }
+
+        string SerializeString() => $"\"{str!.Escape('"')}\"";
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Lilypad.Scoreboards; 
+﻿namespace Lilypad; 
 
-public class SingleCriterion : Criterion {
+public class SingleCriterion : ObjectiveCriterion {
     protected override string Name { get; }
     public override bool CanBeModified { get; }
 

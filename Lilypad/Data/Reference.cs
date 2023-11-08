@@ -26,7 +26,7 @@ public readonly struct Reference<T> : ISerializeInner where T : Resource {
     }
     
     public static Reference<T> Minecraft(string name) {
-        return new Reference<T>($"{Namespaces.Minecraft}:{name}");
+        return new Reference<T>($"minecraft:{name}");
     }
     
     public static implicit operator Reference<T>(string location) {

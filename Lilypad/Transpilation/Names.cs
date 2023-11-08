@@ -28,6 +28,6 @@ public static class Names {
             count = 0;
         }
         _counts[category] = count + 1;
-        return $"{category}_{count}";
+        return $"{category}{count}";
     }
 }

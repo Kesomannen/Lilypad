@@ -1,31 +1,46 @@
 ﻿using Lilypad.Extensions;
 
-namespace Lilypad.Advancements; 
+namespace Lilypad; 
 
-public class AdvancementCommand : CommandGenerator<AdvancementCommand> {
+public class AdvancementCommand {
     readonly Selector _selector;
     readonly EnumReference<AdvancementAction> _action;
-
-    protected override string BaseCommand => $"advancement {_action} {_selector}";
+    readonly Function _function;
     
     public AdvancementCommand(
         Function function, 
         Selector selector,
         EnumReference<AdvancementAction> action
-    ) : base(function) {
+    ) {
+        _function = function;
         _selector = selector;
         _action = action;
     }
-
-    public AdvancementCommand Everything() => AddLine("everything");
     
+    AdvancementCommand AddCommand(string command) {
+        _function.Add($"advancement {_action} {_selector} {command}");
+        return this;
+    }
+
+    public AdvancementCommand Everything() {
+        return AddCommand("everything");
+    }
+
     public AdvancementCommand Only(Advancement advancement, string? criterion = null) {
-        return AddLine($"only {advancement} {criterion.ToStringOrEmpty()}");
+        return AddCommand($"only {advancement} {criterion.ToStringOrEmpty()}");
     }
     
-    public AdvancementCommand From(Advancement advancement) => AddLine($"from {advancement}");
-    public AdvancementCommand Through(Advancement advancement) => AddLine($"through {advancement}");
-    public AdvancementCommand Until(Advancement advancement) => AddLine($"until {advancement}");
+    public AdvancementCommand From(Advancement advancement) {
+        return AddCommand($"from {advancement}");
+    }
+
+    public AdvancementCommand Through(Advancement advancement) {
+        return AddCommand($"through {advancement}");
+    }
+
+    public AdvancementCommand Until(Advancement advancement) {
+        return AddCommand($"until {advancement}");
+    }
 }
 
 public enum AdvancementAction {

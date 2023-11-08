@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Lilypad.Text; 
+﻿namespace Lilypad.Text; 
 
 public static class RichTextParser {
     static int _index;
@@ -25,7 +23,11 @@ public static class RichTextParser {
         _formatParsers.AddRange(Enum.GetValues<TextStyle>().Select(style => new StyleParser(style)));
         
         _contentParsers = new List<ContentParser> {
-            new EntityNameParser()
+            new EntityNameParser(),
+            new KeybindParser(),
+            new ScoreParser(),
+            new VariableParser(),
+            new NBTParser()
         };
     }
     

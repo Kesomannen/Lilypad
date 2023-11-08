@@ -2,10 +2,10 @@
 
 public readonly struct ItemSource {
     public readonly ItemSourceType Type;
-    public readonly Coordinate? Position;
+    public readonly Vector3? Position;
     public readonly Argument<Selector>? Selector;
     
-    public ItemSource(Coordinate position) {
+    public ItemSource(Vector3 position) {
         Type = ItemSourceType.Block;
         Position = position;
     }
@@ -23,10 +23,10 @@ public readonly struct ItemSource {
         };
     }
 
-    public static implicit operator ItemSource(Coordinate position) => new(position);
+    public static implicit operator ItemSource(Vector3 position) => new(position);
     public static implicit operator ItemSource(Selector selector) => new(selector);
     
-    public static ItemSource Block(Coordinate position) => new(position);
+    public static ItemSource Block(Vector3 position) => new(position);
     public static ItemSource Entity(Argument<Selector> selector) => new(selector);
 }
 

@@ -1,9 +1,8 @@
-﻿using Lilypad.Loot;
-using Lilypad.Predicates;
+﻿using Lilypad;
 using Lilypad.Recipes;
 using Newtonsoft.Json;
 
-namespace Lilypad.Advancements; 
+namespace Lilypad; 
 
 public class Criterion {
     [JsonIgnore]
@@ -31,6 +30,14 @@ public class Criterion {
         
         ((List<Predicate>) _conditions["player"]).AddRange(predicates);
         return this;
+    }
+    
+    public Criterion AddPlayerConditions(params EntityConditions[] conditions) {
+        var predicates = conditions
+            .Select(c => new EntityProperties { Predicate = c })
+            .Cast<Predicate>()
+            .ToArray();
+        return AddPlayerPredicates(predicates);
     }
     
     public static Criterion AllayDropItemOnBlock(params Predicate[] locationPredicates) {

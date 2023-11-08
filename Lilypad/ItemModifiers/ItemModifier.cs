@@ -1,5 +1,5 @@
-﻿namespace Lilypad.ItemModifiers; 
+﻿namespace Lilypad; 
 
 public class ItemModifier : Resource {
-    internal ItemModifier(string name, Datapack datapack) : base(name, datapack) { }
+    internal ItemModifier(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
 }

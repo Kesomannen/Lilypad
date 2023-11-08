@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Predicates; 
+﻿namespace Lilypad; 
 
 public class EntityProperties : Predicate {
     public EnumReference<ContextEntity> Entity;

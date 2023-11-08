@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Predicates; 
+﻿namespace Lilypad; 
 
 public class AllOf : Predicate {
     public List<Predicate> Terms;

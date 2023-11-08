@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Advancements; 
+﻿namespace Lilypad; 
 
 public static class AdvancementFunctionExtensions {
     public static AdvancementCommand Advancement(

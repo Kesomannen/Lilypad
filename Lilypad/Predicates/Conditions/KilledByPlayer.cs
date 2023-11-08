@@ -1,4 +1,4 @@
-﻿namespace Lilypad.Predicates;
+﻿namespace Lilypad;
 
 public class KilledByPlayer : Predicate {
     
