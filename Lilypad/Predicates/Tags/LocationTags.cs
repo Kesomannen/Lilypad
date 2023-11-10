@@ -9,8 +9,8 @@ public class LocationTags {
     public PositionTags? Position;
     public bool? Smokey;
     public EnumReference<Structure>? Structure;
-    
-    public static implicit operator LocationTags(Block block) => new() {
-        Block = new BlockTags(block)
-    };
+
+    public LocationTags(params Block[] blocks) {
+        Block = new BlockTags(blocks);
+    }
 }

@@ -31,7 +31,7 @@ public class ParkourGame : DatapackBuilder {
     Selector GetBlockSelector(Block block) {
         var predicate = Datapack.Predicates.Add(new EntityProperties {
             Predicate = new EntityConditions {
-                SteppingOn = block
+                SteppingOn = new LocationTags(block)
             }
         });
         return Selector.All.Predicate(predicate);
