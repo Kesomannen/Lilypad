@@ -1,6 +1,4 @@
-﻿using Lilypad;
-
-namespace Lilypad;
+﻿namespace Lilypad;
 
 public abstract class NumberProvider {
     public string Type => GetType().Name.ToLower();

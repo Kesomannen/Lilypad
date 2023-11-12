@@ -8,11 +8,11 @@ public static class DefaultFunctionExtensions {
         return new ExecuteCommand(function);
     }
     
-    public static IfElse If(this Function function, string[] conditions, Action<Function> build) {
+    public static IfElse If(this Function function, Condition[] conditions, Action<Function> build) {
         return new IfElse(function, conditions, build);
     }
     
-    public static IfElse If(this Function function, string condition, Action<Function> build) {
+    public static IfElse If(this Function function, Condition condition, Action<Function> build) {
         return function.If(new[] { condition }, build);
     }
 
@@ -126,10 +126,27 @@ public static class DefaultFunctionExtensions {
     }
     
     public static Function Schedule(this Function function, float seconds, Reference<Function> functionRef) {
-        return function.Add($"schedule function {functionRef} {(int)seconds * 20}t");
+        return function.Add($"schedule function {functionRef} {seconds * 20:0}t");
     }
     
     public static Function Gamerule(this Function function, string gamerule, object value) {
         return function.Add($"gamerule {gamerule} {value}");
     }
+    
+    public static Function Comment(this Function function, string comment) {
+        return function.Add($"# {comment}");
+    }
+    
+    public static Function SetExperience(this Function function, Argument<Selector> selector, int experience, EnumReference<ExperienceType> type) {
+        return function.Add($"xp set {selector} {experience} {(type == ExperienceType.Levels ? "levels" : "points")}");
+    }
+    
+    public static Function AddExperience(this Function function, Argument<Selector> selector, int experience, EnumReference<ExperienceType> type) {
+        return function.Add($"xp add {selector} {experience} {(type == ExperienceType.Levels ? "levels" : "points")}");
+    }
+}
+
+public enum ExperienceType {
+    Points,
+    Levels
 }

@@ -1,7 +1,4 @@
-﻿using Lilypad.Extensions;
-using Lilypad;
-
-namespace Lilypad.Helpers; 
+﻿namespace Lilypad.Helpers; 
 
 public readonly struct ScoreVariable : IVariable {
     public readonly Argument<Selector> Selector;

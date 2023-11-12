@@ -60,8 +60,8 @@ internal static class ExampleUtil {
         return Directory.Exists(path);
     }
     
-    public static void SetHelpMessage(Datapack datapack, Example example, RichText message) {
-        var text = new RichText(
+    public static void SetHelpMessage(Datapack datapack, Example example, JsonText message) {
+        var text = new JsonText(
             $"\n----- <green>Lilypad Example (<yellow>{example}</yellow>)</green> -----\n \n",
             message,
             "\n \n--------------------------------------\n"

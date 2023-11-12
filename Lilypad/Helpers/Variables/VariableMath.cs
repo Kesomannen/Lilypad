@@ -1,12 +1,11 @@
-﻿using Lilypad;
+﻿namespace Lilypad.Helpers; 
 
-namespace Lilypad.Helpers; 
-
-public static class Math {
+public static class VariableMath {
     static int _tempIndex;
     
-    public static Function Evaluate(this Function function, IVariable output, string expression, params IVariable[] variables) {
-        return function.SetVariable(output, Evaluate(function, expression, variables));
+    public static T Evaluate<T>(this Function function, T output, string expression, params IVariable[] variables) where T : IVariable { 
+        function.SetVariable(output, Evaluate(function, expression, variables));
+        return output;
     }
     
     public static IVariable Evaluate(this Function function, string expression, params IVariable[] variables) {
@@ -17,7 +16,7 @@ public static class Math {
         return result;
     }
     
-    static IVariable Evaluate(this Function function, INode node) {
+    static IVariable Evaluate(Function function, INode node) {
         switch (node) {
             case VariableNode variableNode:
                 return variableNode.Variable;
@@ -26,10 +25,9 @@ public static class Math {
                 var left = Evaluate(function, operatorNode.Left!);
                 var right = Evaluate(function, operatorNode.Right!);
                 
-                var result = Temp.Get(function.Datapack, $"#math{_tempIndex}");
-                
-                _tempIndex++;
-                function.Operation(result, Operation.Assign, left)
+                var result = Temp.Get(function.Datapack, $"#math{_tempIndex++}");
+                function
+                    .Operation(result, Operation.Assign, left)
                     .Operation(result, operatorNode.Operator, right);
                 return result;
             default:
@@ -90,33 +88,20 @@ public static class Math {
             }
         }
 
-        var operationNodes = nodes.OfType<OperatorNode>().OrderBy(n => n.Priority);
+        var operatorNodes = nodes.OfType<OperatorNode>().OrderBy(n => n.Priority).ToArray();
         
-        foreach (var operationNode in operationNodes) {
-            var i = nodes.IndexOf(operationNode);
-            
-            var node = nodes[i];
-            switch (node) {
-                case OperatorNode operatorNode:
-                    if (i == 0) {
-                        throw new MathException("Unexpected operator at start of expression");
-                    }
-                    if (i == nodes.Count - 1) {
-                        throw new MathException("Unexpected operator at end of expression");
-                    }
-                    operatorNode.Left = nodes[i - 1];
-                    operatorNode.Right = nodes[i + 1];
-                    nodes.RemoveAt(i + 1);
-                    nodes.RemoveAt(i - 1);
-                    i--;
-                    break;
-                
-                case VariableNode:
-                    break;
-                
-                default:
-                    throw new MathException($"Unexpected node type {node.GetType().Name}");
+        foreach (var operatorNode in operatorNodes) {
+            var i = nodes.IndexOf(operatorNode);
+            if (i == 0) {
+                throw new MathException("Unexpected operator at start of expression");
             }
+            if (i == nodes.Count - 1) {
+                throw new MathException("Unexpected operator at end of expression");
+            }
+            operatorNode.Left = nodes[i - 1];
+            operatorNode.Right = nodes[i + 1];
+            nodes.RemoveAt(i + 1);
+            nodes.RemoveAt(i - 1);
         }
         
         return nodes[0];

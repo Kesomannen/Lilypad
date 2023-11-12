@@ -16,4 +16,8 @@ internal static class StringExtensions {
     public static string Escape(this string text, char charToEscape, char escapeChar = '\\') {
         return text.Escape(new[] { charToEscape }, escapeChar);
     }
+    
+    public static string Quote(this string text, char quoteChar = '"') {
+        return $"{quoteChar}{text.Escape(quoteChar)}{quoteChar}";
+    }
 }

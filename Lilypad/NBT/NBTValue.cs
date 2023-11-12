@@ -22,7 +22,7 @@ public readonly struct NBTValue {
             float => new NBTValue(obj, NBTValueType.Float),
             double => new NBTValue(obj, NBTValueType.Double),
             string => new NBTValue(obj, NBTValueType.String),
-            RichText => new NBTValue(obj, NBTValueType.Json),
+            JsonText => new NBTValue(obj, NBTValueType.Json),
             NBTCompound => new NBTValue(obj, NBTValueType.Compound),
             Enum => new NBTValue((int) obj, NBTValueType.Int),
             IEnumerable<byte> => new NBTValue(obj, NBTValueType.ByteArray),
@@ -46,7 +46,7 @@ public readonly struct NBTValue {
     public static implicit operator NBTValue(float value) => FromObject(value);
     public static implicit operator NBTValue(double value) => FromObject(value);
     public static implicit operator NBTValue(string value) => FromObject(value);
-    public static implicit operator NBTValue(RichText value) => FromObject(value);
+    public static implicit operator NBTValue(JsonText value) => FromObject(value);
     public static implicit operator NBTValue(NBTCompound value) => FromObject(value);
     public static implicit operator NBTValue(byte[] value) => FromObject(value);
     public static implicit operator NBTValue(int[] value) => FromObject(value);

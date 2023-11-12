@@ -2,5 +2,6 @@
 
 public enum Entity {
     Player,
-    Arrow
+    Arrow,
+    Marker
 }

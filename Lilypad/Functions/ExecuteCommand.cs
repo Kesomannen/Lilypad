@@ -26,7 +26,17 @@ public class ExecuteCommand {
     }
     
     public void Run(Action<Function> build) {
-        Run(GetFunction(build));
+        var function = GetFunction(build);
+        function.Generate();
+        
+        var commands = function.Commands.ToArray();
+        if (commands.Length == 1) {
+            function.Datapack.Functions.Remove(function);
+            AddSubCommand($"run {commands[0]}");
+            Generate();
+        } else {
+            Run(function);
+        }
     }
 
     public void RunStore(Action<Function> build) {
@@ -34,14 +44,12 @@ public class ExecuteCommand {
         function.Generate();
         function.Datapack.Functions.Remove(function);
 
-        var str = function.ToString().Split("\n")
-            .Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#")).ToArray();
-        
-        switch (str.Length) {
+        var commands = function.Commands.ToArray();
+        switch (commands.Length) {
             case 0:
                 throw new Exception("Function must contain at least one command");
             case 1:
-                AddSubCommand($"run {str[0]}");
+                AddSubCommand($"run {commands[0]}");
                 Generate();
                 break;
             default:
@@ -107,12 +115,12 @@ public class ExecuteCommand {
         return AddSubCommand($"summon {entity}");
     }
     
-    public ExecuteCommand If(string condition) {
-        return AddSubCommand($"if {condition}");
+    public ExecuteCommand If(Condition condition) {
+        return AddSubCommand(condition.ToString());
     }
     
-    public ExecuteCommand Unless(string condition) {
-        return AddSubCommand($"unless {condition}");
+    public ExecuteCommand Unless(Condition condition) {
+        return AddSubCommand(condition.Not().ToString());
     }
     
     public ExecuteCommand Store(DataSource source, NBTPath path, EnumReference<StoreDataType> type, double scale = 1, bool success = false) {

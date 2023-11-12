@@ -1,4 +1,6 @@
-﻿namespace Lilypad; 
+﻿using Lilypad.Text;
+
+namespace Lilypad; 
 
 public struct DisplaySlotArgument {
     public EnumReference<DisplaySlot> Type;

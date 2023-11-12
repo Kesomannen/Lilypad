@@ -7,6 +7,13 @@ public struct Vector3 {
         set => X.Space = Y.Space = Z.Space = value;
     }
 
+    public Vector3(double x, double y, double z, Space space = Space.World) {
+        X = x;
+        Y = y;
+        Z = z;
+        Space = space;
+    }
+
     public VectorComponent Get(Axis axis) {
         return axis switch {
             Axis.X => X,
@@ -37,6 +44,10 @@ public struct Vector3 {
     public static implicit operator Vector3((double, double, double) tuple) => new() {
         X = tuple.Item1, Y = tuple.Item2, Z = tuple.Item3
     };
+    
+    public static implicit operator Vector3((VectorComponent, VectorComponent, VectorComponent) tuple) => new() {
+        X = tuple.Item1, Y = tuple.Item2, Z = tuple.Item3
+    };
 
     public static implicit operator Vector3(string str) {
         if (!TryParse(str, out var coordinate)) {
@@ -47,9 +58,19 @@ public struct Vector3 {
     
     public static readonly Vector3 Zero = (0, 0, 0);
     public static readonly Vector3 Here = (0d, 0d, 0d).AsRelative();
+    public static readonly Vector3 Up = (0, 1, 0);
+    public static readonly Vector3 Down = (0, -1, 0);
+    public static readonly Vector3 North = (0, 0, -1);
+    public static readonly Vector3 South = (0, 0, 1);
+    public static readonly Vector3 East = (1, 0, 0);
+    public static readonly Vector3 West = (-1, 0, 0);
+    
+    public static Vector3 operator +(Vector3 a, Vector3 b) => (a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+    public static Vector3 operator -(Vector3 a, Vector3 b) => (a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    public static Vector3 operator *(Vector3 a, Vector3 b) => (a.X * b.X, a.Y * b.Y, a.Z * b.Z);
 }
 
-public static class CoordinateExtensions {
+public static class Vector3Extensions {
     public static Vector3 AsLocal(this (double, double, double) tuple) {
         Vector3 vector3 = tuple;
         vector3.Space = Space.Local;
@@ -67,6 +88,8 @@ public static class CoordinateExtensions {
         vector3.Space = Space.World;
         return vector3;
     }
+
+    public static Vector3 Splat(this double value) => (value, value, value);
 }
 
 public enum Space {

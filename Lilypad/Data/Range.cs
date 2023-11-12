@@ -1,7 +1,17 @@
 ﻿namespace Lilypad; 
 
+/// <summary>
+/// A range of values.
+/// </summary>
 public struct Range<T> {
+    /// <summary>
+    /// The minimum value, null if there is none.
+    /// </summary>
     public T? Min;
+    
+    /// <summary>
+    /// The maximum value, null if there is none.
+    /// </summary>
     public T? Max;
 
     public Range(T? min, T? max) {
@@ -18,6 +28,4 @@ public struct Range<T> {
     
     public static implicit operator Range<T>(T? value) => new(value, value);
     public static implicit operator Range<T>((T? min, T? max) value) => new(value.min, value.max);
-    
-    public string Type => "uniform";
 }

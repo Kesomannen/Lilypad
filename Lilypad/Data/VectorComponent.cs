@@ -1,4 +1,6 @@
-﻿namespace Lilypad; 
+﻿using Lilypad.Helpers;
+
+namespace Lilypad; 
 
 public struct VectorComponent {
     public double Value;
@@ -10,6 +12,11 @@ public struct VectorComponent {
     }
     
     public static bool TryParse(string str, out VectorComponent component) {
+        if (string.IsNullOrEmpty(str)) {
+            component = default;
+            return false;
+        }
+        
         Space space;
         double value;
         
@@ -38,9 +45,9 @@ public struct VectorComponent {
 
     public override string ToString() {
         return Space switch {
-            Space.World => $"{Value:0.####}",
-            Space.Local => $"^{Value:0.####}",
-            Space.Relative => $"~{Value:0.####}",
+            Space.World => $"{Value:#.####}",
+            Space.Local => $"^{Value:#.####}",
+            Space.Relative => $"~{Value:#.####}",
             _ => throw new ArgumentOutOfRangeException(nameof(Space), Space, null)
         };
     }
@@ -52,5 +59,20 @@ public struct VectorComponent {
             throw new FormatException($"'{str}' is not a valid vector component.");
         }
         return component;
+    }
+    
+    public static VectorComponent operator +(VectorComponent a, VectorComponent b) {
+        Assert.IsTrue(a.Space == b.Space, "Cannot add components in different spaces.");
+        return new VectorComponent(a.Value + b.Value, a.Space);
+    }
+    
+    public static VectorComponent operator -(VectorComponent a, VectorComponent b) {
+        Assert.IsTrue(a.Space == b.Space, "Cannot subtract components in different spaces.");
+        return new VectorComponent(a.Value - b.Value, a.Space);
+    }
+    
+    public static VectorComponent operator *(VectorComponent a, VectorComponent b) {
+        Assert.IsTrue(a.Space == b.Space, "Cannot multiply components in different spaces.");
+        return new VectorComponent(a.Value * b.Value, a.Space);
     }
 }

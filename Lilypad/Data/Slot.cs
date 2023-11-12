@@ -1,10 +1,20 @@
 ﻿namespace Lilypad; 
 
+/// <summary>
+/// Represents a slot in an inventory.
+/// </summary>
 public readonly struct Slot {
+    /// <summary>
+    /// String identifier. Used in the <c>item</c> command.
+    /// </summary>
     public readonly string Id;
-    public readonly int Index;
     
-    public Slot(string id, int index = 0) {
+    /// <summary>
+    /// Numeric identifier. Used in NBT data.
+    /// </summary>
+    public readonly int Index;
+
+    Slot(string id, int index = 0) {
         Id = id;
         Index = index;
     }

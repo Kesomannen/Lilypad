@@ -81,7 +81,7 @@ public static class NBTSerializer {
                 return SerializeArray(longArray, prefix: "L");
 
             case NBTValueType.Json:
-                var richText = AssertType<RichText>();
+                var richText = AssertType<JsonText>();
                 return $"'{richText.ToString().Escape('\'')}'";
 
             case NBTValueType.Object:

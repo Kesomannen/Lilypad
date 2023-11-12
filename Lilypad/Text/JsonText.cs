@@ -1,25 +1,31 @@
 ﻿namespace Lilypad.Text; 
 
-public class RichText {
+public class JsonText {
     public TextTag? Content { get; set; }
     public List<TextTag> Formatting { get; set; } = new();
-    public List<RichText> Children { get; set; } = new();
+    public List<JsonText> Children { get; set; } = new();
     
-    public RichText() { }
+    public static readonly JsonText Empty = new();
+    
+    public JsonText() { }
 
-    public RichText(params RichText[] children) {
+    public JsonText(params JsonText[] children) {
         Children.AddRange(children);
     }
     
-    public RichText(string text) : this(("text", text)) { }
+    public JsonText(string text) : this(("text", text)) { }
 
-    public RichText(TextTag content, params TextTag[] formatting) {
+    public JsonText(TextTag content, params TextTag[] formatting) {
         Content = content;
         Formatting.AddRange(formatting);
     }
     
     object ToJson() {
         if (Content == null) {
+            if (Children.Count == 0) {
+                return string.Empty;
+            }
+            
             return GetChildJson();
         }
 
@@ -44,16 +50,16 @@ public class RichText {
         return Json.Serialize(ToJson());
     }
 
-    public static implicit operator RichText(string text) {
+    public static implicit operator JsonText(string text) {
         return Parse(text);
     }
     
-    public static RichText Parse(string text) {
-        var children = RichTextParser.Parse(text);
+    public static JsonText Parse(string text) {
+        var children = JsonTextParser.Parse(text);
         if (children.Count == 1) {
             return children[0];
         }
-        var result = new RichText();
+        var result = new JsonText();
         result.Children.AddRange(children);
         return result;
     }

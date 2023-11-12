@@ -14,11 +14,11 @@ public readonly struct DataVariable : IVariable {
     }
 
     public void Get(Function function) {
-        function.GetData(_source, _path, 1 / _scale);
+        function.GetData(_source, _path, _scale);
     }
 
     public ExecuteCommand Set(ExecuteCommand execute) {
-        return execute.Store(_source, _path, _type, _scale);
+        return execute.Store(_source, _path, _type, 1 / _scale);
     }
 
     public override string ToString() {

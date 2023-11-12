@@ -1,11 +1,10 @@
 ﻿using Lilypad.Helpers;
-using Lilypad;
 using Lilypad.Text;
 
 namespace Lilypad; 
 
 public class Objective : Resource {
-    public RichText? DisplayName { get; set; }
+    public JsonText? DisplayName { get; set; }
     public ObjectiveCriterion? Criterion { get; set; }
     public DisplaySlotArgument? DisplaySlot { get; set; }
     public EnumReference<ObjectiveRenderType>? RenderType { get; set; }
@@ -35,7 +34,7 @@ public class Objective : Resource {
         return $"{Namespace}_{Name}";
     }
     
-    public Objective SetDisplayName(RichText displayName) {
+    public Objective SetDisplayName(JsonText displayName) {
         DisplayName = displayName;
         return this;
     }
@@ -55,7 +54,7 @@ public class Objective : Resource {
         return this;
     }
 
-    public Function CreateRewardFunction(Argument<Range<int>> range, int resetValue, Action<Function> build) {
+    public Function CreateRewardFunction(Range<int> range, int resetValue, Action<Function> build) {
         return Datapack.Functions.Create(f => {
             var selector = Selector.All.Scores((this, range));
             f.Execute().As(selector).Run(g => {
@@ -66,6 +65,6 @@ public class Objective : Resource {
     }
 
     public Function CreateRewardFunction(Action<Function> build) {
-        return CreateRewardFunction("1..", 0, build);
+        return CreateRewardFunction((1, int.MaxValue), 0, build);
     }
 }

@@ -7,7 +7,7 @@ public readonly struct DataSource {
     public readonly object Target;
 
     public DataSource(string storageName, string? @namespace = null) {
-        @namespace ??= Datapack.DefaultNamespaceName;
+        @namespace ??= Datapack.DefaultDefaultNamespace;
         Type = DataSourceType.Storage;
         Target = $"{@namespace}:{storageName}";
     }

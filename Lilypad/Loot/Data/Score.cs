@@ -17,7 +17,7 @@ public class Score : NumberProvider {
         };
     }
 
-    public Score(string name, ContextEntity entity = ContextEntity.This) {
+    public Score(string name, LootContextEntity entity = LootContextEntity.This) {
         Name = name;
         Target = new ScoreTarget {
             Type = ScoreTargetType.Context,
@@ -30,7 +30,7 @@ public struct ScoreTarget {
     public ScoreTargetType Type;
     public string Uuid;
     [JsonProperty("target")]
-    public ContextEntity Entity;
+    public LootContextEntity Entity;
 }
 
 public enum ScoreTargetType {

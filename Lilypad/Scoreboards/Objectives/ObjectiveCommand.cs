@@ -21,7 +21,7 @@ public class ObjectiveCommand {
         return AddCommand($"objectives setdisplay {slot} {_objective}");
     }
     
-    public ObjectiveCommand SetDisplayName(RichText displayName) {
+    public ObjectiveCommand SetDisplayName(JsonText displayName) {
         return AddCommand($"objectives modify {_objective} displayname {displayName}");
     }
     

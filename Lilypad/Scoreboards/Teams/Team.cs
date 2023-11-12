@@ -5,12 +5,12 @@ namespace Lilypad;
 
 public class Team {
     public string Name { get; }
-    public RichText DisplayName { get; }
+    public JsonText DisplayName { get; }
     
     public Team(
         Datapack datapack,
         string? name = null,
-        RichText? displayName = null
+        JsonText? displayName = null
     ) {
         Name = name ?? Names.Get("scoreboard");
         DisplayName = displayName ?? Name;

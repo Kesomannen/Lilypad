@@ -6,17 +6,17 @@ public class Display {
     public Icon Icon;
     public EnumReference<Frame>? Frame;
     
-    public RichText Title;
-    public RichText Description;
+    public JsonText Title;
+    public JsonText Description;
 
     public bool? ShowToast;
     public bool? AnnounceToChat;
     public bool? Hidden;
 
-    public Display(RichText title, RichText description, EnumReference<Item> icon) 
+    public Display(JsonText title, JsonText description, EnumReference<Item> icon) 
         : this(title, description, new Icon { Item = icon }) { }
     
-    public Display(RichText title, RichText description, Icon icon) {
+    public Display(JsonText title, JsonText description, Icon icon) {
         Title = title;
         Description = description;
         Icon = icon;

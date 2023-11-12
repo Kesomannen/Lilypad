@@ -9,15 +9,24 @@ public static class VariableFunctionExtensions {
     }
     
     public static Function SetVariable(this Function function, IVariable variable, IVariable value) {
-        if (variable is not ScoreVariable scoreVariable || value is not ScoreVariable scoreValue)
-            return function.SetVariable(variable, value.Get);
-        
-        function.Scoreboard(scoreVariable.Objective)
-            .Operation(scoreVariable.Selector, "assign", scoreValue.Selector, scoreValue.Objective);
-        return function;
+        if (variable is ScoreVariable scoreVariable && value is ScoreVariable scoreValue) {
+            function.Scoreboard(scoreVariable.Objective)
+                .Operation(scoreVariable.Selector, "assign", scoreValue.Selector, scoreValue.Objective);
+            
+            return function;
+        }
+
+        return function.SetVariable(variable, value.Get);
     }
     
     public static Function SetVariable(this Function function, IVariable variable, int value) {
+        if (variable is ScoreVariable scoreVariable) {
+            function.Scoreboard(scoreVariable.Objective)
+                .Operation(scoreVariable.Selector, "assign", value);
+            
+            return function;
+        }
+        
         return function.SetVariable(variable, Constants.Get(function.Datapack, value));
     }
     
@@ -33,8 +42,8 @@ public static class VariableFunctionExtensions {
             return function;
         }
         
-        var temp1 = Temp.Get(function.Datapack, "#op0");
-        var temp2 = Temp.Get(function.Datapack, "#op1");
+        var temp1 = Temp.Get(function, "#op0");
+        var temp2 = Temp.Get(function, "#op1");
         function.SetVariable(temp1, variable);
         function.SetVariable(temp2, value);
         function.Scoreboard(temp1.Objective)
@@ -48,6 +57,6 @@ public static class VariableFunctionExtensions {
         EnumReference<Operation> operation,
         int value
     ) {
-        return function.Operation(variable, operation, Constants.Get(function.Datapack, value));
+        return function.Operation(variable, operation, Constants.Get(function, value));
     }
 }

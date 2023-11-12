@@ -1,4 +1,4 @@
-﻿namespace Lilypad; 
+﻿namespace Lilypad.Text; 
 
 public enum TextStyle {
     Bold,

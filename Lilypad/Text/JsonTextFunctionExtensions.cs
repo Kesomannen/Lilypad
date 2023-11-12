@@ -1,11 +1,11 @@
 ﻿namespace Lilypad.Text; 
 
-public static class RichTextFunctionExtensions {
-    public static Function Tellraw(this Function function, Argument<Selector> selector, RichText message) {
+public static class JsonTextFunctionExtensions {
+    public static Function Tellraw(this Function function, Argument<Selector> selector, JsonText message) {
         return function.Add($"tellraw {selector} {message}");
     }
     
-    public static Function Tellraw(this Function function, RichText message) {
+    public static Function Tellraw(this Function function, JsonText message) {
         return function.Tellraw(Selector.Self, message);
     }
     
@@ -17,11 +17,11 @@ public static class RichTextFunctionExtensions {
         return function.Add($"title {selector} reset");
     }
 
-    public static Function Title(this Function function, Argument<Selector> selector, EnumReference<TitleType> type, RichText message) {
+    public static Function Title(this Function function, Argument<Selector> selector, EnumReference<TitleType> type, JsonText message) {
         return function.Add($"title {selector} {type} {message}");
     }
     
-    public static Function Title(this Function function, Argument<Selector> selector, RichText title, RichText subtitle) {
+    public static Function Title(this Function function, Argument<Selector> selector, JsonText title, JsonText subtitle) {
         function.Title(selector, TitleType.Title, title);
         return function.Title(selector, TitleType.Subtitle, subtitle);
     }

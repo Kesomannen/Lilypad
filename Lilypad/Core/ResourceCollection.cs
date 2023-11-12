@@ -1,23 +1,44 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Lilypad.Helpers;
 
 namespace Lilypad; 
 
+/// <summary>
+/// Represents a directory of resources in a <see cref="Datapack"/>.
+/// </summary>
 public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     readonly Datapack _datapack;
     readonly List<T> _values = new();
     
+    /// <summary>
+    /// Resources in this collection.
+    /// </summary>
     public IReadOnlyList<T> Values => _values;
     
     internal ResourceCollection(Datapack datapack) {
         _datapack = datapack;
     }
 
+    /// <summary>
+    /// Creates and adds a new resource to this collection.
+    /// </summary>
+    /// <param name="name">Must be unique within the namespace. Defaults to an auto-generated name.</param>
+    /// <param name="namespace">Defaults to the datapack's default namespace.</param>
+    /// <returns>The created resource.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if <typeparamref name="T"/> is abstract.</exception>
+    /// <exception cref="Exception">Thrown if the resource could not be created for an unknown reason.</exception>
     public T Create(string? name = null, string? @namespace = null) {
+        if (typeof(T).IsAbstract) {
+            throw new InvalidOperationException($"Cannot create resource of abstract type {typeof(T)}");
+        }
+        
         name ??= Names.Get<T>();
         @namespace ??= _datapack.DefaultNamespace;
-
+        
+        Assert.IsFalse(_values.Any(value => value.Name == name), $"Resource with name {name} already exists in namespace {@namespace}");
+        
         var instance = Activator.CreateInstance(
             typeof(T),
             BindingFlags.NonPublic | BindingFlags.Instance, 
@@ -33,18 +54,36 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
         return resource;
     }
     
+    /// <summary>
+    /// Tries to get a resource with the given name.
+    /// </summary>
     public bool TryGet(string name, [NotNullWhen(true)] out T? value) {
         return (value = Get(name)) is not null;
     }
     
+    /// <summary>
+    /// Gets a resource with the given name, or null if it doesn't exist.
+    /// </summary>
     public T? Get(string name) {
         return _values.FirstOrDefault(x => x.Name == name);
     }
     
+    /// <summary>
+    /// Gets a resource or creates it if it doesn't exist.
+    /// </summary>
+    /// <param name="name">The name of the resource.</param>
+    /// <param name="namespace">
+    /// Defaults to the datapack's default namespace.
+    /// The resource isn't required to be in this namespace, but will be created here if needed.
+    /// </param>
     public T GetOrCreate(string name, string? @namespace = null) {
         return TryGet(name, out var value) ? value : Create(name, @namespace);
     }
     
+    /// <summary>
+    /// Removes a resource from this collection.
+    /// </summary>
+    /// <returns>True if the resource was found and removed.</returns>
     public bool Remove(T value) {
         return _values.Remove(value);
     }
@@ -54,6 +93,8 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
 }
 
 public static class ResourceCollectionExtensions {
+    /// <param name="build">Is immediately called on the created function.</param>
+    /// <inheritdoc cref="ResourceCollection{T}.Create"/>
     public static Function Create(
         this ResourceCollection<Function> collection,
         string? name,
@@ -65,6 +106,7 @@ public static class ResourceCollectionExtensions {
         return function;
     }
     
+    /// <inheritdoc cref="Create(ResourceCollection{Function},string,System.Action{Function},string)"/>
     public static Function Create(
         this ResourceCollection<Function> collection,
         Action<Function> build,
@@ -73,6 +115,11 @@ public static class ResourceCollectionExtensions {
         return collection.Create(null, build, @namespace);
     }
 
+    /// <summary>
+    /// Adds some data to this collection, wrapped in a <see cref="DataResource{T}"/>.
+    /// Use instead of <see cref="ResourceCollection{T}.Create"/> for data resources.
+    /// </summary>
+    /// <inheritdoc cref="ResourceCollection{T}.Create"/>
     public static DataResource<T> Add<T>(
         this ResourceCollection<DataResource<T>> collection, 
         T data, 

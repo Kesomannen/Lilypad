@@ -1,13 +1,18 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Lilypad.Extensions;
+using Newtonsoft.Json.Linq;
 
 namespace Lilypad; 
 
-internal static class Transpiler {
+public static class Transpiler {
     static Datapack _datapack = null!;
     static TranspilationOptions _options;
     
     static string Root => _options.OutputPath;
     
+    /// <summary>
+    /// Transpiles the given datapack to disk with the given options.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if <see cref="TranspilationOptions.Overwrite"/> is set to false and the target directory already exists.</exception>
     public static void Transpile(Datapack datapack, in TranspilationOptions options) {
         _datapack = datapack;
         _options = options;
@@ -17,7 +22,7 @@ internal static class Transpiler {
                 Console.WriteLine($"Overwriting {Root}");
                 Directory.Delete(Root, true);
             } else {
-                throw new Exception($"Directory {Root} already exists. Enable overwrite to delete it.");
+                throw new InvalidOperationException($"Directory {Root} already exists. Enable overwrite to delete it.");
             }
         }
         Directory.CreateDirectory(Root);
@@ -47,7 +52,7 @@ internal static class Transpiler {
         var pack = new JObject {
             ["pack"] = new JObject {
                 ["pack_format"] = _datapack.PackFormat,
-                ["description"] = _datapack.Description
+                ["description"] = _datapack.Description.ToString().Escape('"')
             }
         };
         

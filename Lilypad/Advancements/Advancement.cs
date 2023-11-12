@@ -1,4 +1,6 @@
-﻿namespace Lilypad;
+﻿using Newtonsoft.Json;
+
+namespace Lilypad;
 
 public class Advancement : Resource {
     public string[][]? Requirements;
@@ -8,6 +10,7 @@ public class Advancement : Resource {
 
     public Rewards Rewards = new();
     
+    [JsonProperty("criteria")]
     Dictionary<string, Criterion> Criteria { get; } = new();
     
     internal Advancement(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
@@ -33,6 +36,10 @@ public class Advancement : Resource {
             f.Advancement("revoke").Only(this);
             build(f);
         });
+    }
+    
+    public Function OnComplete(Function function) {
+        return OnComplete(f => f.Call(function));
     }
     
     public Advancement AddCriteria(params Criterion[] criteria) {

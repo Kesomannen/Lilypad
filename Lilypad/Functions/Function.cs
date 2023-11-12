@@ -6,6 +6,9 @@ public class Function : Resource {
     
     bool _isGenerating;
         
+    public IEnumerable<string> Commands => ToString().Split("\n")
+        .Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#"));
+    
     internal Function(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
     
     public Function Add(CommandGenerator generator) {

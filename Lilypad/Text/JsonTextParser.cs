@@ -1,9 +1,9 @@
 ﻿namespace Lilypad.Text; 
 
-public static class RichTextParser {
+public static class JsonTextParser {
     static int _index;
     
-    static List<RichText> _result = null!;
+    static List<JsonText> _result = null!;
 
     static string _rawText = "";
     static string _input = null!;
@@ -13,7 +13,7 @@ public static class RichTextParser {
     static readonly List<FormatParser> _formatParsers;
     static readonly List<ContentParser> _contentParsers;
     
-    static RichTextParser() {
+    static JsonTextParser() {
         _formatParsers = new List<FormatParser> {
             new ColorParser(),
             new InsertionParser(),
@@ -33,7 +33,7 @@ public static class RichTextParser {
     
     static void Reset() {
         _index = 0;
-        _result = new List<RichText>();
+        _result = new List<JsonText>();
         _rawText = "";
         
         foreach (var tagParser in _formatParsers) {
@@ -41,7 +41,7 @@ public static class RichTextParser {
         }
     }
     
-    public static List<RichText> Parse(string input) {
+    public static List<JsonText> Parse(string input) {
         Reset();
         _input = input;
         
@@ -125,7 +125,7 @@ public static class RichTextParser {
     }
     
     static void AddComponent(TextTag content, IEnumerable<TextTag>? extraFormats = null) {
-        var text = new RichText {
+        var text = new JsonText {
             Content = content,
         };
 
