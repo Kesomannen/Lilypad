@@ -1,14 +1,23 @@
-﻿using Lilypad;
+﻿namespace Lilypad; 
 
-namespace Lilypad; 
-
+/// <summary>
+/// Builder for execute commands.
+/// </summary>
+/// <remarks>
+/// Is not automatically added ("generated") to its owner function,
+/// unless <see cref="Run(Lilypad.Function)"/> or <see cref="ExecuteCommand.RunStore"/> is called.
+/// <br/><br/>When you don't call one of those, for example when storing the result of an if condition,
+/// simply call <see cref="ExecuteCommand.Generate"/> to add the command automatically.
+/// </remarks>
 public class ExecuteCommand {
     readonly List<string> _subCommands = new();
-    
-    public Function Function { get; }
+    readonly Function _function;
 
+    /// <summary>
+    /// Creates a new execute command builder in the function.
+    /// </summary>
     public ExecuteCommand(Function function) {
-        Function = function;
+        _function = function;
     }
     
     ExecuteCommand AddSubCommand(string str) {
@@ -16,15 +25,34 @@ public class ExecuteCommand {
         return this;
     }
 
+    /// <summary>
+    /// Generates the string representation of the command and adds it the owner function.
+    /// </summary>
+    /// <remarks>Don't use this builder after generation.</remarks>
     public void Generate() {
-        Function.Add($"execute {string.Join(" ", _subCommands)}");
+        _function.Add($"execute {string.Join(" ", _subCommands)}");
     }
     
+    /// <summary>
+    /// Finalizes the execute command by calling another function.
+    /// </summary>
+    /// <remarks>Generates the command. Don't use this builder after generation.</remarks>
     public void Run(Function function) {
         AddSubCommand($"run function {function.Location}");
         Generate();
     }
     
+    /// <summary>
+    /// Finalizes the execute command by calling a number of commands.
+    /// </summary>
+    /// <param name="build">
+    /// Action that generates the command(s) to run. Called immediately on a dummy function.
+    /// <br/><br/>If the dummy function contains only one command after generation, it is inlined and the function deleted.
+    /// Otherwise the dummy is kept and a call is generated.
+    /// </param>
+    /// <remarks>
+    /// Generates the command. Don't use this builder after generation.
+    /// </remarks>
     public void Run(Action<Function> build) {
         var function = GetFunction(build);
         function.Generate();
@@ -39,6 +67,17 @@ public class ExecuteCommand {
         }
     }
 
+    /// <summary>
+    /// Finalizes the execute command by calling a command that returns some value to store.
+    /// </summary>
+    /// <param name="build">
+    /// Action that generates the command to run. Called immediately on a temporary function.
+    /// </param>
+    /// <remarks>
+    /// Generates the command. Don't use this builder after generation.
+    /// </remarks>
+    /// <exception cref="Exception">Thrown if the dummy function does not contain exactly one command after generation.</exception>
+    /// <seealso cref="Store(Lilypad.DataSource,Lilypad.NBTPath,Lilypad.EnumReference{Lilypad.StoreDataType},double,bool)"/>
     public void RunStore(Action<Function> build) {
         var function = GetFunction(build);
         function.Generate();
@@ -58,9 +97,9 @@ public class ExecuteCommand {
     }
     
     Function GetFunction(Action<Function> build) {
-        var name = Names.Get($"{Function.Name}/execute/");
-        return Function.Datapack.Functions
-            .Create(name, build, Function.Namespace);
+        var name = Names.Get($"{_function.Name}/execute/");
+        return _function.Datapack.Functions
+            .Create(name, build, _function.Namespace);
     }
     
     public ExecuteCommand As(Argument<Selector> selector) {

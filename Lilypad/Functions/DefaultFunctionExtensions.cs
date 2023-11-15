@@ -1,21 +1,58 @@
 ﻿using Lilypad.Extensions;
 using Lilypad;
+using Lilypad.Helpers;
 
 namespace Lilypad; 
 
+/// <summary>
+/// Provides function extension methods for common minecraft commands.
+/// </summary>
 public static class DefaultFunctionExtensions {
+    /// <summary>
+    /// Creates a new execute command in the function.
+    /// </summary>
+    /// <seealso cref="ExecuteCommand"/>
     public static ExecuteCommand Execute(this Function function) {
         return new ExecuteCommand(function);
     }
     
+    /// <summary>
+    /// Creates a new if-branch in the function.
+    /// </summary>
+    /// <param name="conditions">All of these have to pass for the branch to execute.</param>
+    /// <param name="build">Builder function for the created branch. Will be executed immediately.</param>
+    /// <returns>The created <see cref="IfElse"/> instance, which can be used for more advanced branching.</returns>
     public static IfElse If(this Function function, Condition[] conditions, Action<Function> build) {
         return new IfElse(function, conditions, build);
     }
     
+    /// <summary>
+    /// Creates a new if-branch in the function.
+    /// </summary>
+    /// <param name="condition">Has to pass for the branch to execute</param>
+    /// <param name="build">Builder function for the created branch. Will be executed immediately.</param>
+    /// <returns>The created <see cref="IfElse"/> instance, which can be used for more advanced branching.</returns>
     public static IfElse If(this Function function, Condition condition, Action<Function> build) {
         return function.If(new[] { condition }, build);
     }
 
+    /// <summary>
+    /// Gives an effect.
+    /// </summary>
+    /// <param name="selector">Specifies the target(s).</param>
+    /// <param name="effect">Specifies the effect to be added.</param>
+    /// <param name="seconds">
+    /// Defaults to infinity.
+    /// Specifies the effect's duration in seconds (or in gameticks for instant_damage, instant_health, and saturation).
+    /// Must be between 0 and 1000000 (inclusive).
+    /// </param>
+    /// <param name="amplifier">
+    /// Specifies the number of additional levels to add to the effect.
+    /// Note that the first tier of a status effect (e.g. Regeneration I) is 0.
+    /// </param>
+    /// <param name="invisible">
+    /// Specifies whether the particles and the HUD indicator of the effect should be hidden.
+    /// </param>
     public static Function Effect(
         this Function function,
         Argument<Selector> selector,
@@ -24,9 +61,22 @@ public static class DefaultFunctionExtensions {
         byte amplifier,
         bool invisible = true
     ) {
+        Assert.IsTrue(seconds is >= 0 and <= 1000000, "Effect duration must be between 0 and 1000000 (inclusive).");
         return function.Add($"effect give {selector} {effect} {seconds} {amplifier} {invisible.ToString().ToLower()}");
     }
     
+    /// <summary>
+    /// Gives an infinite effect.
+    /// </summary>
+    /// <param name="selector">Specifies the target(s).</param>
+    /// <param name="effect">Specifies the effect to be added.</param>
+    /// <param name="amplifier">
+    /// Specifies the number of additional levels to add to the effect.
+    /// Note that the first tier of a status effect (e.g. Regeneration I) is 0.
+    /// </param>
+    /// <param name="invisible">
+    /// Specifies whether the particles and the HUD indicator of the effect should be hidden.
+    /// </param>
     public static Function Effect(
         this Function function, 
         Argument<Selector> selector,
@@ -37,6 +87,10 @@ public static class DefaultFunctionExtensions {
         return function.Add($"effect give {selector} {effect} infinite {amplifier} {invisible.ToString().ToLower()}");
     }
     
+    /// <summary>
+    /// Clears effect(s).
+    /// </summary>
+    /// <param name="effect">The effect to clear. If left unset, clears all effects.</param>
     public static Function ClearEffect(this Function function, Argument<Selector> selector, EnumReference<Effect>? effect = null) {
         return function.Add($"effect clear {selector} {effect.ToStringOrEmpty()}");
     }

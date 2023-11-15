@@ -9,6 +9,7 @@ namespace Lilypad;
 /// Formats its value as snake_case when turned into a string.
 /// Used instead of a normal enum when referencing minecraft objects.
 /// </remarks>
+/// <seealso cref="Reference{T}"/>
 public readonly struct EnumReference<T> : ISerializeInner where T : struct, Enum {
     public T Value { get; }
 

@@ -16,7 +16,7 @@ public static class TreeGenerator {
         Assert.IsTrue(range.Max > range.Min, "Min must be less than or equal to max");
         Assert.IsTrue(branches >= 2, "Branches must be greater than or equal to 2");
         
-        var score = function.CopyToScore(variable, "#tree");
+        var score = function.CopyTemp(variable, "#tree");
         function.If(Condition.Score(score, range), f => {
             f.Call(GenerateBranch(function, score, range, branches, build));
         }).Else(f => {

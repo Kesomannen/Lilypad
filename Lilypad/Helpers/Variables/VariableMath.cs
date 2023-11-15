@@ -131,8 +131,7 @@ public static class VariableMath {
             while (
                 index < expression.Length && 
                 !char.IsWhiteSpace(expression[index]) &&
-                expression[index] != '(' &&
-                expression[index] != ')'
+                !_operations.ContainsKey(expression[index])
             ) {
                 index++;
             }

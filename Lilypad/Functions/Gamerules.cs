@@ -3,6 +3,10 @@ using Lilypad.Helpers;
 
 namespace Lilypad; 
 
+/// <summary>
+/// Utility class for setting gamerules.
+/// Run <see cref="Generate"/> to generate the gamerule commands in a datapack.
+/// </summary>
 public class Gamerules {
     public bool? AnnounceAdvancements;
     public bool? BlockExplosionDropDecay;
@@ -52,6 +56,9 @@ public class Gamerules {
     public bool? UniversalAnger;
     public bool? WaterSourceConversion;
 
+    /// <summary>
+    /// Generates the gamerule commands in the install function of a datapack.
+    /// </summary>
     public void Generate(Datapack datapack) {
         var install = datapack.GetInstallFunction();
         
