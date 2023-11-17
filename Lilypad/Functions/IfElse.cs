@@ -6,11 +6,11 @@
 /// <example>
 /// <code>
 /// function.If(Condition.Biome("jungle"), f => {
-///     say("You are in a jungle!");
-/// }).IfElse(Condition.Biome("desert"), f => {
-///     say("You are in a desert!");
+///     f.Say("You are in a jungle!");
+/// }).ElseIf(Condition.Biome("desert"), f => {
+///     f.Say("You are in a desert!");
 /// }).Else(f => {
-///     say("You are somewhere else!");
+///     f.Say("You are somewhere else!");
 /// });
 /// </code>
 /// </example>
