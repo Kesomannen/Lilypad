@@ -29,8 +29,8 @@ public static class Transpiler {
         
         WriteMetadata();
         
-        for (var i = 0; i < _datapack.Functions.Values.Count; i++) {
-            var function = _datapack.Functions.Values[i];
+        for (var i = 0; i < _datapack.Functions.Members.Count; i++) {
+            var function = _datapack.Functions.Members[i];
             function.Generate();
         }
         WriteResources(_datapack.Functions, "functions", "mcfunction");
