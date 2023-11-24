@@ -33,7 +33,7 @@ public static class Transpiler {
             var function = _datapack.Functions.Members[i];
             function.Generate();
         }
-        WriteResources(_datapack.Functions, "functions", "mcfunction");
+        WriteResources(_datapack.Functions, "functions", "mcfunction", f => f.GetContent());
         
         WriteResourcesJson(_datapack.Advancements, "advancements");
         WriteResourcesJson(_datapack.Recipes, "recipes");

@@ -1,7 +1,8 @@
 ﻿namespace Lilypad; 
 
 /// <summary>
-/// Represents a 128-bit UUID.
+/// Represents a 128-bit UUID. Used in minecraft for identifying entities,
+/// usually formatted like <c>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</c>.
 /// </summary>
 public struct Uuid {
     /// <summary>

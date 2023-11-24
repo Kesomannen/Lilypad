@@ -1,9 +1,10 @@
 ﻿using Lilypad.Helpers;
-using Lilypad;
 
 namespace Lilypad.Examples; 
 
 public class ParkourGame : DatapackBuilder {
+    protected override string DefaultNamespace => "parkour";
+
     protected override void Build() {
         ExampleUtil.SetHelpMessage(Datapack, Example.ParkourGame,
             "<yellow>Stepping on different colors of concrete gives you different effects!</yellow>\n \n" +

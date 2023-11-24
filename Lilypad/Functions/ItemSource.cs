@@ -28,6 +28,7 @@ public readonly struct ItemSource {
     
     public static ItemSource Block(Vector3 position) => new(position);
     public static ItemSource Entity(Argument<Selector> selector) => new(selector);
+    public static ItemSource Executor => Entity("@s");
 }
 
 public enum ItemSourceType {

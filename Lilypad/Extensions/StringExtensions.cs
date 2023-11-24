@@ -1,6 +1,6 @@
 ﻿namespace Lilypad.Extensions; 
 
-internal static class StringExtensions {
+public static class StringExtensions {
     public static string ToCamelCase(this string text) {
         return string.Concat(text.Split('_').Select(word => char.ToUpper(word[0]) + word[1..]));
     }

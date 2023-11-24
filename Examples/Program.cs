@@ -3,7 +3,8 @@ using Lilypad;
 using Lilypad.Helpers;
 
 var examples = new Dictionary<Example, DatapackBuilder> {
-    { Example.ParkourGame, new ParkourGame() }
+    { Example.ParkourGame, new ParkourGame() },
+    { Example.MachineGun, new MachineGun() }
 };
 
 var foundPath = ExampleUtil.TryFindMinecraftDirectory(out var minecraftPath);
@@ -33,12 +34,14 @@ var example = ExampleUtil.ChoiceInput("Choose an example to add", examples.Keys.
 
 var options = new TranspilationOptions {
     OutputPath = Path.Join(savesPath, world, "datapacks", $"Lilypad Example ({example})"),
-    Overwrite = true
+    Overwrite = true,
+    PrettyPrint = true
 };
 examples[example].Create(options);
 
 Console.WriteLine("Datapack added! Run '/reload' in the world to load the datapack");
 
 internal enum Example {
-    ParkourGame
+    ParkourGame,
+    MachineGun
 }

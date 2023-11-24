@@ -65,7 +65,7 @@ public static class Sounds {
         public string Step => $"entity.{_name}.step";
     }
 
-    public static class NoteBlock {
+    public static class Noteblock {
         public static readonly string Banjo = "block.note_block.banjo";
         public static readonly string Basedrum = "block.note_block.basedrum";
         public static readonly string Bass = "block.note_block.bass";

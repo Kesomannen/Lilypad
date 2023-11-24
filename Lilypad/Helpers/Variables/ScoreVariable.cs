@@ -18,6 +18,6 @@ public readonly struct ScoreVariable : IVariable {
     }
     
     public override string ToString() {
-        return $"Variable-Score-{Objective}-{Selector}".Replace(" ", "$");
+        return IVariable.GetName("Variable", "Score", Objective, Selector);
     }
 }

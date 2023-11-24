@@ -1,8 +1,11 @@
 ﻿namespace Lilypad.Text; 
 
-public struct TextTag {
-    public string Name;
-    public object Value;
+/// <summary>
+/// A tag in a JSON text component.
+/// </summary>
+public readonly struct TextTag {
+    public readonly string Name;
+    public readonly object Value;
     
     public TextTag(string name, object value) {
         Name = name;

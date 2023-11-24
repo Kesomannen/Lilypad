@@ -1,17 +1,8 @@
-﻿using System.Collections;
-using Newtonsoft.Json;
+﻿namespace Lilypad;
 
-namespace Lilypad;
-
-[JsonConverter(typeof(JsonConverter))]
-public class NBTCompound : IEnumerable<KeyValuePair<string, NBTValue>> {
-    readonly Dictionary<string, NBTValue> _pairs = new();
+public class NBTCompound : Dictionary<string, object?>, ISerializeInner {
+    public static readonly NBTCompound Empty = new();
     
-    public NBTValue this[string name] {
-        get => _pairs[name];
-        set => _pairs[name] = value;
-    }
-
     public string Serialize() {
         return NBTSerializer.Serialize(this);
     }
@@ -20,15 +11,7 @@ public class NBTCompound : IEnumerable<KeyValuePair<string, NBTValue>> {
         return Serialize();
     }
 
-    public IEnumerator<KeyValuePair<string, NBTValue>> GetEnumerator() {
-        return _pairs.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-        return GetEnumerator();
-    }
-    
-    public static NBTCompound From(params (string, NBTValue)[] pairs) {
+    public static NBTCompound From(params (string, object?)[] pairs) {
         var compound = new NBTCompound();
         foreach (var (key, value) in pairs) {
             compound[key] = value;
@@ -47,13 +30,8 @@ public class NBTCompound : IEnumerable<KeyValuePair<string, NBTValue>> {
         return compound;
     }
     
-    public static implicit operator NBTCompound((string, NBTValue)[] pairs) => From(pairs);
-    public static implicit operator NBTCompound((string, NBTValue) pair) => From(pair);
-    
-    
-    class JsonConverter : WriteOnlyConverter<NBTCompound> {
-        protected override void WriteJson(JsonWriter writer, NBTCompound value, JsonSerializer serializer) {
-            writer.WriteValue(value.ToString().Replace("\"", "\\\""));
-        }
-    }
+    public static implicit operator NBTCompound((string, object?)[] pairs) => From(pairs);
+    public static implicit operator NBTCompound((string, object?) pair) => From(pair);
+
+    public object? SerializedData => Serialize();
 }

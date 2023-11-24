@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lilypad.ItemModifiers;
+using Newtonsoft.Json;
 
 namespace Lilypad; 
 

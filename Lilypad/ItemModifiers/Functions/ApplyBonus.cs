@@ -1,4 +1,4 @@
-﻿namespace Lilypad; 
+﻿namespace Lilypad.ItemModifiers; 
 
 /// <summary>
 /// Applies a predefined bonus formula to the count of the item stack. 
@@ -6,11 +6,11 @@
 public class ApplyBonus : ItemFunction {
     public EnumReference<Enchantment> Enchantment;
     public EnumReference<BonusFormula> Formula;
-    public Dictionary<string, object> Parameters = new();
+    public Dictionary<string, object>? Parameters;
 
     public static ApplyBonus BinomialWithBonusCount(int extra, float probability) => new() {
         Formula = BonusFormula.BinomialWithBonusCount,
-        Parameters = {
+        Parameters = new() {
             ["extra"] = extra,
             ["probability"] = probability
         }
@@ -18,7 +18,7 @@ public class ApplyBonus : ItemFunction {
     
     public static ApplyBonus UniformBonusCount(int extra) => new() {
         Formula = BonusFormula.UniformBonusCount,
-        Parameters = {
+        Parameters = new() {
             ["extra"] = extra
         }
     };

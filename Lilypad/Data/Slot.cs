@@ -21,6 +21,8 @@ public readonly struct Slot {
     
     public override string ToString() => Id;
 
+    public static Slot Mainhand => Weapon.Mainhand;
+    
     public static class Armor {
         public static readonly Slot Chest = new("armor.chest", 102);
         public static readonly Slot Feet = new("armor.feet", 100);
@@ -29,7 +31,7 @@ public readonly struct Slot {
     }
 
     public static class Weapon {
-        public static readonly Slot MainHand = new("weapon.mainhand", 0);
+        public static readonly Slot Mainhand = new("weapon.mainhand", 0);
         public static readonly Slot OffHand = new("weapon.offhand", -106);
     }
     

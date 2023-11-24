@@ -70,9 +70,9 @@ internal static class ExampleUtil {
         datapack.Functions.Create(f => {
             f.Tellraw("@a",
                 $"<green>Lilypad </green>| Example <yellow>{example}</yellow> loaded! " +
-                  $"<u><run {helperFunction.Location}>Click here</u></run> " +
-                  $"or run <i>'/function {helperFunction.Location}'</i> for more information."
+                $"<u><run {helperFunction}>Click here</u></run> " +
+                $"or run <i>'/function {helperFunction}'</i> for more information."
             );
-        });
+        }).SetLoad();
     }
 }

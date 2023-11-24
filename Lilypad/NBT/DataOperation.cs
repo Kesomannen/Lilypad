@@ -3,14 +3,14 @@
 namespace Lilypad; 
 
 public readonly struct DataOperation {
-    readonly EnumReference<DataOperationType> _operationType;
-    readonly EnumReference<DataOperationSourceType> _sourceType;
+    public readonly EnumReference<DataOperationType> OperationType;
+    public readonly EnumReference<DataOperationSourceType> SourceType;
     
-    readonly DataSource? _source;
-    readonly NBTPath? _sourcePath;
-    readonly NBTValue? _value;
+    public readonly DataSource? Source;
+    public readonly NBTPath? SourcePath;
+    public readonly object? NBTValue;
 
-    readonly int? _index;
+    public readonly int? Index;
     
     static readonly StringBuilder _builder = new();
     
@@ -20,30 +20,30 @@ public readonly struct DataOperation {
         NBTPath? sourcePath = null, 
         int? index = null
     ) {
-        _operationType = operation;
-        _source = source;
-        _sourcePath = sourcePath;
-        _index = index;
-        _sourceType = DataOperationSourceType.From;
+        OperationType = operation;
+        Source = source;
+        SourcePath = sourcePath;
+        Index = index;
+        SourceType = DataOperationSourceType.From;
         
         CheckInsertIndex();
     }
     
     public DataOperation(
         EnumReference<DataOperationType> operation, 
-        NBTValue value, 
+        object value, 
         int? index = null
     ) {
-        _operationType = operation;
-        _value = value;
-        _index = index;
-        _sourceType = DataOperationSourceType.Value;
+        OperationType = operation;
+        NBTValue = value;
+        Index = index;
+        SourceType = DataOperationSourceType.Value;
         
         CheckInsertIndex();
     }
 
     void CheckInsertIndex() {
-        if (_operationType == DataOperationType.Insert && !_index.HasValue) {
+        if (OperationType == DataOperationType.Insert && !Index.HasValue) {
             throw new InvalidOperationException("Insert operations require an index.");
         }
     }
@@ -51,19 +51,19 @@ public readonly struct DataOperation {
     public override string ToString() {
         _builder.Clear();
        
-        Append(_operationType);
-        if (_operationType == DataOperationType.Insert) {
-            Append(_index!);
+        Append(OperationType);
+        if (OperationType == DataOperationType.Insert) {
+            Append(Index!);
         }
         
-        Append(_sourceType);
-        if (_sourceType == DataOperationSourceType.Value) {
-            Append(_value!);
+        Append(SourceType);
+        if (SourceType == DataOperationSourceType.Value) {
+            Append(NBTValue!);
         } else {
-            Append(_source!);
+            Append(Source!);
             
-            if (_sourcePath is not null) {
-                Append(_sourcePath!);
+            if (SourcePath is not null) {
+                Append(SourcePath!);
             }
         }
         
@@ -75,7 +75,7 @@ public readonly struct DataOperation {
         }
     }
     
-    public static DataOperation Value(EnumReference<DataOperationType> operation, NBTValue value, int? index = null) {
+    public static DataOperation Value(EnumReference<DataOperationType> operation, object value, int? index = null) {
         return new DataOperation(operation, value, index);
     }
     

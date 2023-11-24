@@ -1,5 +1,24 @@
 ﻿namespace Lilypad.Text; 
 
+/// <summary>
+/// Parses a string into a list of <see cref="JsonText"/>s.
+/// Supports HTML-style tags to apply formatting and add content.
+/// Can be used through the implicit conversion from string in <see cref="JsonText"/>.
+///
+/// <br/><br/>Supported formatting tags:
+/// <list type="bullet">
+///     <item><description><c>&lt;bold&gt;</c> or <c>&lt;b&gt;</c></description></item>
+///     <item><description><c>&lt;italic&gt;</c> or <c>&lt;i&gt;</c></description></item>
+///    <item><description><c>&lt;underlined&gt;</c> or <c>&lt;u&gt;</c></description></item>
+///     <item><description><c>&lt;strikethrough&gt;</c> or <c>&lt;s&gt;</c></description></item>
+///     <item><description><c>&lt;obfuscated&gt;</c> or <c>&lt;o&gt;</c></description></item>
+///     <item><description>
+///         <c>&lt;color [color]&gt;</c>
+///         <br/>Where <c>[color]</c> is a <see cref="TextColor"/> in <c>snake_case</c>.
+///     </description></item>
+///     <item><description><c>&lt;color #RRGGBB&gt;</c></description></item>
+/// </list>
+/// </summary>
 public static class JsonTextParser {
     static int _index;
     
@@ -17,7 +36,8 @@ public static class JsonTextParser {
         _formatParsers = new List<FormatParser> {
             new ColorParser(),
             new InsertionParser(),
-            new ClickEventParser()
+            new ClickEventParser(),
+            new HoverEventParser()
         };
         
         _formatParsers.AddRange(Enum.GetValues<TextStyle>().Select(style => new StyleParser(style)));
@@ -29,6 +49,14 @@ public static class JsonTextParser {
             new VariableParser(),
             new NBTParser()
         };
+    }
+    
+    public static void AddFormatParser(FormatParser parser) {
+        _formatParsers.Add(parser);
+    }
+    
+    public static void AddContentParser(ContentParser parser) {
+        _contentParsers.Add(parser);
     }
     
     static void Reset() {
@@ -93,12 +121,14 @@ public static class JsonTextParser {
         while (!EndOfInput && Peek() != '>') {
             body += Advance();
         }
+
         Advance();
-        
+
         var argList = new List<string>();
         
         var arg = "";
         var inQuotes = false;
+        var escaped = false;
         
         foreach (var c in body) {
             switch (c) {
@@ -111,10 +141,23 @@ public static class JsonTextParser {
                     break;
                 }
                 
-                case '\'':
-                    inQuotes = !inQuotes; break;
+                case '\'' when !escaped:
+                    inQuotes = !inQuotes;
+                    break;
+                
+                case '\\':
+                    if (escaped) {
+                        arg += '\\';
+                        escaped = false;
+                    } else {
+                        escaped = true;
+                    }
+                    break;
+                
                 default:
-                    arg += c; break;
+                    arg += c; 
+                    escaped = false;
+                    break;
             }
         }
         

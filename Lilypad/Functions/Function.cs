@@ -16,7 +16,7 @@ public class Function : Resource {
     /// Returns an enumerable of all commands in this function. Ignores empty lines and comments.
     /// </summary>
     /// <remarks>Returns an empty enumerable when called before function generation.</remarks>
-    public IEnumerable<string> Commands => ToString().Split("\n")
+    public IEnumerable<string> Commands => GetContent().Split("\n")
         .Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#"));
     
     internal Function(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
@@ -111,7 +111,7 @@ public class Function : Resource {
         }
     }
     
-    public override string ToString() {
+    public string GetContent() {
         return IsGenerating ? string.Join('\n', _commands) : $"# Function {Name} has not been generated yet";
     }
 }

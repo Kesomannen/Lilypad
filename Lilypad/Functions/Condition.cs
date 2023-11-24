@@ -169,6 +169,23 @@ public struct Condition {
     public static Condition Score(ScoreVariable variable, Range<int> range) {
         return Score(variable.Selector, variable.Objective, range);
     }
+
+    public static Condition Variable(
+        Function function, 
+        IVariable a, 
+        EnumReference<Comparison> comparison, 
+        IVariable b
+    ) {
+        return Score(function.ToScore(a, "#compare0"), comparison, function.ToScore(b, "#compare1"));
+    }
+    
+    public static Condition Variable(
+        Function function, 
+        IVariable variable, 
+        Range<int> range
+    ) {
+        return Score(function.ToScore(variable, "#compare0"), range);
+    }
     
     /// <summary>
     /// Checks if the executing entity has a given tag.

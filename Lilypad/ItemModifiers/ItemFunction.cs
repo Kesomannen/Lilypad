@@ -1,6 +1,6 @@
 ﻿using Lilypad.Extensions;
 
-namespace Lilypad; 
+namespace Lilypad.ItemModifiers; 
 
 public abstract class ItemFunction {
     public List<Predicate>? Conditions;

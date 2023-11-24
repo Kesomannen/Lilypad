@@ -22,7 +22,7 @@ public static class Scheduling {
         
         var currentTick = CurrentTick.Get(datapack);
         var executingTick = new ScoreVariable("@s", objective);
-        function.Evaluate(executingTick, $"{currentTick} + {seconds.ToTicks()}", currentTick);
+        function.Evaluate(executingTick, $" {currentTick} + {seconds.ToTicks()} ", currentTick);
         
         var result = datapack.Functions.Create(Names.Get($"{function.Name}/delayed/{channel}_"), f => {
             var condition = Condition.Score(currentTick, Comparison.Equal, executingTick);
