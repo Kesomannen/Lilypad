@@ -1,4 +1,6 @@
-﻿namespace Lilypad; 
+﻿using Lilypad.ItemModifiers;
+
+namespace Lilypad; 
 
 public class LootPool {
     public List<Predicate>? Predicates;

@@ -1,6 +1,7 @@
 ﻿using Lilypad.Extensions;
 using Lilypad;
 using Lilypad.Helpers;
+using Lilypad.ItemModifiers;
 
 namespace Lilypad; 
 
@@ -133,8 +134,22 @@ public static class DefaultFunctionExtensions {
         return function.Add($"give {selector} {item}{nbt.ToStringOrEmpty()} {count}");
     }
     
-    public static Function ModifyItem(this Function function, ItemSource source, Reference<ItemModifier> modifier) {
-        return function.Add($"item modify {source} {modifier}");
+    public static Function ModifyItem(
+        this Function function,
+        ItemSource target, 
+        Slot slot,
+        Reference<ItemModifier> modifier
+    ) {
+        return function.Add($"item modify {target} {slot} {modifier}");
+    }
+
+    public static Function ModifyItem(
+        this Function function,
+        ItemSource target,
+        Slot slot,
+        params ItemFunction[] functions
+    ) {
+        return function.ModifyItem(target, slot, function.Datapack.ItemModifiers.Create().AddFunctions(functions));
     }
     
     public static Function ReplaceItem(
@@ -197,6 +212,10 @@ public static class DefaultFunctionExtensions {
     
     public static Function AddExperience(this Function function, Argument<Selector> selector, int experience, EnumReference<ExperienceType> type) {
         return function.Add($"xp add {selector} {experience} {(type == ExperienceType.Levels ? "levels" : "points")}");
+    }
+    
+    public static Function SetBlock(this Function function, Vector3 position, EnumReference<Block> block) {
+        return function.Add($"setblock {position} {block}");
     }
 }
 

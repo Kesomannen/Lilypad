@@ -164,7 +164,7 @@ public class ExecuteCommand {
     
     public ExecuteCommand Store(DataSource source, NBTPath path, EnumReference<StoreDataType> type, double scale = 1, bool success = false) {
         var target = success ? "success" : "result";
-        return AddSubCommand($"{target} {path} {source} {type} {scale}");
+        return AddSubCommand($"store {target} {source} {path} {type} {scale}");
     }
 
     public ExecuteCommand StoreBossbar() {

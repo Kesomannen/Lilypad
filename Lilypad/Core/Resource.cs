@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 namespace Lilypad; 
 
 /// <summary>
-/// Represents an object in a datapack with a resource location.
+/// Base class for members in a datapack with a resource location.
 /// </summary>
 public abstract class Resource {
     /// <summary>
     /// The name of this resource, should be in snake_case. Must be unique within the namespace.
-    /// Slashes are converted to directories.
+    /// Slashes are turned into directories when transpiled.
     /// </summary>
     /// <remarks>Can include: <list type="bullet">
     /// <item>Lowercase letters <c>(a-z)</c></item>
@@ -50,13 +50,13 @@ public abstract class Resource {
         Namespace = @namespace;
         Datapack = datapack;
     }
-    
-    public static bool ValidateName(string name) {
-        return name.All(c => char.IsLetterOrDigit(c) || c == '_' || c == '-' || c == '.' || c == '/');
+
+    static bool ValidateName(string name) {
+        return name.All(c => char.IsLetterOrDigit(c) || c is '_' or '-' or '.' or '/');
     }
-    
-    public static bool ValidateNamsepace(string @namespace) {
-        return @namespace.All(c => char.IsLetterOrDigit(c) || c == '_' || c == '-' || c == '.');
+
+    static bool ValidateNamsepace(string @namespace) {
+        return @namespace.All(c => char.IsLetterOrDigit(c) || c is '_' or '-' or '.');
     }
     
     /// <returns>The resource location of this resource.</returns>

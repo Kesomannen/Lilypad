@@ -22,6 +22,6 @@ public struct DataVariable : IVariable {
     }
 
     public override string ToString() {
-        return $"Variable~Nbt~{Path}~{Source.Type}~'{Source.Target}'".Replace(" ", "$");
+        return IVariable.GetName("Variable", "Nbt", Path, Source.Type, $"'{Source.Target}'");
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Lilypad; 
+﻿using Lilypad.ItemModifiers;
+
+namespace Lilypad; 
 
 public class LootEntry : LootEntryProvider {
     public List<ItemFunction>? Functions;

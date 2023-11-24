@@ -1,4 +1,4 @@
-﻿namespace Lilypad; 
+﻿namespace Lilypad.ItemModifiers; 
 
 /// <summary>
 /// Enchants the item.

@@ -7,15 +7,17 @@ namespace Lilypad;
 
 /// <summary>
 /// Represents a directory of resources in a <see cref="Datapack"/>.
+/// The members can be in different namespaces, but must be the same type (or a subclass) of <typeparamref name="T"/>.
 /// </summary>
+/// <typeparam name="T">The type of resources in this collection. Must be a subclass of <see cref="Resource"/>.</typeparam>
 public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     readonly Datapack _datapack;
-    readonly List<T> _values = new();
+    readonly List<T> _members = new();
     
     /// <summary>
     /// Resources in this collection.
     /// </summary>
-    public IReadOnlyList<T> Values => _values;
+    public IReadOnlyList<T> Members => _members;
     
     internal ResourceCollection(Datapack datapack) {
         _datapack = datapack;
@@ -40,7 +42,7 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
         name ??= Names.Get<T>();
         @namespace ??= _datapack.DefaultNamespace;
         
-        Assert.IsFalse(_values.Any(value => value.Name == name), $"Resource with name {name} already exists in namespace {@namespace}");
+        Assert.IsFalse(_members.Any(value => value.Name == name), $"Resource with name {name} already exists in namespace {@namespace}");
         
         var instance = Activator.CreateInstance(
             typeof(T),
@@ -53,7 +55,7 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
             throw new Exception($"Failed to create resource of type {typeof(T)}");
         }
         
-        _values.Add(resource);
+        _members.Add(resource);
         return resource;
     }
     
@@ -68,7 +70,7 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     /// Gets a resource with the given name, or null if it doesn't exist.
     /// </summary>
     public T? Get(string name) {
-        return _values.FirstOrDefault(x => x.Name == name);
+        return _members.FirstOrDefault(x => x.Name == name);
     }
     
     /// <summary>
@@ -88,10 +90,10 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     /// </summary>
     /// <returns>True if the resource was found and removed.</returns>
     public bool Remove(T value) {
-        return _values.Remove(value);
+        return _members.Remove(value);
     }
 
-    public IEnumerator<T> GetEnumerator() => _values.GetEnumerator();
+    public IEnumerator<T> GetEnumerator() => _members.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
@@ -119,10 +121,13 @@ public static class ResourceCollectionExtensions {
     }
 
     /// <summary>
-    /// Adds some data to this collection, wrapped in a <see cref="DataResource{T}"/>.
-    /// Use instead of <see cref="ResourceCollection{T}.Create"/> for data resources.
+    /// Wrappes data in a <see cref="DataResource{T}"/> and adds it to the collection.
+    /// Use instead of <see cref="ResourceCollection{T}.Create"/> when the collection is a <see cref="DataResource{T}"/>.
     /// </summary>
-    /// <inheritdoc cref="ResourceCollection{T}.Create"/>
+    /// <param name="name">Must be unique within the namespace. Defaults to an auto-generated name.</param>
+    /// <param name="namespace">Defaults to the datapack's default namespace.</param>
+    /// <returns>The newly created <see cref="DataResource{T}"/>.</returns>
+    /// <exception cref="Exception">Thrown if the resource could not be created for an unknown reason.</exception>
     public static DataResource<T> Add<T>(
         this ResourceCollection<DataResource<T>> collection, 
         T data, 

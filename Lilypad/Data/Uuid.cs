@@ -1,10 +1,10 @@
 ﻿namespace Lilypad; 
 
 /// <summary>
-/// A 128-bit UUID (Universally Unique Identifier).
-/// Used in Minecraft for identifying entities and attributes.
+/// A 128-bit UUID. Used in minecraft for identifying entities,
+/// usually formatted like <c>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</c>.
 /// </summary>
-public struct Uuid {
+public struct Uuid : ICustomNBTSerializer {
     /// <summary>
     /// A 32 bit segment of the UUID.
     /// </summary>
@@ -48,7 +48,11 @@ public struct Uuid {
     public override string ToString() {
         return ToHyphenatedHexadecimal();
     }
-    
+
+    public string? Serialize() {
+        return NBTSerializer.SerializeValue(ToIntArray());
+    }
+
     /// <summary>
     /// Parses a UUID from a string formatted as four 32 bit integers separated by commas.
     /// </summary>
@@ -63,8 +67,6 @@ public struct Uuid {
     public static Uuid New() {
         return new Uuid(Random.Shared.Next(), Random.Shared.Next(), Random.Shared.Next(), Random.Shared.Next());
     }
-
-    public static implicit operator NBTValue(Uuid uuid) => uuid.ToIntArray();
     
     public static bool operator ==(Uuid a, Uuid b) {
         return a.A == b.A && a.B == b.B && a.C == b.C && a.D == b.D;

@@ -1,4 +1,4 @@
-﻿namespace Lilypad; 
+﻿namespace Lilypad.ItemModifiers; 
 
 /// <summary>
 /// Copies an entity's or a block entity's name tag into the item's <c>display.Name</c> tag. 

@@ -1,8 +1,6 @@
 ﻿namespace Lilypad.Helpers; 
 
 public static class VariableMath {
-    static int _tempIndex;
-    
     public static T Evaluate<T>(this Function function, T output, string expression, params IVariable[] variables) where T : IVariable { 
         function.SetVariable(output, Evaluate(function, expression, variables));
         return output;
@@ -12,7 +10,6 @@ public static class VariableMath {
         var datapack = function.Datapack;
         var node = Parse(expression, datapack, variables.ToDictionary(v => v.ToString()!, v => v));
         var result = Evaluate(function, node);
-        _tempIndex = 0;
         return result;
     }
     
@@ -24,11 +21,9 @@ public static class VariableMath {
             case OperatorNode operatorNode:
                 var left = Evaluate(function, operatorNode.Left!);
                 var right = Evaluate(function, operatorNode.Right!);
-                
-                var result = Temp.Get(function.Datapack, $"#math{_tempIndex++}");
-                function
-                    .Operation(result, Operation.Assign, left)
-                    .Operation(result, operatorNode.Operator, right);
+
+                var result = function.CopyTempScore(left, Names.Get("#math"));
+                function.Operation(result, operatorNode.Operator, right);
                 return result;
             default:
                 throw new MathException($"Unexpected node type {node.GetType().Name}");
@@ -130,10 +125,10 @@ public static class VariableMath {
             var start = index;
             while (
                 index < expression.Length && 
-                !char.IsWhiteSpace(expression[index]) &&
-                !_operations.ContainsKey(expression[index]) &&
-                expression[index] != '(' &&
-                expression[index] != ')'
+                (expression[index] == IVariable.Separator ||
+                 expression[index] == IVariable.Space || 
+                 (!char.IsWhiteSpace(expression[index]) && !_operations.ContainsKey(expression[index]))
+                )
             ) {
                 index++;
             }

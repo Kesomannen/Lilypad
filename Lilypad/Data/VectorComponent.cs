@@ -45,7 +45,7 @@ public struct VectorComponent {
 
     public override string ToString() {
         return Space switch {
-            Space.World => $"{Value:#.####}",
+            Space.World => $"{Value:0.####}",
             Space.Local => $"^{Value:#.####}",
             Space.Relative => $"~{Value:#.####}",
             _ => throw new ArgumentOutOfRangeException(nameof(Space), Space, null)

@@ -8,7 +8,11 @@ internal static class Json {
     public static string Serialize(object value, bool pretty = false) {
         return JsonConvert.SerializeObject(value, pretty ? Formatting.Indented : Formatting.None, Settings);
     }
-    
+
+    public static T? Deserialize<T>(string text) {
+        return JsonConvert.DeserializeObject<T>(text, Settings);
+    }
+
     public static readonly JsonSerializerSettings Settings = new() {
         NullValueHandling = NullValueHandling.Ignore,
         Formatting = Formatting.None,

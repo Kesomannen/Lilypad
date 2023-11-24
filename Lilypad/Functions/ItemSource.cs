@@ -40,6 +40,7 @@ public struct ItemSource {
     /// Creates an item source from an entity matching the given selector.
     /// </summary>
     public static ItemSource Entity(Argument<Selector> selector) => new(selector);
+    public static ItemSource Executor => Entity("@s");
 }
 
 public enum ItemSourceType {

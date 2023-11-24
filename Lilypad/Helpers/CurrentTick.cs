@@ -1,6 +1,4 @@
-﻿using Lilypad;
-
-namespace Lilypad.Helpers; 
+﻿namespace Lilypad.Helpers; 
 
 public static class CurrentTick {
     const string PlayerName = "#current_tick";

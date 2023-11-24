@@ -1,4 +1,4 @@
-﻿namespace Lilypad; 
+﻿namespace Lilypad.ItemModifiers; 
 
 /// <summary>
 /// Copies block state properties provided by loot context to the item's <c>BlockStateTag</c> tag. 

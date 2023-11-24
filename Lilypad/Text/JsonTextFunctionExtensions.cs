@@ -1,5 +1,8 @@
 ﻿namespace Lilypad.Text; 
 
+/// <summary>
+/// Provides function extension methods for JSON text commands.
+/// </summary>
 public static class JsonTextFunctionExtensions {
     public static Function Tellraw(this Function function, Argument<Selector> selector, JsonText message) {
         return function.Add($"tellraw {selector} {message}");
