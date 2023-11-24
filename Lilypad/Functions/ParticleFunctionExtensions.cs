@@ -2,12 +2,30 @@
 
 namespace Lilypad; 
 
+/// <summary>
+/// Provides function extension methods for the /particle command.
+/// </summary>
 public static class ParticleFunctionExtensions {
+    static Function Particle(
+        this Function function,
+        string particle,
+        Vector3 position,
+        Vector3 delta,
+        float speed,
+        int count,
+        bool force = false,
+        Argument<Selector>? viewers = null
+    ) {
+        var mode = force ? "force" : "normal";
+        return function.Add($"particle {particle} {position} {delta} {speed} {count} {mode} {viewers.ToStringOrEmpty()}");
+    }
+
     public static Function Particle(
         this Function function, 
         EnumReference<Particle> particle,
         Vector3? position = null
     ) {
+        AssertNotBlock(particle);
         return function.Add($"particle {particle} {position.ToStringOrEmpty()}");
     }
 
@@ -21,8 +39,27 @@ public static class ParticleFunctionExtensions {
         bool force = false,
         Argument<Selector>? viewers = null
     ) {
-        var mode = force ? "force" : "normal";
-        return function.Add($"particle {particle} {position} {delta} {speed} {count} {mode} {viewers.ToStringOrEmpty()}");
+        AssertNotBlock(particle);
+        return function.Particle(particle.ToString(), position, delta, speed, count, force, viewers);
+    }
+
+    public static Function BlockParticle(
+        this Function function,
+        EnumReference<Block> block,
+        Vector3 position,
+        Vector3 delta,
+        float speed,
+        int count,
+        bool force = false,
+        Argument<Selector>? viewers = null
+    ) {
+        return function.Particle($"block {block}", position, delta, speed, count, force, viewers);
+    }
+    
+    static void AssertNotBlock(EnumReference<Particle> particle) {
+        if (particle.Value == Lilypad.Particle.Block) {
+            throw new ArgumentException("Block particles must be used with BlockParticle instead of Particle.");
+        }
     }
 }
 

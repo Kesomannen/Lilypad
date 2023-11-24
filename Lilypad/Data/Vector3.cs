@@ -23,6 +23,15 @@ public struct Vector3 {
         };
     }
     
+    public Vector3 InSpace(Space space) {
+        return new Vector3 {
+            X = X,
+            Y = Y,
+            Z = Z,
+            Space = space
+        };
+    }
+    
     public override string ToString() {
         return $"{X} {Y} {Z}";
     }
@@ -67,7 +76,9 @@ public struct Vector3 {
     
     public static Vector3 operator +(Vector3 a, Vector3 b) => (a.X + b.X, a.Y + b.Y, a.Z + b.Z);
     public static Vector3 operator -(Vector3 a, Vector3 b) => (a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-    public static Vector3 operator *(Vector3 a, Vector3 b) => (a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+    
+    public static Vector3 operator *(Vector3 a, double b) => (a.X * b, a.Y * b, a.Z * b);
+    public static Vector3 operator /(Vector3 a, double b) => (a.X / b, a.Y / b, a.Z / b);
 }
 
 public static class Vector3Extensions {

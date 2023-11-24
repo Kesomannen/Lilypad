@@ -1,8 +1,8 @@
 ﻿namespace Lilypad.Helpers; 
 
-public readonly struct ScoreVariable : IVariable {
-    public readonly Argument<Selector> Selector;
-    public readonly Reference<Objective> Objective;
+public struct ScoreVariable : IVariable {
+    public Argument<Selector> Selector;
+    public Reference<Objective> Objective;
     
     public ScoreVariable(Argument<Selector> selector, Reference<Objective> objective) {
         Selector = selector;
@@ -18,6 +18,6 @@ public readonly struct ScoreVariable : IVariable {
     }
     
     public override string ToString() {
-        return $"Variable-Score-{Objective}-{Selector}".Replace(" ", "$");
+        return $"Variable~Score~{Objective}~{Selector}".Replace(" ", "$");
     }
 }

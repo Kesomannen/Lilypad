@@ -9,7 +9,7 @@ public class VariableParser : ContentParser {
         if (!tag.StartsWith("Variable")) return false;
         AssertArgumentCount(arguments, 0);
 
-        var segments = tag.Replace("$", " ").Split('-');
+        var segments = tag.Replace("$", " ").Split('~');
         var type = segments[1].ToLower();
         
         if (_scoreParser.TryParse(type, segments[2..], out tags))

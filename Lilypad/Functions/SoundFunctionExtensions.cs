@@ -1,5 +1,8 @@
 ﻿namespace Lilypad; 
 
+/// <summary>
+/// Provides function extension methods for the /playsound command.
+/// </summary>
 public static class SoundFunctionExtensions {
     public static Function PlaySound(
         this Function function,

@@ -27,8 +27,11 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     /// <param name="name">Must be unique within the namespace. Defaults to an auto-generated name.</param>
     /// <param name="namespace">Defaults to the datapack's default namespace.</param>
     /// <returns>The created resource.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if <typeparamref name="T"/> is abstract.</exception>
-    /// <exception cref="Exception">Thrown if the resource could not be created for an unknown reason.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// <typeparamref name="T"/> is abstract. Commonly occurs when trying to add
+    /// a predicate to a collection. Use <see cref="ResourceCollectionExtensions.Add{T}"/> instead.
+    /// </exception>
+    /// <exception cref="Exception">The resource could not be created for an unknown reason.</exception>
     public T Create(string? name = null, string? @namespace = null) {
         if (typeof(T).IsAbstract) {
             throw new InvalidOperationException($"Cannot create resource of abstract type {typeof(T)}");

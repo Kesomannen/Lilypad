@@ -71,8 +71,11 @@ public struct VectorComponent {
         return new VectorComponent(a.Value - b.Value, a.Space);
     }
     
-    public static VectorComponent operator *(VectorComponent a, VectorComponent b) {
-        Assert.IsTrue(a.Space == b.Space, "Cannot multiply components in different spaces.");
-        return new VectorComponent(a.Value * b.Value, a.Space);
+    public static VectorComponent operator *(VectorComponent a, double b) {
+        return new VectorComponent(a.Value * b, a.Space);
+    }
+    
+    public static VectorComponent operator /(VectorComponent a, double b) {
+        return new VectorComponent(a.Value / b, a.Space);
     }
 }

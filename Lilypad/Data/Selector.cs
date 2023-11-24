@@ -5,7 +5,7 @@ using Lilypad.Helpers;
 namespace Lilypad; 
 
 /// <summary>
-/// Represents a target selector;
+/// Represents a target selector.
 /// </summary>
 public class Selector {
     readonly char _name;
@@ -128,12 +128,16 @@ public class Selector {
     public Selector Distance(Range<double> distance) {
         return Add("distance", distance);
     }
-    
-    public Selector Volume(Range<Vector3> volume) {
-        return Volume(volume.Min, volume.Max);
+
+    public Selector Volume(Vector3 center, Vector3 size) {
+        return Between(center - size / 2, center + size / 2);
     }
-    
-    public Selector Volume(Vector3 min, Vector3 max) {
+
+    public Selector Between(Range<Vector3> range) {
+        return Between(range.Min, range.Max);
+    }
+
+    public Selector Between(Vector3 min, Vector3 max) {
         return Position(min).Volume(max - min);
     }
 
@@ -193,7 +197,7 @@ public class Selector {
         if (!allowDuplicates) {
             foreach (var (k, _) in _arguments) {
                 if (k == key) {
-                    throw new ArgumentException($"Duplicate key {key} in selector.");
+                    throw new ArgumentException($"Selector key '{key}' doesn't allow duplicates, but one was added.");
                 }
             }
         }

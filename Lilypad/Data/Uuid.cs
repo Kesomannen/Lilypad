@@ -1,11 +1,12 @@
 ﻿namespace Lilypad; 
 
 /// <summary>
-/// Represents a 128-bit UUID.
+/// A 128-bit UUID (Universally Unique Identifier).
+/// Used in Minecraft for identifying entities and attributes.
 /// </summary>
 public struct Uuid {
     /// <summary>
-    /// 32 bit segment of the UUID.
+    /// A 32 bit segment of the UUID.
     /// </summary>
     public int A, B, C, D;
     
@@ -22,7 +23,7 @@ public struct Uuid {
     }
     
     /// <summary>
-    /// Formats the UUID as four 32 bit integers.
+    /// Formats the UUID as four 32 bit integers in an array.
     /// </summary>
     public int[] ToIntArray() {
         return _array ??= new[] { A, B, C, D };
@@ -30,6 +31,7 @@ public struct Uuid {
 
     /// <summary>
     /// Formats the UUID as a hexadecimal string in the format 8-4-4-4-12.
+    /// This is the most common format used by Minecraft and the format used when turning a UUID into a string.
     /// </summary>
     /// <example><c>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</c>.</example>
     public string ToHyphenatedHexadecimal() {
@@ -42,10 +44,14 @@ public struct Uuid {
         return new Guid(bytes).ToString("D");
     }
     
+    /// <inheritdoc cref="ToHyphenatedHexadecimal"/>
     public override string ToString() {
         return ToHyphenatedHexadecimal();
     }
     
+    /// <summary>
+    /// Parses a UUID from a string formatted as four 32 bit integers separated by commas.
+    /// </summary>
     public static Uuid Parse(string value) {
         var parts = value.Split(',');
         return new Uuid(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));

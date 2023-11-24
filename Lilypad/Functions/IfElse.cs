@@ -22,7 +22,7 @@ public class IfElse {
     /// Creates a new if-else chain in the function.
     /// </summary>
     /// <param name="conditions">All must pass for the branch to execute.</param>
-    /// <param name="build">Builder function for the if branch. Will be executed immediately.</param>
+    /// <param name="build">Builder method for the if branch. Will be executed immediately.</param>
     public IfElse(Function function, Condition[] conditions, Action<Function> build) {
         _function = function;
         CreateBranch(conditions, build);
@@ -32,7 +32,7 @@ public class IfElse {
     /// Creates an else if branch.
     /// </summary>
     /// <param name="condition">Must pass for the branch to execute.</param>
-    /// <param name="build">Builder function for the branch. Will be executed immediately.</param>
+    /// <param name="build">Builder method for the branch. Will be executed immediately.</param>
     public IfElse ElseIf(Condition condition, Action<Function> build) {
         return ElseIf(new[] { condition }, build);
     }
@@ -41,7 +41,7 @@ public class IfElse {
     /// Creates an else if branch.
     /// </summary>
     /// <param name="conditions">All must pass for the branch to execute.</param>
-    /// <param name="build">Builder function for the branch. Will be executed immediately.</param>
+    /// <param name="build">Builder method for the branch. Will be executed immediately.</param>
     public IfElse ElseIf(Condition[] conditions, Action<Function> build) {
         CreateBranch(conditions, build);
         return this;
@@ -50,7 +50,7 @@ public class IfElse {
     /// <summary>
     /// Creates an else branch.
     /// </summary>
-    /// <param name="build">Builder function for the branch. Will be executed immediately.</param>
+    /// <param name="build">Builder method for the branch. Will be executed immediately.</param>
     public IfElse Else(Action<Function> build) {
         CreateBranch(Array.Empty<Condition>(), build);
         return this;
