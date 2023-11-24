@@ -1,9 +1,11 @@
 ﻿using Lilypad.Extensions;
+using Newtonsoft.Json;
 
 namespace Lilypad.ItemModifiers; 
 
 public abstract class ItemFunction {
     public List<Predicate>? Conditions;
     
-    public string Function => GetType().Name.ToSnakeCase();
+    [JsonProperty("function")]
+    public virtual string FunctionName => GetType().Name.ToSnakeCase();
 }

@@ -3,20 +3,20 @@
 namespace Lilypad.Helpers; 
 
 public static class CustomHeads {
-    public static NBTCompound FromPlayer(string name) {
-        return new NBTCompound {
-            ["SkullOwner"] = new NBTCompound {
+    public static NBT FromPlayer(string name) {
+        return new NBT {
+            ["SkullOwner"] = new NBT {
                 ["Name"] = name
             }
         };
     }
     
-    public static NBTCompound FromTexture(string texture) {
-        return new NBTCompound {
-            ["SkullOwner"] = new NBTCompound {
+    public static NBT FromTexture(string texture) {
+        return new NBT {
+            ["SkullOwner"] = new NBT {
                 ["Id"] = Uuid.New(),
-                ["Properties"] = new NBTCompound {
-                    ["textures"] = new NBTCompound[] {
+                ["Properties"] = new NBT {
+                    ["textures"] = new NBT[] {
                         ("Value", texture)
                     }
                 }

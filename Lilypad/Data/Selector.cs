@@ -41,6 +41,14 @@ public class Selector {
     /// <remarks>It does not select anything if the command was run by a command block or server console.</remarks>
     public static Selector Self => new('s');
     
+    public static Selector Predicates(params DataResource<Predicate>[] predicates) {
+        return predicates.Aggregate(Entites, (current, predicate) => current.Predicate(predicate));
+    }
+    
+    public static Selector Predicates(Resource resource, params Predicate[] predicates) {
+        return Predicates(predicates.Select(p => resource.Datapack.Predicates.Add(p)).ToArray());
+    }
+    
     static readonly StringBuilder _builder = new();
     
     public Selector Gamemode(EnumReference<Gamemode> gamemode) {
@@ -107,17 +115,17 @@ public class Selector {
         return Add("limit", limit);
     }
     
-    public Selector Single => Limit(1);
+    public Selector Single() => Limit(1);
     
     public Selector Sort(EnumReference<Sort> sort) {
         return Add("sort", sort);
     }
 
-    public Selector Nbt(NBTCompound nbt) {
+    public Selector Nbt(NBT nbt) {
         return Add("nbt", nbt, true);
     }
     
-    public Selector NotNbt(NBTCompound nbt) {
+    public Selector NotNbt(NBT nbt) {
         return Add("nbt", $"!{nbt}", true);
     }
     

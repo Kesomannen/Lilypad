@@ -42,7 +42,7 @@ public static class Temp {
         EnumReference<StoreDataType>? dataType = null,
         double scale = 1
     ) {
-        if (variable is DataVariable data) return data;
+        if (Math.Abs(scale - 1) < double.Epsilon && variable is DataVariable data) return data;
         return function.CopyTempStorage(variable, path, dataType, scale);
     }
 

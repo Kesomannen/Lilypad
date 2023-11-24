@@ -15,7 +15,7 @@ public class NBTPath {
         Name(path);
     }
     
-    public NBTPath(NBTCompound root) {
+    public NBTPath(NBT root) {
         Add(new RootCompoundTag(root));
     }
     
@@ -32,7 +32,7 @@ public class NBTPath {
         return Add(new NamedTag(name));
     }
     
-    public NBTPath Tag(string name, NBTCompound tag) {
+    public NBTPath Tag(string name, NBT tag) {
         return Add(new NamedCompoundTag(name, tag));
     }
     
@@ -44,7 +44,7 @@ public class NBTPath {
         return Add(new ListAllElements(name));
     }
     
-    public NBTPath CompoundInList(string name, NBTCompound tag) {
+    public NBTPath CompoundInList(string name, NBT tag) {
         return Add(new ListCompoundElements(name, tag));
     }
 

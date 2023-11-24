@@ -5,7 +5,7 @@ namespace Lilypad;
 /// <summary>
 /// Sets the <c>Potion</c> tag of an item. 
 /// </summary>
-public class SetPotion : NBTCompound {
+public class SetPotion : NBT {
     [JsonProperty("id")]
     public EnumReference<Potion> Potion;
 }

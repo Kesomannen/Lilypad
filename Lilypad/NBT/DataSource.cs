@@ -6,7 +6,7 @@ public readonly struct DataSource {
     public readonly EnumReference<DataSourceType> Type;
     public readonly object Target;
 
-    public static readonly DataSource Executor = Entity(Selector.Self);
+    public static readonly DataSource Self = Entity(Selector.Self);
 
     public DataSource(string storageName, string? @namespace = null) {
         @namespace ??= Datapack.DefaultDefaultNamespace;

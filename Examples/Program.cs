@@ -21,6 +21,7 @@ if (!rightOne || !foundPath) {
 
 Console.Clear();
 
+Task.Run(() => ExampleUtil.SetPathEnvironmentVariable(minecraftPath));
 var savesPath = Path.Join(minecraftPath, "saves");
 var worlds = Directory.GetDirectories(savesPath);
 

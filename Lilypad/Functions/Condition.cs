@@ -5,16 +5,16 @@ namespace Lilypad;
 /// <summary>
 /// Represents a condition for an execute command.
 /// </summary>
-public struct Condition {
+public readonly struct Condition {
     /// <summary>
     /// String representation of the condition.
     /// </summary>
-    public string Value;
+    public readonly string Value;
     
     /// <summary>
     /// If true, the condition will use 'unless' instead of 'if'.
     /// </summary>
-    public bool Invert;
+    public readonly bool Invert;
     
     public Condition(string value, bool invert = false) {
         Value = value;

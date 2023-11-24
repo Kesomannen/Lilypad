@@ -4,14 +4,12 @@
 /// A 128-bit UUID. Used in minecraft for identifying entities,
 /// usually formatted like <c>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</c>.
 /// </summary>
-public struct Uuid : ICustomNBTSerializer {
+public readonly struct Uuid : ISerializeInnerNBT, ISerializeInnerJson {
     /// <summary>
     /// A 32 bit segment of the UUID.
     /// </summary>
-    public int A, B, C, D;
-    
-    int[]? _array;
-    
+    public readonly int A, B, C, D;
+
     /// <summary>
     /// Creates a UUID from four 32 bit segments.
     /// </summary>
@@ -26,7 +24,7 @@ public struct Uuid : ICustomNBTSerializer {
     /// Formats the UUID as four 32 bit integers in an array.
     /// </summary>
     public int[] ToIntArray() {
-        return _array ??= new[] { A, B, C, D };
+        return new[] { A, B, C, D };
     }
 
     /// <summary>
@@ -47,10 +45,6 @@ public struct Uuid : ICustomNBTSerializer {
     /// <inheritdoc cref="ToHyphenatedHexadecimal"/>
     public override string ToString() {
         return ToHyphenatedHexadecimal();
-    }
-
-    public string? Serialize() {
-        return NBTSerializer.SerializeValue(ToIntArray());
     }
 
     /// <summary>
@@ -83,4 +77,7 @@ public struct Uuid : ICustomNBTSerializer {
     public override int GetHashCode() {
         return HashCode.Combine(A, B, C, D);
     }
+
+    object ISerializeInnerNBT.SerializedData => ToIntArray();
+    object ISerializeInnerJson.SerializedData => ToHyphenatedHexadecimal();
 }

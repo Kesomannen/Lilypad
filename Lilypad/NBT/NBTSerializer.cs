@@ -6,7 +6,7 @@ using Lilypad.Text;
 namespace Lilypad; 
 
 public static class NBTSerializer {
-    public static string Serialize(NBTCompound compound) {
+    public static string Serialize(NBT compound) {
         var builder = new StringBuilder();
         builder.Append('{');
         
@@ -29,7 +29,7 @@ public static class NBTSerializer {
         return builder.ToString();
     }
 
-    static string? SerializeValue(object? obj) {
+    public static string? SerializeValue(object? obj) {
         if (obj is null) return null;
 
         var str = obj.ToString();
@@ -38,6 +38,7 @@ public static class NBTSerializer {
         }
         return obj switch {
             sbyte => str + 'b',
+            byte => str + 'b',
             bool => str.ToLower(),
             short => str + 's',
             int => str,
@@ -45,8 +46,8 @@ public static class NBTSerializer {
             float => str + 'f',
             double => str + 'd',
             string => str.Quote(),
-            JsonText text => text.ToString().Quote('\''),
-            NBTCompound compound => Serialize(compound),
+            ICustomNBTSerializer serializer => serializer.Serialize(),
+            NBT compound => Serialize(compound),
             IEnumerable<byte> bytes => SerializeArray(bytes, "B"),
             IEnumerable<int> integers => SerializeArray(integers, "I"),
             IEnumerable<long> longs => SerializeArray(longs, "L"),
@@ -67,8 +68,8 @@ public static class NBTSerializer {
         
         string SerializeEnum(Enum value) {
             return value.GetType().GetCustomAttribute<FlagsAttribute>() != null
-                ? ((int)(object) value).ToString()
-                : value.ToString().ToSnakeCase();
+                ? ((int)(object)value).ToString()
+                : value.ToString().ToSnakeCase().Quote();
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace Lilypad; 
 
 public class RootCompoundTag : NBTPathNode {
-    public NBTCompound Tag;
+    public NBT Tag;
     
-    public RootCompoundTag(NBTCompound tag) {
+    public RootCompoundTag(NBT tag) {
         Tag = tag;
     }
 

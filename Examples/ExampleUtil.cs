@@ -3,6 +3,9 @@
 namespace Lilypad.Examples; 
 
 internal static class ExampleUtil {
+    const string PathEnvironmentVariable = "LILYPAD_EXAMPLES_MC_PATH";
+    const EnvironmentVariableTarget PathEnvironmentVariableTarget = EnvironmentVariableTarget.User;
+        
     public static string PathInput(string message, Func<string, bool>? validator = null) {
         validator ??= _ => true;
         Console.Clear();
@@ -55,9 +58,17 @@ internal static class ExampleUtil {
     }
 
     public static bool TryFindMinecraftDirectory(out string path) {
-        var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        path = Path.Combine(appdata, ".minecraft");
+        if (Environment.GetEnvironmentVariable(PathEnvironmentVariable, PathEnvironmentVariableTarget) is { } envPath) {
+            path = envPath;
+        } else {
+            var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            path = Path.Combine(appdata, ".minecraft");
+        }
         return Directory.Exists(path);
+    }
+    
+    public static void SetPathEnvironmentVariable(string path) {
+        Environment.SetEnvironmentVariable(PathEnvironmentVariable, path, PathEnvironmentVariableTarget);
     }
     
     public static void SetHelpMessage(Datapack datapack, Example example, JsonText message) {

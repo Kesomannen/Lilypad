@@ -9,7 +9,7 @@ public class ItemConditions {
     public List<EnchantmentPredicate>? Enchantments;
     public List<EnchantmentPredicate>? StoredEnchantments;
     public List<EnumReference<Item>>? Items;
-    public NBTCompound? Nbt;
+    public NBT? Nbt;
     //public Reference<Potion> Potion;
     public Reference<Tag<Item>>? Tag;
 }

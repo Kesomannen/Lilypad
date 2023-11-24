@@ -44,7 +44,7 @@ public abstract class Resource {
         Assert.NotNull(datapack, nameof(datapack));
         
         Assert.IsTrue(ValidateName(name), $"Invalid resource name: {name}. Names must only contain lowercase letters, numbers, underscores, hyphens, periods and slashes.");
-        Assert.IsTrue(ValidateNamsepace(@namespace), $"Invalid resource namespace: {@namespace}. Namespaces must only contain lowercase letters, numbers, underscores, hyphens and periods.");
+        Assert.IsTrue(ValidateNamespace(@namespace), $"Invalid resource namespace: {@namespace}. Namespaces must only contain lowercase letters, numbers, underscores, hyphens and periods.");
 
         Name = name;
         Namespace = @namespace;
@@ -55,7 +55,7 @@ public abstract class Resource {
         return name.All(c => char.IsLetterOrDigit(c) || c is '_' or '-' or '.' or '/');
     }
 
-    static bool ValidateNamsepace(string @namespace) {
+    static bool ValidateNamespace(string @namespace) {
         return @namespace.All(c => char.IsLetterOrDigit(c) || c is '_' or '-' or '.');
     }
     

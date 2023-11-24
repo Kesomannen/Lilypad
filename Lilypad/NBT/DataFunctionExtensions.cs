@@ -9,7 +9,7 @@ public static class DataFunctionExtensions {
         return function.Add($"data get {source}");
     }
     
-    public static Function MergeData(this Function function, DataSource source, NBTCompound data) {
+    public static Function MergeData(this Function function, DataSource source, NBT data) {
         return function.Add($"data merge {source} {data}");
     }
     

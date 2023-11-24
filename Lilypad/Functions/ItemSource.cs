@@ -3,17 +3,19 @@
 /// <summary>
 /// The source of an item for the /item command.
 /// </summary>
-public struct ItemSource {
-    public ItemSourceType Type;
-    public Vector3? Position;
-    public Argument<Selector>? Selector;
-    
+public readonly struct ItemSource {
+    public readonly ItemSourceType Type;
+    public readonly Vector3? Position;
+    public readonly Argument<Selector>? Selector;
+
+    public static readonly ItemSource Self = Entity(Lilypad.Selector.Self);
+
     /// <inheritdoc cref="Block"/>
     public ItemSource(Vector3 position) {
         Type = ItemSourceType.Block;
         Position = position;
     }
-    
+
     /// <inheritdoc cref="Entity"/>
     public ItemSource(Argument<Selector> selector) {
         Type = ItemSourceType.Entity;
@@ -35,12 +37,11 @@ public struct ItemSource {
     /// Creates an item source from a block at the given position.
     /// </summary>
     public static ItemSource Block(Vector3 position) => new(position);
-    
+
     /// <summary>
     /// Creates an item source from an entity matching the given selector.
     /// </summary>
     public static ItemSource Entity(Argument<Selector> selector) => new(selector);
-    public static ItemSource Executor => Entity("@s");
 }
 
 public enum ItemSourceType {

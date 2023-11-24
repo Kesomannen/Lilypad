@@ -128,10 +128,18 @@ public static class DefaultFunctionExtensions {
         this Function function,
         Argument<Selector> selector,
         EnumReference<Item> item,
-        NBTCompound? nbt = null,
+        NBT? nbt = null,
         int count = 1
     ) {
         return function.Add($"give {selector} {item}{nbt.ToStringOrEmpty()} {count}");
+    }
+    
+    public static Function Give(
+        this Function function,
+        Argument<Selector> selector,
+        ItemNBT nbt
+    ) {
+        return function.Add($"give {selector} {nbt.Item}{nbt} {nbt.Count}");
     }
     
     public static Function ModifyItem(
@@ -157,7 +165,7 @@ public static class DefaultFunctionExtensions {
         ItemSource target,
         Slot slot,
         EnumReference<Item> item,
-        NBTCompound? nbt = null,
+        NBT? nbt = null,
         int count = 1
     ) {
         return function.Add($"item replace {target} {slot} with {item}{nbt.ToStringOrEmpty()} {count}");

@@ -6,12 +6,29 @@ namespace Lilypad.ItemModifiers;
 /// <summary>
 /// Copies NBT values from a specified block entity or entity, or from storage to the item's <c>tag</c> tag. 
 /// </summary>
-public class CopyNbt : ItemFunction {
+public class CopyNBT : ItemFunction {
     public CopyNBTSource Source;
     [JsonProperty("ops")]
     public List<NBTOperation> Operations = new();
+    
+    public override string FunctionName => "copy_nbt";
 
-    public static CopyNbt FromVariable(
+    /// <summary>
+    /// Creates a <see cref="CopyNBT"/> function from a variable,
+    /// by first copying it to temporary data storage.
+    /// </summary>
+    /// <param name="function">
+    /// A function to put the commands for copying the variable to storage,
+    /// which should always be ran before using the output function.
+    /// The storage will also share the same namespace as the function.
+    /// </param>
+    /// <param name="variable">Variable to copy from, must be the same type as <paramref name="operationType"/>.</param>
+    /// <param name="target">The item path to copy the data to.</param>
+    /// <param name="operationType">The operation type to use when copying, defaults to <see cref="NBTOperationType.Replace"/>.</param>
+    /// <param name="dataType">The data type to use when copying the variable, defaults to <see cref="StoreDataType.Int"/>.</param>
+    /// <param name="scale">Value of variable will be multiplied by this value before copying to the <paramref name="target"/></param>
+    /// <returns>A <see cref="CopyNBT"/> function from <paramref name="variable"/>.</returns>
+    public static CopyNBT FromVariable(
         Function function,
         IVariable variable,
         NBTPath target,
@@ -20,7 +37,7 @@ public class CopyNbt : ItemFunction {
         double scale = 1
     ) {
         var storage = function.ToStorage(variable, Names.Get("#copynbt"), dataType, scale);
-        return new CopyNbt {
+        return new CopyNBT {
             Source = CopyNBTSource.From(storage.Source),
             Operations = {
                 new NBTOperation {
@@ -33,12 +50,23 @@ public class CopyNbt : ItemFunction {
     }
 }
 
+/// <summary>
+/// One copy operation in a <see cref="CopyNBT"/> function.
+/// </summary>
 public struct NBTOperation {
+    /// <summary>
+    /// The NBT path in the source to copy from.
+    /// </summary>
     public NBTPath Source;
+    
+    /// <summary>
+    /// The NBT path in the target to copy to.
+    /// </summary>
     public NBTPath Target;
     [JsonProperty("op")] 
     public EnumReference<NBTOperationType> Operation;
-
+    
+    /// <param name="operationType">Defaults to <see cref="NBTOperationType.Replace"/>.</param>
     public NBTOperation(NBTPath source, NBTPath target, EnumReference<NBTOperationType>? operationType = null) {
         Source = source;
         Target = target;
@@ -64,7 +92,7 @@ public enum NBTOperationType {
 }
 
 /// <summary>
-/// Defines the source of the NBT data to copy.
+/// Defines the source of the NBT data in a <see cref="CopyNBT"/> function.
 /// </summary>
 public struct CopyNBTSource {
     public EnumReference<CopyNBTSourceType> Type;

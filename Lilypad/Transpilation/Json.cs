@@ -27,15 +27,22 @@ internal static class Json {
         },
     };
 
-    class SerializeInnerConverter : WriteOnlyConverter<ISerializeInner> {
+    class SerializeInnerConverter : WriteOnlyConverter<ISerializeInnerJson> {
         protected override bool SerializeDerivedTypes => true;
 
-        protected override void WriteJson(JsonWriter writer, ISerializeInner value, JsonSerializer serializer) {
+        protected override void WriteJson(JsonWriter writer, ISerializeInnerJson value, JsonSerializer serializer) {
             serializer.Serialize(writer, value.SerializedData);
         }
     }
 }
 
-internal interface ISerializeInner {
+internal interface ISerializeInnerJson {
     object? SerializedData { get; }
+}
+
+internal interface ISerializeInner : ISerializeInnerNBT, ISerializeInnerJson {
+    new object? SerializedData { get; }
+
+    object? ISerializeInnerNBT.SerializedData => SerializedData;
+    object? ISerializeInnerJson.SerializedData => SerializedData;
 }

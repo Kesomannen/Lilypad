@@ -51,6 +51,6 @@ public readonly struct EnumReference<T> : ISerializeInner where T : struct, Enum
     public override string ToString() {
         return Value.ToString().ToSnakeCase();
     }
-
+    
     object ISerializeInner.SerializedData => Value;
 }

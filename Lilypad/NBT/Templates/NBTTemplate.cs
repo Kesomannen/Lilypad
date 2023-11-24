@@ -1,9 +1,13 @@
-﻿namespace Lilypad.Templates; 
+﻿namespace Lilypad; 
 
 public abstract class NBTTemplate : ICustomNBTSerializer {
-    public abstract NBTCompound ToNBT();
+    public abstract NBT ToNBT();
     
     public string Serialize() {
         return ToNBT().Serialize();
+    }
+
+    public override string ToString() {
+        return Serialize();
     }
 }

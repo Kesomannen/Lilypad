@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lilypad.Extensions;
+using Newtonsoft.Json;
 
 namespace Lilypad.Text; 
 
@@ -28,7 +29,7 @@ namespace Lilypad.Text;
 /// {"text":"Hello, world","color":"red"}
 /// </code>
 /// </example>
-public class JsonText : ISerializeInner {
+public class JsonText : ISerializeInnerJson, ICustomNBTSerializer {
     public TextTag? Content { get; set; }
     public List<TextTag> Formatting { get; set; } = new();
     public List<JsonText> Children { get; set; } = new();
@@ -155,5 +156,6 @@ public class JsonText : ISerializeInner {
         return result;
     }
 
-    public object? SerializedData => ToJson();
+    object ISerializeInnerJson.SerializedData => ToJson();
+    string ICustomNBTSerializer.Serialize() => Serialize().Quote('\'');
 }

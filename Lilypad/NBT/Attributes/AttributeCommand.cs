@@ -1,4 +1,6 @@
-﻿namespace Lilypad;
+﻿using Lilypad;
+
+namespace Lilypad;
 
 public class AttributeCommand {
     readonly Function _function;

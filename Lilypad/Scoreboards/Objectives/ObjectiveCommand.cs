@@ -81,6 +81,10 @@ public class ObjectiveCommand {
         EnumReference<Operation> operation,
         int value
     ) {
+        if (operation.Value == Lilypad.Operation.Assign) {
+            return Set(target, value);
+        }
+        
         var variable = Constants.Get(_function.Datapack, value);
         return Operation(target, operation, variable.Selector, variable.Objective);
     }

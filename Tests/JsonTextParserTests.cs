@@ -68,8 +68,8 @@ public class JsonTextParserTests {
 
     [TestMethod]
     public void Parse_HoverFormat_ShowItem() {
-        var nbt = new NBTCompound {
-            ["display"] = new NBTCompound {
+        var nbt = new NBT {
+            ["display"] = new NBT {
                 ["Name"] = new JsonText(
                     ("text", "God sword"),
                     ("color", "gold")

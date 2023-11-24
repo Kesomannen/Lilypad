@@ -1,6 +1,6 @@
 ﻿namespace Lilypad.ItemModifiers; 
 
-public class ItemModifier : Resource, ISerializeInner {
+public class ItemModifier : Resource, ISerializeInnerJson {
     public List<ItemFunction> Functions = new();
 
     internal ItemModifier(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }

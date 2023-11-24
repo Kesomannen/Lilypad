@@ -5,7 +5,7 @@ namespace Lilypad;
 /// <summary>
 /// A reference to a resource or resource tag.
 /// </summary>
-public readonly struct Reference<T> : ISerializeInner where T : Resource {
+public readonly struct Reference<T> : ISerializeInnerJson where T : Resource {
     /// <summary>
     /// The <see cref="Resource.Location"/> this reference points to.
     /// </summary>
@@ -54,5 +54,5 @@ public readonly struct Reference<T> : ISerializeInner where T : Resource {
 
     public override string ToString() => Location;
 
-    object ISerializeInner.SerializedData => Location;
+    object ISerializeInnerJson.SerializedData => Location;
 }

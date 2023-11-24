@@ -4,9 +4,9 @@ namespace Lilypad;
 
 public class ListCompoundElements : NBTPathNode {
     public string Name;
-    public NBTCompound Tag;
+    public NBT Tag;
     
-    public ListCompoundElements(string name, NBTCompound tag) {
+    public ListCompoundElements(string name, NBT tag) {
         Name = name;
         Tag = tag;
     }

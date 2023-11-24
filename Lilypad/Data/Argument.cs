@@ -5,7 +5,7 @@ namespace Lilypad;
 /// <summary>
 /// Can either be a string or a value of type <typeparamref name="T"/>.
 /// </summary>
-public readonly struct Argument<T> : ISerializeInner {
+public readonly struct Argument<T> : ISerializeInnerJson {
     public string Text { get; }
 
     /// <summary>

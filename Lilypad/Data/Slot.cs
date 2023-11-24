@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a slot in an inventory.
 /// </summary>
-public readonly struct Slot {
+public readonly struct Slot : ICustomNBTSerializer {
     /// <summary>
     /// String identifier. Used in the <c>item</c> command.
     /// </summary>
@@ -20,8 +20,13 @@ public readonly struct Slot {
     }
     
     public override string ToString() => Id;
+    
+    public string Serialize() {
+        return Index.ToString();
+    }
 
     public static Slot Mainhand => Weapon.Mainhand;
+    public static Slot Offhand => Weapon.Offhand;
     
     public static class Armor {
         public static readonly Slot Chest = new("armor.chest", 102);
@@ -32,7 +37,7 @@ public readonly struct Slot {
 
     public static class Weapon {
         public static readonly Slot Mainhand = new("weapon.mainhand", 0);
-        public static readonly Slot OffHand = new("weapon.offhand", -106);
+        public static readonly Slot Offhand = new("weapon.offhand", -106);
     }
     
     public static class Horse {

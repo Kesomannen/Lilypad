@@ -1,9 +1,7 @@
 ﻿namespace Lilypad.Text; 
 
 /// <summary>
-/// Parses a string into a list of <see cref="JsonText"/>s.
-/// Supports HTML-style tags to apply formatting and add content.
-/// Can be used through the implicit conversion from string in <see cref="JsonText"/>.
+/// Parses strings with HTML-style tags to raw JSON text.
 ///
 /// <br/><br/>Supported formatting tags:
 /// <list type="bullet">
@@ -69,6 +67,12 @@ public static class JsonTextParser {
         }
     }
     
+    /// <summary>
+    /// Parses a string into a list of <see cref="JsonText"/>.
+    /// Supports HTML-style tags to apply formatting and add content.
+    /// Can be used through <see cref="JsonText"/>'s implicit conversion from string.
+    /// </summary>
+    /// <exception cref="ArgumentException">The input was not in a correct format.</exception>
     public static List<JsonText> Parse(string input) {
         Reset();
         _input = input;
