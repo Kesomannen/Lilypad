@@ -1,8 +1,6 @@
 ﻿using Lilypad.Recipes;
-using Lilypad;
 using Lilypad.Helpers;
 using Lilypad.ItemModifiers;
-using Lilypad.Text;
 
 namespace Lilypad;
 
@@ -10,20 +8,7 @@ namespace Lilypad;
 /// Represents a datapack.
 /// </summary>
 public class Datapack {
-    /// <summary>
-    /// Pack version. Defaults to <see cref="NewestPackFormat"/>.
-    /// </summary>
-    /// <remarks>If this number does not match the current required number, the data pack displays a warning and requires additional confirmation to load the pack.</remarks>
-    /// <seealso href="https://minecraft.fandom.com/wiki/Data_pack#Pack_format"/>
-    public int PackFormat { get; set; } = NewestPackFormat;
-    
-    /// <summary>
-    /// The description of this datapack.
-    /// </summary>
-    /// <remarks>
-    /// Appears when hovering over the data pack's name in the list given by the <c>/datapack list</c> command, or when viewing the pack in the Create World screen.
-    /// </remarks>
-    public JsonText Description { get; set; } = JsonText.Empty;
+    public DatapackMetadata Metadata { get; set; } = new();
 
     /// <summary>
     /// The functions in this datapack.
@@ -53,7 +38,7 @@ public class Datapack {
     /// <summary>
     /// The predicates in this datapack.
     /// </summary>
-    public ResourceCollection<DataResource<Predicate>> Predicates { get; }
+    public ResourceCollection<PredicateResource> Predicates { get; }
 
     /// <summary>
     /// The function tags in this datapack.
@@ -64,6 +49,21 @@ public class Datapack {
     /// The item tags in this datapack.
     /// </summary>
     public ResourceCollection<Tag<Item>> ItemTags { get; }
+    
+    /// <summary>
+    /// The block tags in this datapack.
+    /// </summary>
+    public ResourceCollection<Tag<Block>> BlockTags { get; }
+    
+    /// <summary>
+    /// The entity tags in this datapack.
+    /// </summary>
+    public ResourceCollection<Tag<Entity>> EntityTags { get; }
+    
+    /// <summary>
+    /// The fluid tags in this datapack.
+    /// </summary>
+    public ResourceCollection<Tag<Fluid>> FluidTags { get; }
     
     /// <summary>
     /// A collection of objectives in this datapack.
@@ -81,7 +81,6 @@ public class Datapack {
     public LoggingLevel LoggingLevels { get; init; } = LoggingLevel.All;
     
     public const string DefaultDefaultNamespace = "generated";
-    public const int NewestPackFormat = 18;
 
     /// <summary>
     /// Creates a new datapack.
@@ -97,11 +96,13 @@ public class Datapack {
         Recipes = new ResourceCollection<Recipe>(this);
         LootTables = new ResourceCollection<LootTable>(this);
         ItemModifiers = new ResourceCollection<ItemModifier>(this);
-        
-        Predicates = new ResourceCollection<DataResource<Predicate>>(this);
+        Predicates = new ResourceCollection<PredicateResource>(this);
         
         FunctionTags = new ResourceCollection<Tag<Function>>(this);
         ItemTags = new ResourceCollection<Tag<Item>>(this);
+        BlockTags = new ResourceCollection<Tag<Block>>(this);
+        EntityTags = new ResourceCollection<Tag<Entity>>(this);
+        FluidTags = new ResourceCollection<Tag<Fluid>>(this);
         
         Objectives = new ResourceCollection<Objective>(this);
     }

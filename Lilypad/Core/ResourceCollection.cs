@@ -29,10 +29,7 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     /// <param name="name">Must be unique within the namespace. Defaults to an auto-generated name.</param>
     /// <param name="namespace">Defaults to the datapack's default namespace.</param>
     /// <returns>The created resource.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// <typeparamref name="T"/> is abstract. Commonly occurs when trying to add
-    /// a predicate to a collection. Use <see cref="ResourceCollectionExtensions.Add{T}"/> instead.
-    /// </exception>
+    /// <exception cref="InvalidOperationException"><typeparamref name="T"/> is abstract.</exception>
     /// <exception cref="Exception">The resource could not be created for an unknown reason.</exception>
     public T Create(string? name = null, string? @namespace = null) {
         if (typeof(T).IsAbstract) {
@@ -119,23 +116,23 @@ public static class ResourceCollectionExtensions {
     ) {
         return collection.Create(null, build, @namespace);
     }
-
-    /// <summary>
-    /// Wrappes data in a <see cref="DataResource{T}"/> and adds it to the collection.
-    /// Use instead of <see cref="ResourceCollection{T}.Create"/> when the collection is a <see cref="DataResource{T}"/>.
-    /// </summary>
-    /// <param name="name">Must be unique within the namespace. Defaults to an auto-generated name.</param>
-    /// <param name="namespace">Defaults to the datapack's default namespace.</param>
-    /// <returns>The newly created <see cref="DataResource{T}"/>.</returns>
-    /// <exception cref="Exception">Thrown if the resource could not be created for an unknown reason.</exception>
-    public static DataResource<T> Add<T>(
-        this ResourceCollection<DataResource<T>> collection, 
-        T data, 
-        string? name = null, 
+    
+    public static PredicateResource Add(
+        this ResourceCollection<PredicateResource> collection,
+        string? name,
+        Predicate predicate,
         string? @namespace = null
     ) {
         var resource = collection.Create(name, @namespace);
-        resource.Data = data;
+        resource.Add(predicate);
         return resource;
+    }
+    
+    public static PredicateResource Add(
+        this ResourceCollection<PredicateResource> collection,
+        Predicate predicate,
+        string? @namespace = null
+    ) {
+        return collection.Add(null, predicate, @namespace);
     }
 }

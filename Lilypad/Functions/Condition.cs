@@ -105,7 +105,7 @@ public readonly struct Condition {
     /// <summary>
     /// Checks whether the predicate successes.
     /// </summary>
-    public static Condition Predicate(Reference<DataResource<Predicate>> predicate) {
+    public static Condition Predicate(Reference<PredicateResource> predicate) {
         return $"predicate {predicate}";
     }
     

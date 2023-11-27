@@ -1,14 +1,12 @@
 ﻿namespace Lilypad.Helpers; 
 
 public static class RaycastHelper {
-    public const double DefaultStepSize = 0.5;
-    
     public static Function RaycastForward(
         this Function function,
         double maxDistance, 
-        Selector selector,
+        Selector casterSelector,
         Action<Function> builder, 
-        double stepSize = DefaultStepSize,
+        double stepSize = 0.5,
         bool visualize = false
     ) {
         var iterations = (int) Math.Ceiling(maxDistance / stepSize);
@@ -18,7 +16,7 @@ public static class RaycastHelper {
         return function.Raycast(
             (0d, 0d, stepSize).AsLocal(), 
             iterations, 
-            selector.NotTag(ignoreTag).Distance((0, stepSize / 2)),
+            casterSelector.NotTag(ignoreTag).Distance((0, stepSize / 2)),
             f => {
                 function.Execute().As(Selector.Entites.Tag(ignoreTag).Single()).Run(f => f.RemoveTag(ignoreTag));
                 builder(f);

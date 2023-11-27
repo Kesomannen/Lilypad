@@ -41,7 +41,7 @@ public class Selector {
     /// <remarks>It does not select anything if the command was run by a command block or server console.</remarks>
     public static Selector Self => new('s');
     
-    public static Selector Predicates(params DataResource<Predicate>[] predicates) {
+    public static Selector Predicates(params PredicateResource[] predicates) {
         return predicates.Aggregate(Entites, (current, predicate) => current.Predicate(predicate));
     }
     
@@ -59,11 +59,11 @@ public class Selector {
         return Add("gamemode", $"!{gamemode}", true);
     }
     
-    public Selector Predicate(Reference<DataResource<Predicate>> predicate) {
+    public Selector Predicate(Reference<PredicateResource> predicate) {
         return Add("predicate", predicate, true);
     }
     
-    public Selector NotPredicate(Reference<DataResource<Predicate>> predicate) {
+    public Selector NotPredicate(Reference<PredicateResource> predicate) {
         return Add("predicate", $"!{predicate}", true);
     }
     

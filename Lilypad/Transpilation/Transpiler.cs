@@ -1,7 +1,4 @@
-﻿using Lilypad.Extensions;
-using Newtonsoft.Json.Linq;
-
-namespace Lilypad; 
+﻿namespace Lilypad; 
 
 public static class Transpiler {
     static Datapack _datapack = null!;
@@ -30,8 +27,7 @@ public static class Transpiler {
         WriteMetadata();
         
         for (var i = 0; i < _datapack.Functions.Members.Count; i++) {
-            var function = _datapack.Functions.Members[i];
-            function.Generate();
+            _datapack.Functions.Members[i].Generate();
         }
         WriteResources(_datapack.Functions, "functions", "mcfunction", f => f.GetContent());
         
@@ -44,19 +40,23 @@ public static class Transpiler {
 
         WriteResourcesJson(_datapack.FunctionTags, "tags/functions");
         WriteResourcesJson(_datapack.ItemTags, "tags/items");
+        WriteResourcesJson(_datapack.BlockTags, "tags/blocks");
+        WriteResourcesJson(_datapack.FluidTags, "tags/fluids");
+        WriteResourcesJson(_datapack.EntityTags, "tags/entity_types");
         
         Console.WriteLine($"Transpiled to {Root} successfully");
     }
 
     static void WriteMetadata() {
-        var pack = new JObject {
-            ["pack"] = new JObject {
-                ["pack_format"] = _datapack.PackFormat,
-                ["description"] = _datapack.Description.ToString().Escape('"')
+        var icon = _datapack.Metadata.IconPath;
+        if (icon != null) {
+            if (!File.Exists(icon)) {
+                throw new FileNotFoundException($"Icon file {icon} does not exist");
             }
-        };
+            File.Copy(icon, GetAbsolute("pack.png"));
+        }
         
-        File.WriteAllText(GetAbsolute("pack.mcmeta"), Serialize(pack));
+        File.WriteAllText(GetAbsolute("pack.mcmeta"), Serialize(_datapack.Metadata));
     }
     
     static void WriteResourcesJson<T>(ResourceCollection<T> collection, string path) where T : Resource {
