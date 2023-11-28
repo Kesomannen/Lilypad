@@ -3,11 +3,12 @@
 namespace Lilypad; 
 
 /// <summary>
-/// A reference to an enum value. Has implicit conversions from <typeparamref name="T"/> and <see cref="string"/>.
+/// A reference to an enum value. You can implicitly convert a <typeparamref name="T"/> and <see cref="string"/>
+/// to this type.
 /// </summary>
 /// <remarks>
 /// Formats its value as snake_case when turned into a string.
-/// Used instead of a normal enum when referencing minecraft objects.
+/// Use instead of a normal enum when referencing minecraft objects.
 /// </remarks>
 /// <seealso cref="Reference{T}"/>
 public readonly struct EnumReference<T> : ISerializeInner where T : struct, Enum {
@@ -25,6 +26,10 @@ public readonly struct EnumReference<T> : ISerializeInner where T : struct, Enum
         return new EnumReference<T>(result);
     }
     
+    /// <summary>
+    /// Implicitly converts a string to a <see cref="EnumReference{T}"/>.
+    /// Note that the conversion can fail if the string is not a valid enum vThe converted string can be in any case.alue.
+    /// </summary>
     public static implicit operator EnumReference<T>(string text) => Parse(text);
     public static implicit operator EnumReference<T>(T enumValue) => new(enumValue);
 
