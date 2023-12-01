@@ -4,8 +4,8 @@ using Newtonsoft.Json;
 namespace Lilypad; 
 
 public class ItemConditions {
-    public Range<int>? Count;
-    public Range<int>? Durability;
+    public IntRange? Count;
+    public IntRange? Durability;
     public List<EnchantmentPredicate>? Enchantments;
     public List<EnchantmentPredicate>? StoredEnchantments;
     public List<EnumReference<Item>>? Items;
@@ -17,5 +17,5 @@ public class ItemConditions {
 public struct EnchantmentPredicate {
     [JsonProperty("enchantment")]
     public EnumReference<Enchantment> Type;
-    public Range<int> Level;
+    public IntRange Level;
 }

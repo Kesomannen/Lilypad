@@ -139,7 +139,7 @@ public static class DefaultFunctionExtensions {
         Argument<Selector> selector,
         ItemNBT nbt
     ) {
-        return function.Add($"give {selector} {nbt.Item}{nbt} {nbt.Count}");
+        return function.Add($"give {selector} {nbt.Item}{nbt.GetTag()} {nbt.Count}");
     }
     
     public static Function ModifyItem(
@@ -220,10 +220,6 @@ public static class DefaultFunctionExtensions {
     
     public static Function AddExperience(this Function function, Argument<Selector> selector, int experience, EnumReference<ExperienceType> type) {
         return function.Add($"xp add {selector} {experience} {(type == ExperienceType.Levels ? "levels" : "points")}");
-    }
-    
-    public static Function SetBlock(this Function function, Vector3 position, EnumReference<Block> block) {
-        return function.Add($"setblock {position} {block}");
     }
 }
 

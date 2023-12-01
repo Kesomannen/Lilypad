@@ -52,7 +52,7 @@ public class Objective : Resource {
         return this;
     }
 
-    public Function CreateRewardFunction(Range<int> range, int resetValue, Action<Function> build) {
+    public Function CreateRewardFunction(IntRange range, int resetValue, Action<Function> build) {
         return Datapack.Functions.Create(f => {
             var selector = Selector.All.Scores((this, range));
             f.Execute().As(selector).Run(g => {

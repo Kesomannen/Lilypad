@@ -1,4 +1,4 @@
-﻿using Lilypad;
+﻿using Lilypad.Extensions;
 using Lilypad.Recipes;
 using Newtonsoft.Json;
 
@@ -14,7 +14,7 @@ public class Criterion {
     [JsonProperty("conditions")]
     Dictionary<string, object> _conditions;
 
-    Criterion(Trigger trigger, params (string, object?)[] conditions) {
+    Criterion(EnumReference<Trigger> trigger, params (string, object?)[] conditions) {
         _trigger = trigger;
         Name = _trigger.ToString();
         
@@ -48,7 +48,7 @@ public class Criterion {
         return new Criterion(Trigger.AvoidVibration);
     }
 
-    public static Criterion BeeNestDestroyed(EnumReference<Block>? block = null, ItemConditions? item = null, Range<int>? beesInside = null) {
+    public static Criterion BeeNestDestroyed(EnumReference<Block>? block = null, ItemConditions? item = null, IntRange? beesInside = null) {
         return new Criterion(Trigger.BeeNestDestroyed, ("block", block), ("item", item), ("num_bees_inside", beesInside));
     }
     
@@ -92,7 +92,7 @@ public class Criterion {
         return new Criterion(Trigger.EnchantedItem, ("item", item), ("levels", levels));
     }
 
-    public static Criterion EnterBlock(Block? block = null, BlockProperties? properties = null) {
+    public static Criterion EnterBlock(Block? block = null, BlockState? properties = null) {
         return new Criterion(Trigger.EnterBlock, ("block", block), ("state", properties));
     }
     
@@ -152,10 +152,11 @@ public class Criterion {
         return new Criterion(Trigger.KilledByCrossbow, ("victims", victims), ("unique_entity_types", uniqueTypes));
     }
     
-    public static Criterion Levitation(DistanceTags? distance = null, Range<int>? durationSeconds = null) {
-        Range<int>? range = durationSeconds is null ? null : 
-            new Range<int>(durationSeconds.Value.Min * 20, durationSeconds.Value.Max * 20);
-        
+    public static Criterion Levitation(DistanceTags? distance = null, FloatRange? durationSeconds = null) {
+        IntRange? range = durationSeconds is null
+            ? null
+            : (durationSeconds.Min?.ToTicks(), durationSeconds.Max?.ToTicks());
+
         return new Criterion(Trigger.Levitation, ("distance", distance), ("duration", range));
     }
     
@@ -211,7 +212,7 @@ public class Criterion {
         return new Criterion(Trigger.SleptInBed);
     }
     
-    public static Criterion SlideDownBlock(EnumReference<Block>? block = null, BlockProperties? properties = null) {
+    public static Criterion SlideDownBlock(EnumReference<Block>? block = null, BlockState? properties = null) {
         return new Criterion(Trigger.SlideDownBlock, ("block", block), ("state", properties));
     }
     
@@ -227,7 +228,7 @@ public class Criterion {
         return new Criterion(Trigger.TameAnimal, ("entity", predicates));
     }
     
-    public static Criterion TargetHit(Range<int>? signalStrength = null, params Predicate[] projectile) {
+    public static Criterion TargetHit(IntRange? signalStrength = null, params Predicate[] projectile) {
         return new Criterion(Trigger.TargetHit, ("signal_strength", signalStrength), ("projectile", projectile));
     }
     

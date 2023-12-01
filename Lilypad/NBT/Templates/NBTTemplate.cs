@@ -7,7 +7,5 @@ public abstract class NBTTemplate : ICustomNBTSerializer {
         return ToNBT().Serialize();
     }
 
-    public override string ToString() {
-        return Serialize();
-    }
+    public override string ToString() => Serialize();
 }
