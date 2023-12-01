@@ -24,11 +24,11 @@ public readonly struct Operation {
 
     public override string ToString() {
         return Type switch {
-            OperationType.Add => "+",
-            OperationType.Subtract => "-",
-            OperationType.Multiply => "*",
-            OperationType.Divide => "/",
-            OperationType.Modulo => "%",
+            OperationType.Add => "+=",
+            OperationType.Subtract => "-=",
+            OperationType.Multiply => "*=",
+            OperationType.Divide => "/=",
+            OperationType.Modulo => "%=",
             OperationType.Assign => "=",
             OperationType.Min => "<",
             OperationType.Max => ">",
