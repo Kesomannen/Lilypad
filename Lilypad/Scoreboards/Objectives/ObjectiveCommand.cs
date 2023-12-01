@@ -25,7 +25,7 @@ public class ObjectiveCommand {
         return AddCommand($"objectives modify {_objective} displayname {displayName}");
     }
     
-    public ObjectiveCommand SetRenderType(EnumReference<ObjectiveRenderType> renderType) {
+    public ObjectiveCommand SetRenderType(EnumReference<RenderType> renderType) {
         return AddCommand($"objectives modify {_objective} rendertype {renderType}");
     }
 
@@ -55,42 +55,44 @@ public class ObjectiveCommand {
     
     public ObjectiveCommand Operation(
         Argument<Selector> target, 
-        EnumReference<Operation> operation, 
+        Operation operation, 
         Argument<Selector> source, 
         Reference<Objective>? sourceObjective = null
     ) {
         sourceObjective ??= _objective;
-        var op = operation.Value switch {
-            Lilypad.Operation.Add => "+=",
-            Lilypad.Operation.Subtract => "-=",
-            Lilypad.Operation.Multiply => "*=",
-            Lilypad.Operation.Divide => "/=",
-            Lilypad.Operation.Modulo => "%=",
-            Lilypad.Operation.Assign => "=",
-            Lilypad.Operation.Min => "<",
-            Lilypad.Operation.Max => ">",
-            Lilypad.Operation.Swap => "><",
-            _ => throw new ArgumentOutOfRangeException(nameof(operation), operation, null)
-        };
-        
-        return AddCommand($"players operation {target} {_objective} {op} {source} {sourceObjective}");
+        return AddCommand($"players operation {target} {_objective} {operation} {source} {sourceObjective}");
     }
     
     public ObjectiveCommand Operation(
         Argument<Selector> target,
-        EnumReference<Operation> operation,
+        Operation operation,
         int value
     ) {
-        if (operation.Value == Lilypad.Operation.Assign) {
-            return Set(target, value);
+        switch (operation.Type) {
+            case OperationType.Assign:
+                return Set(target, value);
+            
+            case OperationType.Add:
+                return Add(target, value);
+            
+            case OperationType.Subtract:
+                return Remove(target, value);
+
+            case OperationType.Multiply:
+            case OperationType.Divide:
+            case OperationType.Modulo:
+            case OperationType.Min:
+            case OperationType.Max:
+            case OperationType.Swap:
+            default: {
+                var constant = Constants.Get(_function.Datapack, value);
+                return Operation(target, operation, constant.Selector, constant.Objective);
+            }
         }
-        
-        var variable = Constants.Get(_function.Datapack, value);
-        return Operation(target, operation, variable.Selector, variable.Objective);
     }
 }
 
-public enum ObjectiveRenderType {
+public enum RenderType {
     Hearts,
     Integer
 }

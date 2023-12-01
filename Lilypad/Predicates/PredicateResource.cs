@@ -1,5 +1,9 @@
 ﻿namespace Lilypad; 
 
+/// <summary>
+/// Represents a predicate resource (a .json file in the <c>predicates</c> folder).
+/// Can include multiple predicates.
+/// </summary>
 public class PredicateResource : Resource, ISerializeInner {
     public List<Predicate> Predicates = new();
     

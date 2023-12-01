@@ -85,7 +85,7 @@ public static class LoopFunctionExtensions {
         return function.For(
             f => f.SetVariable(variable, start), 
             Condition.Score(variable, (start, end - 1)), 
-            f => f.Operation(variable, Operation.Add, 1),
+            f => f.Operation(variable, "+", 1),
             f => build(f, variable)
         );
     }

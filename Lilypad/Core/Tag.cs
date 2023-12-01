@@ -14,7 +14,9 @@ public class Tag<T> : Resource {
     /// <br/>When <c>false</c> the tag's content is appended to the contents of the higher priority data packs, instead.
     /// </summary>
     public bool Replace { get; set; } = false;
-    
+
+    public override string Location => $"#{Namespace}:{Name}";
+
     internal Tag(string name, string @namespace, Datapack datapack) : base(name, @namespace, datapack) { }
     
     internal void Add(string resourceLocation, bool required = true) {
@@ -26,10 +28,6 @@ public class Tag<T> : Resource {
             Location = resourceLocation,
             Required = required
         });
-    }
-
-    protected override string GetLocation() {
-        return $"#{Namespace}:{Name}";
     }
     
     public struct Value {

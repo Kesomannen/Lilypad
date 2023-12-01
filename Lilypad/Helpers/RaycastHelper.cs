@@ -34,7 +34,7 @@ public static class RaycastHelper {
                 f.Particle(Particle.ElectricSpark, Vector3.Here, Vector3.Zero, 0, 1, viewers: "@s");
             }
 
-            f.Operation(counter, Operation.Add, 1);
+            f.Operation(counter, "+=", 1);
             f.If(Condition.Score(counter, (0, maxIterations)), f => {
                 f.Execute().As(selector).At("@s").Run(builder);
                 f.Execute().Unless(Condition.Entity(selector)).Positioned(step).Run(raycast);

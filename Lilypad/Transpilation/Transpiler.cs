@@ -9,7 +9,7 @@ public static class Transpiler {
     /// <summary>
     /// Transpiles the given datapack to disk with the given options.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if <see cref="TranspilationOptions.Overwrite"/> is set to false and the target directory already exists.</exception>
+    /// <exception cref="InvalidOperationException"><see cref="TranspilationOptions.Overwrite"/> is set to false but the target directory already exists.</exception>
     public static void Transpile(Datapack datapack, in TranspilationOptions options) {
         _datapack = datapack;
         _options = options;

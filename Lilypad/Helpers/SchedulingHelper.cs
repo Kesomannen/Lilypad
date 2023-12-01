@@ -2,7 +2,7 @@
 
 namespace Lilypad.Helpers; 
 
-public static class Scheduling {
+public static class SchedulingHelper {
     static int _channelIndex;
     
     public static Function DelayedCall(this Function function, float seconds, Action<Function> build, string? channel = null) {
@@ -25,8 +25,7 @@ public static class Scheduling {
         function.Evaluate(executingTick, $" {currentTick} + {seconds.ToTicks()} ", currentTick);
         
         var result = datapack.Functions.Create(Names.Get($"{function.Name}/delayed/{channel}_"), f => {
-            var condition = Condition.Score(currentTick, Comparison.Equal, executingTick);
-            execute(f.Execute().As("@e").If(condition).At("@s"));
+            execute(f.Execute().As("@e").If(Condition.Score(currentTick, "==", executingTick)).At("@s"));
         }, function.Namespace);
 
         function.Schedule(seconds, result);

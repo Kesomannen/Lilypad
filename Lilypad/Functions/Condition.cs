@@ -3,7 +3,7 @@
 namespace Lilypad; 
 
 /// <summary>
-/// Represents a condition for an execute command.
+/// A condition for an execute command.
 /// </summary>
 public readonly struct Condition {
     /// <summary>
@@ -96,7 +96,7 @@ public readonly struct Condition {
     }
     
     /// <summary>
-    ///Checks if chunks at a given position is fully loaded (entity ticking).
+    /// Checks if chunks at a given position is fully loaded (entity ticking).
     /// </summary>
     public static Condition Loaded(Vector3 pos) {
         return $"loaded {pos}";
@@ -116,35 +116,26 @@ public readonly struct Condition {
     /// <param name="score">The target score.</param>
     /// <param name="comparison">
     /// The comparison to use.
-    /// Must be entered as Comparison.Equal or "Equal", rather than "==".</param>
+    /// Can be entered as <c>ComparisonType.Equal</c>, "equal" or "=="</param>
     /// <param name="source">The other selector to compare with.</param>
     /// <param name="sourceScore">The other objective to compare with.</param>
     public static Condition Score(
         Argument<Selector> target, 
         Reference<Objective> score, 
-        EnumReference<Comparison> comparison,
+        Comparison comparison,
         Argument<Selector> source, 
         Reference<Objective> sourceScore
     ) {
-        var op = comparison.Value switch {
-            Comparison.GreaterThan => ">",
-            Comparison.GreaterThanOrEqual => ">=",
-            Comparison.LessThan => "<",
-            Comparison.LessThanOrEqual => "<=",
-            Comparison.Equal => "=",
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        
-        return $"score {target} {score} {op} {source} {sourceScore}";
+        return $"score {target} {score} {comparison} {source} {sourceScore}";
     }
 
     /// <summary>
     /// Compares two score variables.
     /// </summary>
-    /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.EnumReference{Lilypad.Comparison},Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
+    /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.Comparison,Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
     public static Condition Score(
         ScoreVariable target,
-        EnumReference<Comparison> comparison,
+        Comparison comparison,
         ScoreVariable variable
     ) {
         return Score(target.Selector, target.Objective, comparison, variable.Selector, variable.Objective);
@@ -153,7 +144,7 @@ public readonly struct Condition {
     /// <summary>
     /// Checks if a score is within a given range, inclusive.
     /// </summary>
-    /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.EnumReference{Lilypad.Comparison},Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
+    /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.Comparison,Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
     public static Condition Score(
         Argument<Selector> target,
         Reference<Objective> score,
@@ -165,15 +156,15 @@ public readonly struct Condition {
     /// <summary>
     /// Checks if a score variable is within a given range, inclusive.
     /// </summary>
-    /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.EnumReference{Lilypad.Comparison},Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
-    public static Condition Score(ScoreVariable variable, IntRange range) {
+    /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.Comparison,Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
+    public static Condition Score(ScoreVariable variable, Range<int> range) {
         return Score(variable.Selector, variable.Objective, range);
     }
 
     public static Condition Variable(
         Function function, 
         IVariable a, 
-        EnumReference<Comparison> comparison, 
+        Comparison comparison, 
         IVariable b
     ) {
         return Score(function.ToScore(a, "#compare0"), comparison, function.ToScore(b, "#compare1"));
@@ -208,10 +199,3 @@ public enum BlocksComparison {
     Masked
 }
 
-public enum Comparison {
-    GreaterThan,
-    GreaterThanOrEqual,
-    LessThan,
-    LessThanOrEqual,
-    Equal
-}

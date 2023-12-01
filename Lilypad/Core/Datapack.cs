@@ -1,6 +1,7 @@
 ﻿using Lilypad.Recipes;
 using Lilypad.Helpers;
 using Lilypad.ItemModifiers;
+using Lilypad.Text;
 
 namespace Lilypad;
 
@@ -9,6 +10,18 @@ namespace Lilypad;
 /// </summary>
 public class Datapack {
     public DatapackMetadata Metadata { get; set; } = new();
+
+    /// <inheritdoc cref="PackInformation.Description"/>
+    public JsonText Description {
+        get => Metadata.Pack.Description;
+        set => Metadata.Pack.Description = value;
+    }
+    
+    /// <inheritdoc cref="PackInformation.PackFormat"/>
+    public int PackFormat {
+        get => Metadata.Pack.PackFormat;
+        set => Metadata.Pack.PackFormat = value;
+    }
 
     /// <summary>
     /// The functions in this datapack.

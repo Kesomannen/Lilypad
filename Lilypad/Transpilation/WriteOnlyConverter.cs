@@ -7,7 +7,7 @@ internal abstract class WriteOnlyConverter<T> : JsonConverter {
     
     public override bool CanConvert(Type objectType) {
         var type = typeof(T);
-        return objectType == type || (SerializeDerivedTypes && (type.IsAssignableFrom(objectType) || CheckNullable()));
+        return objectType == type || SerializeDerivedTypes && (type.IsAssignableFrom(objectType) || CheckNullable());
 
         bool CheckNullable() {
             return objectType.IsGenericType && 
