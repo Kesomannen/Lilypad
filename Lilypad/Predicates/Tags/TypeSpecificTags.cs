@@ -36,5 +36,5 @@ public class Player : ITypeSpecificTag {
 }
 
 public class Slime : ITypeSpecificTag {
-    public Range<int>? Size;
+    public IntRange? Size;
 }

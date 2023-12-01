@@ -23,16 +23,9 @@ public class Advancement : Resource {
     public Function GetRewardFunction() {
         return (Rewards.Function ??= Datapack.Functions.Create($"{Name}/reward")).Resource!;
     }
-    
-    public Function CreateRewardFunction(Action<Function> build) {
-        var name = Names.Get($"{Name}/reward/");
-        var function = Datapack.Functions.Create(name, build, Namespace);
-        GetRewardFunction().Call(function);
-        return function;
-    }
-    
+
     public Function OnComplete(Action<Function> build) {
-        return CreateRewardFunction(f => {
+        return GetRewardFunction().Add(f => {
             f.Advancement("revoke").Only(this);
             build(f);
         });

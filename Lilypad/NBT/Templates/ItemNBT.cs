@@ -14,7 +14,7 @@ public class ItemNBT : NBTTemplate {
     public JsonText? Name;
     public List<JsonText>? Lore;
 
-    public NBT? Tag;
+    public NBT? AdditionalTag;
 
     public static List<(EnumReference<Enchantment>? Enchantment, byte? Level)> VisualOnlyEnchants { get; } = new() { (null, null) };
 
@@ -29,33 +29,28 @@ public class ItemNBT : NBTTemplate {
     public NBT ToItemNBT() {
         return new NBT {
             ["id"] = Item,
-            ["Count"] = Count
-        }.Add(GetTag());
-    }
-
-    public NBT ToEntityNBT() {
-        return new NBT {
-            ["Item"] = new NBT {
-                ["id"] = Item,
-                ["Count"] = Count,
-                ["tag"] = GetTag()
-            }
+            ["Count"] = Count,
+            ["tag"] = GetTag()
         };
     }
+    
+    public NBT ToEntityNBT() {
+        return new NBT { ["Item"] = ToItemNBT() };
+    }
 
-    NBT GetTag() {
+    public NBT GetTag() {
         return new NBT {
             ["Unbreakable"] = Unbreakable,
             ["HideFlags"] = HideFlags,
-            ["Enchantments"] = Enchantments?.Select(t => new NBT {
-                ["id"] = t.Enchantment,
-                ["lvl"] = t.Level
+            ["Enchantments"] = Enchantments?.Select(tuple => new NBT {
+                ["id"] = tuple.Enchantment,
+                ["lvl"] = tuple.Level
             }),
             ["AttributeModifiers"] = AttributeModifiers,
             ["display"] = new NBT {
                 ["Name"] = Name,
                 ["Lore"] = Lore
             }
-        }.Add(Tag);
+        }.Add(AdditionalTag);
     }
 }

@@ -24,13 +24,13 @@ public class MachineGun : DatapackBuilder {
         
         var item = new ItemNBT(Item.Crossbow) {
             Name = "</i><gold>Machine Gun",
-            Lore = new List<JsonText> {
-                "<gray></i>Automatic reloading crossbow"
+            Lore = new() {
+                "<gray></i>Automatic crossbow"
             },
             Enchantments = ItemNBT.VisualOnlyEnchants,
             Unbreakable = true,
             HideFlags = HideFlags.Everything,
-            Tag = loadedNbt + ("machine_gun", true)
+            AdditionalTag = loadedNbt + ("machine_gun", true)
         };
 
         give.Add(f => {
@@ -41,13 +41,16 @@ public class MachineGun : DatapackBuilder {
         Datapack.Advancements.Create()
             .AddCriteria(Criterion.ShotCrossbow(new ItemConditions {
                 Nbt = ("machine_gun", true)
-            }))
-            .OnComplete(f => {
-                f.If(Condition.Data(DataSource.Self, "SelectedItem"), f => {
-                    f.ModifyItem(ItemSource.Self, Slot.Weapon.Mainhand, new SetNBT(loadedNbt));
+            })).OnComplete(f => {
+                f.If(Condition.Data(DataSource.Self, new("SelectedItem", "tag", "machine_gun")), f => { 
+                    Reload(f, Slot.Mainhand);
                 }).Else(f => {
-                    f.ModifyItem(ItemSource.Self, Slot.Weapon.Offhand, new SetNBT(loadedNbt));
+                    Reload(f, Slot.Offhand);
                 });
+
+                void Reload(Function f, Slot slot) {
+                    f.ModifyItem(ItemSource.Self, slot, new SetNBT(loadedNbt));
+                }
             });
     }
 }

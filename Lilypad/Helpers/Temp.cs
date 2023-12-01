@@ -30,7 +30,7 @@ public static class Temp {
         double scale = 1
     ) {
         var type = dataType?.Value ?? StoreDataType.Int;
-        var result = new DataVariable(DataSource.Storage(Names.Get("temp_storage"), function.Namespace), type, path, scale);
+        var result = new DataVariable(DataSource.Storage(Names.Get("temp_storage"), function.Namespace), path, type, scale);
         function.SetVariable(result, variable);
         return result;
     }

@@ -3,7 +3,7 @@ using System.Text;
 using Lilypad.Extensions;
 using Lilypad.Text;
 
-namespace Lilypad; 
+namespace Lilypad;
 
 public static class NBTSerializer {
     public static string Serialize(NBT compound) {
@@ -61,6 +61,7 @@ public static class NBTSerializer {
             var serialized = items
                 .Select(serialize)
                 .Where(val => val != null);
+            
             return prefix == null ? 
                 $"[{string.Join(',', serialized)}]" : 
                 $"[{prefix};{string.Join(',', serialized)}]";

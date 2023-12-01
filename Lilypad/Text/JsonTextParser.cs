@@ -76,40 +76,62 @@ public static class JsonTextParser {
     public static List<JsonText> Parse(string input) {
         Reset();
         _input = input;
+        var escaped = false;
         
         while (!EndOfInput) {
-            if (Peek() == '<') {
-                AddText();
-                var tag = ParseTag(out var arguments, out var isClosing);
-                
-                if (isClosing) {
-                    if (!_formatParsers.Any(tagParser => tagParser.OnClosingTag(tag))) {
-                        throw new ArgumentException($"Invalid closing tag: {tag}");
-                    }
-                    AddText();
-                } else {
-                    var found = _formatParsers.Any(tagParser => tagParser.OnOpeningTag(tag, arguments));
+            var next = Peek();
 
-                    if (found) {
+            switch (next) {
+                case '<' when !escaped:
+                    AddText();
+                    var tag = ParseTag(out var arguments, out var isClosing);
+                
+                    if (isClosing) {
+                        if (!_formatParsers.Any(tagParser => tagParser.OnClosingTag(tag))) {
+                            throw new ArgumentException($"Invalid closing tag: {tag}");
+                        }
                         AddText();
                     } else {
-                        foreach (var tagParser in _contentParsers) {
-                            if (!tagParser.TryParse(tag, arguments, out var content)) continue;
-                            var tags = content.ToArray();
+                        var found = _formatParsers.Any(tagParser => tagParser.OnOpeningTag(tag, arguments));
 
+                        if (found) {
                             AddText();
-                            AddComponent(tags.First(), tags.Skip(1));
-                            found = true;
-                            break;
+                        } else {
+                            foreach (var tagParser in _contentParsers) {
+                                if (!tagParser.TryParse(tag, arguments, out var content)) continue;
+                                var tags = content!.ToArray();
+
+                                AddText();
+                                AddComponent(tags.First(), tags.Skip(1));
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            throw new ArgumentException($"Invalid opening tag: {tag}");
                         }
                     }
-
-                    if (!found) {
-                        throw new ArgumentException($"Invalid opening tag: {tag}");
+                    
+                    break;
+                
+                case '\\':
+                    if (escaped) {
+                        _rawText += '\\';
+                        escaped = false;
+                    } else {
+                        escaped = true;
                     }
-                }
-            } else {
-                _rawText += Advance();
+
+                    Advance();
+                    break;
+                
+                default:
+                    if (escaped) {
+                        escaped = false;
+                    }
+                    _rawText += Advance();
+                    break;
             }
         }
         AddText();

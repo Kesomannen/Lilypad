@@ -79,25 +79,28 @@ public class JsonText : ISerializeInnerJson, ICustomNBTSerializer {
     }
 
     public string Serialize() {
-        return Json.Serialize(ToJson());
+        return Json.Serialize(ToJson(true));
     }
 
     public override string ToString() {
         return Serialize();
     }
 
-    object ToJson() {
-        if (Content == null) {
-            if (Children.Count == 0) {
-                return string.Empty;
-            }
-            
+    object ToJson(bool isTopLevel) {
+        if (!Content.HasValue && Children.Count == 1) {
+            return Children[0].ToJson(isTopLevel);
+        }
+        if (isTopLevel && !Content.HasValue && Children.Count > 1) {
             return GetChildJson();
         }
 
-        var json = new Dictionary<string, object> {
-            [Content.Value.Name] = Content.Value.Value
-        };
+        var json = new Dictionary<string, object>();
+
+        if (Content.HasValue) {
+            json[Content.Value.Name] = Content.Value.Value;
+        } else {
+            json["text"] = string.Empty;
+        }
         
         foreach (var textFormat in Formatting) {
             json[textFormat.Name] = textFormat.Value;
@@ -108,7 +111,7 @@ public class JsonText : ISerializeInnerJson, ICustomNBTSerializer {
         return json;
         
         object[] GetChildJson() {
-            return Children.Select(child => child.ToJson()).ToArray();
+            return Children.Select(child => child.ToJson(false)).ToArray();
         }
     }
 
@@ -155,7 +158,11 @@ public class JsonText : ISerializeInnerJson, ICustomNBTSerializer {
         }
         return result;
     }
+    
+    public static JsonText operator +(JsonText left, JsonText right) {
+        return new JsonText(left, right);
+    }
 
-    object ISerializeInnerJson.SerializedData => ToJson();
+    object ISerializeInnerJson.SerializedData => ToJson(true);
     string ICustomNBTSerializer.Serialize() => Serialize().Quote('\'');
 }

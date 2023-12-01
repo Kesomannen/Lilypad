@@ -22,12 +22,12 @@ public static class VariableFunctionExtensions {
     public static Function SetVariable(this Function function, IVariable variable, int value) {
         if (variable is ScoreVariable scoreVariable) {
             function.Scoreboard(scoreVariable.Objective)
-                .Operation(scoreVariable.Selector, "assign", value);
+                .Operation(scoreVariable.Selector, Lilypad.Operation.Assign, value);
             
             return function;
         }
         
-        return function.SetVariable(variable, Constants.Get(function.Datapack, value));
+        return function.SetVariable(variable, Constants.Get(function, value));
     }
     
     public static Function Operation(

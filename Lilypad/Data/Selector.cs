@@ -67,7 +67,7 @@ public class Selector {
         return Add("predicate", $"!{predicate}", true);
     }
     
-    public Selector Scores(params (Reference<Objective>, Range<int>)[] scores) {
+    public Selector Scores(params (Reference<Objective>, IntRange)[] scores) {
         return AddCompound("scores", scores);
     }
     
@@ -133,7 +133,7 @@ public class Selector {
         return AddVector(position);
     }
     
-    public Selector Distance(Range<double> distance) {
+    public Selector Distance(DoubleRange distance) {
         return Add("distance", distance);
     }
 
@@ -141,8 +141,9 @@ public class Selector {
         return Between(center - size / 2, center + size / 2);
     }
 
-    public Selector Between(Range<Vector3> range) {
-        return Between(range.Min, range.Max);
+    public Selector Between(Vector3Range range) {
+        Assert.IsTrue(range is { Min: { }, Max: { } }, "Range must have both min and max values.");
+        return Between(range.Min!.Value, range.Max!.Value);
     }
 
     public Selector Between(Vector3 min, Vector3 max) {
@@ -153,19 +154,20 @@ public class Selector {
         return AddVector(delta, "d");
     }
     
-    public Selector Pitch(Range<double> pitch) {
+    public Selector Pitch(DoubleRange pitch) {
         return Add("x_rotation", pitch);
     }
     
-    public Selector Yaw(Range<double> yaw) {
+    public Selector Yaw(DoubleRange yaw) {
         return Add("y_rotation", yaw);
     }
 
-    public Selector Rotation(Range<Vector2> rotation) {
-        return Pitch((rotation.Min.X.Value, rotation.Max.X.Value)).Yaw((rotation.Min.Y.Value, rotation.Max.Y.Value));
+    public Selector Rotation(Vector2Range rotation) {
+        
+        return Pitch((rotation.Min?.X.Value, rotation.Max?.X.Value)).Yaw((rotation.Min?.Y.Value, rotation.Max?.Y.Value));
     }
     
-    public Selector Level(Range<int> level) {
+    public Selector Level(IntRange level) {
         return Add("level", level);
     }
     

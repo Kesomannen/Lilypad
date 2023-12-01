@@ -36,8 +36,11 @@ public struct Vector3 {
         return $"{X} {Y} {Z}";
     }
 
-    public static bool TryParse(string str, out Vector3 vector3) {
+    public static bool TryParse(string? str, out Vector3 vector3) {
         vector3 = default;
+        if (string.IsNullOrWhiteSpace(str)) {
+            return false;
+        }
         
         var components = str.Split(' ');
         if (components.Length != 3) {
@@ -60,13 +63,22 @@ public struct Vector3 {
 
     public static implicit operator Vector3(string str) {
         if (!TryParse(str, out var coordinate)) {
-            throw new FormatException($"'{str}' is not a valid vector3.");
+            throw new FormatException($"'{str}' is not a valid Vector3.");
         }
         return coordinate;
     }
     
     public static readonly Vector3 Zero = (0, 0, 0);
+    public static readonly Vector3 One = (1, 1, 1);
     public static readonly Vector3 Here = (0d, 0d, 0d).AsRelative();
+
+    public static readonly Vector3 LocalUp = (0d, 1d, 0d).AsLocal();
+    public static readonly Vector3 LocalDown = (0d, -1d, 0d).AsLocal();
+    public static readonly Vector3 Forward = (0d, 0d, 1d).AsLocal();
+    public static readonly Vector3 Back = (0d, 0d, -1d).AsLocal();
+    public static readonly Vector3 Left = (-1d, 0d, 0d).AsLocal();
+    public static readonly Vector3 Right = (1d, 0d, 0d).AsLocal();
+
     public static readonly Vector3 Up = (0, 1, 0);
     public static readonly Vector3 Down = (0, -1, 0);
     public static readonly Vector3 North = (0, 0, -1);

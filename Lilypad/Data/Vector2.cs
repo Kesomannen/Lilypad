@@ -7,8 +7,12 @@ public struct Vector2 {
         return $"{X} {Y}";
     }
     
-    public static bool TryParse(string str, out Vector2 vector2) {
+    public static bool TryParse(string? str, out Vector2 vector2) {
         vector2 = default;
+        if (string.IsNullOrWhiteSpace(str)) {
+            return false;
+        }
+        
         var components = str.Split(' ');
         if (components.Length != 2) {
             return false;

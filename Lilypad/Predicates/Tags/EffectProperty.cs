@@ -4,8 +4,8 @@ namespace Lilypad;
 
 public struct EffectProperty {
     public bool? Ambient;
-    public Range<int>? Amplifier;
+    public IntRange? Amplifier;
     [JsonProperty("Duration")]
-    public Range<int>? DurationRemaining;
+    public IntRange? DurationRemaining;
     public bool? Visible;
 }

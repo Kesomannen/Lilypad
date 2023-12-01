@@ -1,20 +1,12 @@
-﻿using Lilypad.Extensions;
-using Newtonsoft.Json;
+﻿namespace Lilypad; 
 
-namespace Lilypad; 
-
-[JsonConverter(typeof(Converter))]
-public class NBTPath {
+public class NBTPath : ISerializeInner {
     public List<NBTPathNode> Nodes = new();
     
     public string Path => string.Join('.', Nodes.Select(node => node.ToString()));
 
     public NBTPath() { }
 
-    public NBTPath(string path) {
-        Name(path);
-    }
-    
     public NBTPath(NBT root) {
         Add(new RootCompoundTag(root));
     }
@@ -36,25 +28,21 @@ public class NBTPath {
         return Add(new NamedCompoundTag(name, tag));
     }
     
-    public NBTPath Index(string name, int index) {
-        return Add(new ListSingleElement(name, index));
+    public NBTPath Index(string listName, int index) {
+        return Add(new ListSingleElement(listName, index));
     }
     
-    public NBTPath All(string name) {
-        return Add(new ListAllElements(name));
+    public NBTPath All(string listName) {
+        return Add(new ListAllElements(listName));
     }
     
-    public NBTPath CompoundInList(string name, NBT tag) {
-        return Add(new ListCompoundElements(name, tag));
+    public NBTPath CompoundInList(string listName, NBT tag) {
+        return Add(new ListCompoundElements(listName, tag));
     }
 
     public override string ToString() => Path;
 
     public static implicit operator NBTPath(string path) => new(path);
     
-    class Converter : WriteOnlyConverter<NBTPath> {
-        protected override void WriteJson(JsonWriter writer, NBTPath value, JsonSerializer serializer) {
-            writer.WriteValue(value.Path);
-        }
-    }
+    object ISerializeInner.SerializedData => Path;
 }

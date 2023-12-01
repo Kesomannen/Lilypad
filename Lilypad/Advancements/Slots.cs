@@ -3,5 +3,5 @@
 namespace Lilypad; 
 
 public class Slots {
-    public Range<int>? Empty, Full, Occupied;
+    public IntRange? Empty, Full, Occupied;
 }

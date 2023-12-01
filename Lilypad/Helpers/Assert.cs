@@ -12,4 +12,9 @@ internal static class Assert {
     public static void NotNull(object? obj, string paramName) {
         if (obj == null) throw new ArgumentNullException(paramName);
     }
+
+    public static void NotInfinite<T>(Range<T?> range, string paramName) where T : struct {
+        if (range.Min is null) throw new ArgumentException($"Range {paramName} cannot be inifinite");
+        if (range.Max is null) throw new ArgumentException($"Range {paramName} cannot be inifinite");
+    }
 }

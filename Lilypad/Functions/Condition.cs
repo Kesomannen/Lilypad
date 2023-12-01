@@ -157,7 +157,7 @@ public readonly struct Condition {
     public static Condition Score(
         Argument<Selector> target,
         Reference<Objective> score,
-        Range<int> range
+        IntRange range
     ) {
         return $"score {target} {score} matches {range}";
     }
@@ -166,7 +166,7 @@ public readonly struct Condition {
     /// Checks if a score variable is within a given range, inclusive.
     /// </summary>
     /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.EnumReference{Lilypad.Comparison},Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
-    public static Condition Score(ScoreVariable variable, Range<int> range) {
+    public static Condition Score(ScoreVariable variable, IntRange range) {
         return Score(variable.Selector, variable.Objective, range);
     }
 
@@ -182,7 +182,7 @@ public readonly struct Condition {
     public static Condition Variable(
         Function function, 
         IVariable variable, 
-        Range<int> range
+        IntRange range
     ) {
         return Score(function.ToScore(variable, "#compare0"), range);
     }
