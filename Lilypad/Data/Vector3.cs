@@ -14,6 +14,13 @@ public struct Vector3 {
         Space = space;
     }
 
+    public double Magnitude {
+        get {
+            GetValues(out var x, out var y, out var z);
+            return Math.Sqrt(x * x + y * y + z * z);
+        }
+    }
+
     public VectorComponent Get(Axis axis) {
         return axis switch {
             Axis.X => X,
@@ -22,7 +29,7 @@ public struct Vector3 {
             _ => throw new ArgumentOutOfRangeException(nameof(axis), axis, null)
         };
     }
-    
+
     public Vector3 InSpace(Space space) {
         return new Vector3 {
             X = X,
@@ -31,7 +38,13 @@ public struct Vector3 {
             Space = space
         };
     }
-    
+
+    public void GetValues(out double x, out double y, out double z) {
+        x = X.Value;
+        y = Y.Value;
+        z = Z.Value;
+    }
+
     public override string ToString() {
         return $"{X} {Y} {Z}";
     }

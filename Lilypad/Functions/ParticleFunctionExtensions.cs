@@ -63,6 +63,10 @@ public static class ParticleFunctionExtensions {
     }
 }
 
+/// <summary>
+/// Particle types that can be used with the /particle command.
+/// See https://minecraft.wiki/w/Particles#Types_of_particles.
+/// </summary>
 public enum Particle {
     AmbientEntityEffect,
     AngryVillager,

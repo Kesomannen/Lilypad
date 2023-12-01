@@ -5,7 +5,7 @@
 /// </summary>
 /// <remarks>
 /// Is not automatically added ("generated") to its owner function,
-/// unless <see cref="Run(Lilypad.Function)"/> or <see cref="ExecuteCommand.RunStore"/> is called.
+/// unless <see cref="Run(Lilypad.Reference{Lilypad.Function})"/> or <see cref="ExecuteCommand.RunStore"/> is called.
 /// <br/><br/>When you don't call one of those, for example when storing the result of an if condition,
 /// simply call <see cref="ExecuteCommand.Generate"/> to add the command automatically.
 /// </remarks>
@@ -28,7 +28,7 @@ public class ExecuteCommand {
     /// <summary>
     /// Generates the string representation of the command and adds it the owner function.
     /// </summary>
-    /// <remarks>Don't use this builder after generation.</remarks>
+    /// <remarks>Don't use this object after generation.</remarks>
     public void Generate() {
         _function.Add($"execute {string.Join(" ", _subCommands)}");
     }
@@ -36,9 +36,9 @@ public class ExecuteCommand {
     /// <summary>
     /// Finalizes the execute command by calling another function.
     /// </summary>
-    /// <remarks>Generates the command. Don't use this builder after generation.</remarks>
-    public void Run(Function function) {
-        AddSubCommand($"run function {function.Location}");
+    /// <remarks>Generates the command. Don't use this object after generation.</remarks>
+    public void Run(Reference<Function> function) {
+        AddSubCommand($"run function {function}");
         Generate();
     }
     
@@ -51,7 +51,7 @@ public class ExecuteCommand {
     /// Otherwise the dummy is kept and a call is generated.
     /// </param>
     /// <remarks>
-    /// Generates the command. Don't use this builder after generation.
+    /// Generates the command. Don't use this object after generation.
     /// </remarks>
     public void Run(Action<Function> build) {
         var function = GetFunction(build);
@@ -74,7 +74,7 @@ public class ExecuteCommand {
     /// Action that generates the command to run. Called immediately on a temporary function.
     /// </param>
     /// <remarks>
-    /// Generates the command. Don't use this builder after generation.
+    /// Generates the command. Don't use this object after generation.
     /// </remarks>
     /// <exception cref="Exception">Thrown if the dummy function does not contain exactly one command after generation.</exception>
     /// <seealso cref="Store(Lilypad.DataSource,Lilypad.NBTPath,Lilypad.EnumReference{Lilypad.StoreDataType},double,bool)"/>

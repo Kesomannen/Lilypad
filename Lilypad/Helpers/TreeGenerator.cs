@@ -19,7 +19,7 @@ public static class TreeGenerator {
         Assert.NotInfinite(range, nameof(range));
         
         var score = function.CopyTempScore(variable, "#tree");
-        function.If(Condition.Score(score, range), f => {
+        function.If(Condition.InRange(score, range), f => {
             f.Call(GenerateBranch(function, score, range, branches, build));
         }).Else(f => {
             f.LogWarning($"Value <{score}> out of generated tree range {range}", function);
@@ -33,7 +33,7 @@ public static class TreeGenerator {
         if (count <= branches) {
             for (var i = range.Min; i <= range.Max; i++) {
                 var index = i.Value;
-                function.Execute().If(Condition.Score(variable, i)).Run(f => build(f, index));
+                function.Execute().If(Condition.InRange(variable, i)).Run(f => build(f, index));
             }
         } else {
             for (var i = 0; i < branches; i++) {
@@ -44,7 +44,7 @@ public static class TreeGenerator {
 
                 var branchRange = (min, max);
                 var branch = GenerateBranch(root, variable, branchRange, branches, build);
-                function.Execute().If(Condition.Score(variable, branchRange)).Run(branch);
+                function.Execute().If(Condition.InRange(variable, branchRange)).Run(branch);
             }
         }
         return function;

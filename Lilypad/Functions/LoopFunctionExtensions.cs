@@ -84,7 +84,7 @@ public static class LoopFunctionExtensions {
         var variable = Temp.Get(function, $"#for{_tempIndex++}");
         return function.For(
             f => f.SetVariable(variable, start), 
-            Condition.Score(variable, (start, end - 1)), 
+            Condition.InRange(variable, (start, end - 1)), 
             f => f.Operation(variable, "+", 1),
             f => build(f, variable)
         );

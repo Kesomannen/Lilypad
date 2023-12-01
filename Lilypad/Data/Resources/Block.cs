@@ -879,4 +879,5 @@ public enum Block {
     YellowTerracotta,
     YellowWool,
     ZombieHead,
+    Air
 }

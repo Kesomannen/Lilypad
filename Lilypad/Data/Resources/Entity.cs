@@ -4,5 +4,6 @@ public enum Entity {
     Player,
     Arrow,
     Marker,
-    Pig
+    Pig,
+    Cow
 }

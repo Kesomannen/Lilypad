@@ -1,46 +1,95 @@
-﻿namespace Lilypad.Helpers; 
+﻿namespace Lilypad.Helpers;
 
 public static class RaycastHelper {
-    public static Function RaycastForward(
-        this Function function,
-        double maxDistance, 
-        Selector casterSelector,
-        Action<Function> builder, 
-        double stepSize = 0.5,
-        bool visualize = false
-    ) {
-        var iterations = (int) Math.Ceiling(maxDistance / stepSize);
-        var ignoreTag = Names.Get("raycast_ignore");
-        function.AddTag(ignoreTag);
+    public static Raycast RaycastEntity(this Function function, Selector hitSelector, Action<Function> hitBuilder) {
+        return function.DoRaycast(Raycast.Entity(function, hitSelector, hitBuilder));
+    }
+
+    public static Raycast DoRaycast(this Function function, Raycast raycast) {
+        function.Call(raycast.Function);
+        return raycast;
+    }
+}
+
+public class Raycast {
+    public int MaxSteps { get; set; }
+    public Vector3 Step { get; set; }
+    public Anchor Anchor { get; set; } = Anchor.Eyes;
+
+    public Action<Function>? SetupBuilder { get; set; }
+    public Action<Function>? CleanupBuilder { get; set; }
+    public Action<Function, Reference<Function>>? LoopBuilder { get; set; }
+    
+    public List<Condition> Conditions { get; } = new();
+    public ScoreVariable Counter { get; }
+
+    public Function Function { get; }
+    
+    public Raycast(Resource resource) {
+        var dir = Names.Get($"{resource.Name}/raycast");
+        Function = resource.Datapack.Functions.Create(Names.Get($"{dir}/setup"), resource.Namespace);
         
-        return function.Raycast(
-            (0d, 0d, stepSize).AsLocal(), 
-            iterations, 
-            casterSelector.NotTag(ignoreTag).Distance((0, stepSize / 2)),
-            f => {
-                function.Execute().As(Selector.Entites.Tag(ignoreTag).Single()).Run(f => f.RemoveTag(ignoreTag));
-                builder(f);
-            }, 
-            visualize
-        );
+        Counter = Temp.Get(Function, Names.Get("#raycast"));
+        Conditions.Add(Condition.InRange(Counter, (0, MaxSteps)));
+
+        Function.Add(f => {
+            SetupBuilder?.Invoke(f);
+            f.SetVariable(Counter, 0);
+
+            f.Execute().Anchored(Anchor).Run(f => {
+                f.Increment(Counter);
+                f.If(Conditions.ToArray(), g => {
+                    LoopBuilder?.Invoke(g, f);
+                });
+            });
+            
+            CleanupBuilder?.Invoke(f);
+        });
+    }
+
+    public static Raycast Entity(
+        Resource resource,
+        Selector hitSelector, 
+        Action<Function> hitBuilder, 
+        bool ignoreSelf = true
+    ) {
+        var raycast = new Raycast(resource);
+
+        if (ignoreSelf) {
+            var tag = Names.Get("raycast_ignore");
+            
+            raycast.SetupBuilder = f => f.AddTag(tag);
+            raycast.CleanupBuilder = f => f.RemoveTag(tag);
+            hitSelector.NotTag(tag);
+        }
+        
+        raycast.LoopBuilder = (f, loop) => {
+            f.Execute().As(hitSelector).At("@s").Run(hitBuilder);
+            f.Execute().Unless(Condition.Entity(hitSelector)).Positioned(raycast.Step).Run(loop);
+        };
+        return raycast;
     }
     
-    public static Function Raycast(this Function function, Vector3 step, int maxIterations, Argument<Selector> selector, Action<Function> builder, bool visualize = false) {
-        var counter = Temp.Get(function, Names.Get("#raycast"));
-        function.SetVariable(counter, 0);
-        var raycast = function.Datapack.Functions.Create(Names.Get($"{function.Name}/loop/"), function.Namespace);
-        raycast.Add(f => {
-            if (visualize) {
-                f.Particle(Particle.ElectricSpark, Vector3.Here, Vector3.Zero, 0, 1, viewers: "@s");
-            }
+    public Raycast SetStepForward(double stepDistance) {
+        Step = Vector3.Forward * stepDistance;
+        return this;
+    }
+    
+    public Raycast SetStepForward(double stepDistance, double maxDistance) {
+        MaxSteps = (int)Math.Ceiling(maxDistance / stepDistance);
+        return SetStepForward(stepDistance);
+    }
 
-            f.Operation(counter, "+=", 1);
-            f.If(Condition.Score(counter, (0, maxIterations)), f => {
-                f.Execute().As(selector).At("@s").Run(builder);
-                f.Execute().Unless(Condition.Entity(selector)).Positioned(step).Run(raycast);
-            });
-        });
-        function.Execute().Anchored(Anchor.Eyes).Positioned(step).Run(raycast);
-        return raycast;
+    public Raycast SetBlockedBy(EnumReference<Block> block, bool invert = false) {
+        var condition = Condition.Block(block);
+        if (invert) {
+            condition = condition.Not();
+        }
+        Conditions.Add(condition);
+        return this;
+    }
+    
+    public Raycast SetBlockedByNonAir() {
+        return SetBlockedBy(Block.Air, invert: true);
     }
 }
