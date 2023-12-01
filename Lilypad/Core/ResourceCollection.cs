@@ -2,13 +2,20 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Lilypad.Helpers;
+using Lilypad.Recipes;
 
 namespace Lilypad; 
 
 /// <summary>
 /// Represents a directory of resources in a <see cref="Datapack"/>.
 /// The members can be in different namespaces, but must be the same type (or a subclass) of <typeparamref name="T"/>.
+/// <br/><br/>You can create new resources in the collection with <see cref="Create"/>.
+/// To query existing resources, use <see cref="Get"/>, <see cref="TryGet"/> or <see cref="GetOrCreate"/>.
 /// </summary>
+/// <remarks>
+/// Uses reflection to find the constructor for <typeparamref name="T"/>, since Resource
+/// constructors are internal (to ensure they are always in a datapack with a valid name and namespace).
+/// </remarks>
 /// <typeparam name="T">The type of resources in this collection. Must be a subclass of <see cref="Resource"/>.</typeparam>
 public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     readonly Datapack _datapack;
@@ -76,7 +83,8 @@ public class ResourceCollection<T> : IEnumerable<T> where T : Resource {
     /// <param name="name">The name of the resource.</param>
     /// <param name="namespace">
     /// Defaults to the datapack's default namespace.
-    /// The resource isn't required to be in this namespace, but will be created here if needed.
+    /// The search isn't restricted to this namespace.
+    /// Although if a new resource is created, it will be placed in this namespace.
     /// </param>
     public T GetOrCreate(string name, string? @namespace = null) {
         return TryGet(name, out var value) ? value : Create(name, @namespace);
@@ -117,6 +125,14 @@ public static class ResourceCollectionExtensions {
         return collection.Create(null, build, @namespace);
     }
     
+    /// <summary>
+    /// Adds a predicate to this collection.
+    /// </summary>
+    /// <param name="name">Must be unique within the namespace. Defaults to an auto-generated name.</param>
+    /// <param name="predicate">The predicate to add.</param>
+    /// <param name="namespace">Defaults to the datapack's default namespace.</param>
+    /// <returns>The predicate, wrapped in a <see cref="PredicateResource"/>.</returns>
+    /// <exception cref="Exception">The resource could not be created for an unknown reason.</exception>
     public static PredicateResource Add(
         this ResourceCollection<PredicateResource> collection,
         string? name,
@@ -128,11 +144,29 @@ public static class ResourceCollectionExtensions {
         return resource;
     }
     
+    /// <inheritdoc cref="Add(ResourceCollection{PredicateResource},string,Predicate,string)"/>
     public static PredicateResource Add(
         this ResourceCollection<PredicateResource> collection,
         Predicate predicate,
         string? @namespace = null
     ) {
         return collection.Add(null, predicate, @namespace);
+    }
+    
+    public static Recipe Add(
+        this ResourceCollection<Recipe> collection,
+        string? name,
+        RecipeData recipeData,
+        string? @namespace = null
+    ) {
+        return collection.Create(name, @namespace).SetData(recipeData);
+    }
+    
+    public static Recipe Add(
+        this ResourceCollection<Recipe> collection,
+        RecipeData recipeData,
+        string? @namespace = null
+    ) {
+        return collection.Add(null, recipeData, @namespace);
     }
 }

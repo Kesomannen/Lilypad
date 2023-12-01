@@ -21,8 +21,4 @@ public class SingleCriterion : ObjectiveCriterion {
         Name = name;
         CanBeModified = canBeModified;
     }
-    
-    public override string ToString() {
-        return Name;
-    }
 }

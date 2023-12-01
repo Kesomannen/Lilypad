@@ -1,4 +1,6 @@
-﻿namespace Lilypad.Text; 
+﻿using Lilypad.Extensions;
+
+namespace Lilypad.Text; 
 
 /// <summary>
 /// Provides function extension methods for JSON text commands.
@@ -30,7 +32,7 @@ public static class JsonTextFunctionExtensions {
     }
     
     public static Function TitleTimes(this Function function, Argument<Selector> selector, float fadeIn, float stay, float fadeOut) {
-        return function.Add($"title {selector} times {fadeIn * 20:0} {stay * 20:0} {fadeOut * 20:0}");
+        return function.Add($"title {selector} times {fadeIn.ToTicks()} {stay.ToTicks()} {fadeOut.ToTicks()}");
     }
 }
 

@@ -4,12 +4,13 @@ using Newtonsoft.Json;
 namespace Lilypad; 
 
 /// <summary>
-/// Base class for members in a datapack with a resource location.
+/// Base class for members in a datapack with a resource location,
+/// such as functions and advancements.
 /// </summary>
 public abstract class Resource {
     /// <summary>
     /// The name of this resource, should be in snake_case. Must be unique within the namespace.
-    /// Slashes are turned into directories when transpiled.
+    /// Forward slashes are turned into directories when transpiled.
     /// </summary>
     /// <remarks>Can include: <list type="bullet">
     /// <item>Lowercase letters <c>(a-z)</c></item>
@@ -32,7 +33,7 @@ public abstract class Resource {
     /// Resource location. Also known as namespaced ID or resource identifier.
     /// </summary>
     [JsonIgnore]
-    public string Location => GetLocation();
+    public virtual string Location => $"{Namespace}:{Name}";
     
     /// <summary>
     /// The datapack this resource belongs to.
@@ -61,8 +62,4 @@ public abstract class Resource {
     
     /// <returns>The resource location of this resource.</returns>
     public override string ToString() => Location;
-
-    protected virtual string GetLocation() {
-        return $"{Namespace}:{Name}";
-    }
 }

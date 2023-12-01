@@ -5,7 +5,5 @@ public abstract class ObjectiveCriterion {
     
     public virtual bool CanBeModified => true;
 
-    public override string ToString() {
-        return Name;
-    }
+    public override string ToString() => Name;
 }

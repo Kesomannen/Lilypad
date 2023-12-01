@@ -27,7 +27,11 @@ public class Selector {
     /// <summary>
     /// Selects the nearest player from the command's execution.
     /// </summary>
-    /// <remarks>If there are multiple nearest players, caused by them being precisely the same distance away, the player who most recently joined the server is selected.</remarks>
+    /// <remarks>
+    /// If there are multiple nearest players, caused by them being
+    /// precisely the same distance away, the player who most recently
+    /// joined the server is selected.
+    /// </remarks>
     public static Selector Nearest => new('p');
     
     /// <summary>
@@ -38,7 +42,7 @@ public class Selector {
     /// <summary>
     /// Selects the entity (alive or not) that executed the command.
     /// </summary>
-    /// <remarks>It does not select anything if the command was run by a command block or server console.</remarks>
+    /// <remarks>Does not select anything if the command was run by a command block or server console.</remarks>
     public static Selector Self => new('s');
     
     public static Selector Predicates(params PredicateResource[] predicates) {
@@ -243,7 +247,9 @@ public class Selector {
         _builder.Clear();
         _builder.Append($"@{_name}");
 
-        if (_arguments.Count <= 0) return _builder.ToString();
+        if (_arguments.Count == 0) {
+            return _builder.ToString();
+        }
         
         _builder.Append('[');
             

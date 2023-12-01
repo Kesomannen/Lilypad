@@ -25,5 +25,5 @@ public class Display {
 
 public struct Icon {
     public EnumReference<Item> Item;
-    public string? Nbt;
+    public NBT? Nbt;
 }

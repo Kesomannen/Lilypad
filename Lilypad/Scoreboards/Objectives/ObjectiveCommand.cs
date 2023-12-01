@@ -25,7 +25,7 @@ public class ObjectiveCommand {
         return AddCommand($"objectives modify {_objective} displayname {displayName}");
     }
     
-    public ObjectiveCommand SetRenderType(EnumReference<ObjectiveRenderType> renderType) {
+    public ObjectiveCommand SetRenderType(EnumReference<RenderType> renderType) {
         return AddCommand($"objectives modify {_objective} rendertype {renderType}");
     }
 
@@ -90,7 +90,7 @@ public class ObjectiveCommand {
     }
 }
 
-public enum ObjectiveRenderType {
+public enum RenderType {
     Hearts,
     Integer
 }
