@@ -30,12 +30,12 @@ public static class VariableMath {
         }
     }
     
-    static readonly Dictionary<char, (Operation operation, float priority)> _operations = new() {
-        ['+'] = (Operation.Add, 2),
-        ['-'] = (Operation.Subtract, 2),
-        ['*'] = (Operation.Multiply, 1),
-        ['/'] = (Operation.Divide, 1),
-        ['%'] = (Operation.Modulo, 1)
+    static readonly Dictionary<char, (OperationType operation, float priority)> _operations = new() {
+        ['+'] = (OperationType.Add, 2),
+        ['-'] = (OperationType.Subtract, 2),
+        ['*'] = (OperationType.Multiply, 1),
+        ['/'] = (OperationType.Divide, 1),
+        ['%'] = (OperationType.Modulo, 1)
     };
 
     interface INode { }
