@@ -43,14 +43,10 @@ public class MachineGun : DatapackBuilder {
                 Nbt = ("machine_gun", true)
             })).OnComplete(f => {
                 f.If(Condition.Data(DataSource.Self, new("SelectedItem", "tag", "machine_gun")), f => { 
-                    Reload(f, Slot.Mainhand);
+                    f.ModifyItem(ItemSource.Self, Slot.Mainhand, new SetNBT(loadedNbt));
                 }).Else(f => {
-                    Reload(f, Slot.Offhand);
+                    f.ModifyItem(ItemSource.Self, Slot.Offhand, new SetNBT(loadedNbt));
                 });
-
-                void Reload(Function f, Slot slot) {
-                    f.ModifyItem(ItemSource.Self, slot, new SetNBT(loadedNbt));
-                }
             });
     }
 }

@@ -10,6 +10,6 @@ public class NamedTag : NBTPathNode {
     }
     
     public override string ToString() {
-        return Name.Quote();
+        return Name.Contains(' ') ? Name.Quote() : Name;
     }
 }

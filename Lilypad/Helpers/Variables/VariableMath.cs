@@ -1,6 +1,8 @@
 ﻿namespace Lilypad.Helpers; 
 
 public static class VariableMath {
+    static int _tempIndex = 0;
+    
     public static T Evaluate<T>(this Function function, T output, string expression, params IVariable[] variables) where T : IVariable { 
         function.SetVariable(output, Evaluate(function, expression, variables));
         return output;
@@ -10,21 +12,28 @@ public static class VariableMath {
         var datapack = function.Datapack;
         var node = Parse(expression, datapack, variables.ToDictionary(v => v.ToString()!, v => v));
         var result = Evaluate(function, node);
-        return result;
+        _tempIndex = 0;
+        return result.Variable;
     }
     
-    static IVariable Evaluate(Function function, INode node) {
+    static (IVariable Variable, bool Mutable) Evaluate(Function function, INode node) {
         switch (node) {
+            case NumberNode numberNode:
+                return (Constants.Get(function, numberNode.Value), false);
+            
             case VariableNode variableNode:
-                return variableNode.Variable;
+                return (variableNode.Variable, false);
             
             case OperatorNode operatorNode:
                 var left = Evaluate(function, operatorNode.Left!);
                 var right = Evaluate(function, operatorNode.Right!);
-
-                var result = function.CopyTempScore(left, Names.Get("#math"));
-                function.Operation(result, operatorNode.Operator, right);
-                return result;
+                
+                if (!left.Mutable) {
+                    left.Variable = function.CopyTempScore(left.Variable, $"#math{_tempIndex++}");
+                }
+                
+                function.Operation(left.Variable, operatorNode.Operator, right.Variable);
+                return (left.Variable, true);
             default:
                 throw new MathException($"Unexpected node type {node.GetType().Name}");
         }
@@ -39,6 +48,14 @@ public static class VariableMath {
     };
 
     interface INode { }
+    
+    class NumberNode : INode {
+        public int Value;
+
+        public NumberNode(int value) {
+            Value = value;
+        }
+    }
     
     class VariableNode : INode {
         public IVariable Variable;
@@ -118,16 +135,19 @@ public static class VariableMath {
                 index++;
             }
             var value = int.Parse(expression[start..index]);
-            nodes.Add(new VariableNode(Constants.Get(datapack, value)));
+            nodes.Add(new NumberNode(value));
         }
         
         void ParseVariable() {
             var start = index;
             while (
-                index < expression.Length && 
-                (expression[index] == IVariable.Separator ||
-                 expression[index] == IVariable.Space || 
-                 (!char.IsWhiteSpace(expression[index]) && !_operations.ContainsKey(expression[index]))
+                index < expression.Length && (
+                    expression[index] == IVariable.Separator ||
+                    expression[index] == IVariable.Space || 
+                        !char.IsWhiteSpace(expression[index]) && 
+                        !_operations.ContainsKey(expression[index]) &&
+                        expression[index] != '(' &&
+                        expression[index] != ')'
                 )
             ) {
                 index++;

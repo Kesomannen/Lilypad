@@ -4,7 +4,7 @@ using Lilypad.Helpers;
 namespace Lilypad; 
 
 public static class BlockFunctionExtensions {
-    public static Function SetBlock(this Function function, Vector3 position, BlockPredicate block) {
+    public static Function SetBlock(this Function function, Vector3 position, BlockData block) {
         return function.Add($"setblock {position} {block}");
     }
     
@@ -12,9 +12,9 @@ public static class BlockFunctionExtensions {
         this Function function,
         Vector3 from,
         Vector3 to,
-        BlockPredicate block,
+        BlockData block,
         EnumReference<FillMode>? mode = null,
-        BlockPredicate? replaceFilter = null
+        BlockData? replaceFilter = null
     ) {
         return function.Add($"fill {from} {to} {block} {mode.ToStringOrEmpty()} {replaceFilter.ToStringOrEmpty()}");
     }
@@ -22,11 +22,11 @@ public static class BlockFunctionExtensions {
     public static Function Fill(
         this Function function,
         Vector3Range range,
-        BlockPredicate block,
+        BlockData block,
         EnumReference<FillMode>? mode = null,
-        BlockPredicate? replaceFilter = null
+        BlockData? replaceFilter = null
     ) {
-        Assert.NotInfinite(range, nameof(range));
+        Assert.IsFinite(range, nameof(range));
         return function.Add($"fill {range.Min} {range.Max} {block} {mode.ToStringOrEmpty()} {replaceFilter.ToStringOrEmpty()}");
     }
     

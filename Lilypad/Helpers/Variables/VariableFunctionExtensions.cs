@@ -7,6 +7,8 @@ public static class VariableFunctionExtensions {
     }
     
     public static Function SetVariable(this Function function, IVariable variable, IVariable value) {
+        if (Equals(variable, value)) return function;
+        
         if (variable is ScoreVariable scoreVariable && value is ScoreVariable scoreValue) {
             function.Scoreboard(scoreVariable.Objective)
                 .Operation(scoreVariable.Selector, OperationType.Assign, scoreValue.Selector, scoreValue.Objective);

@@ -8,7 +8,7 @@ public class ItemNBT : NBTTemplate {
 
     public bool? Unbreakable;
     public HideFlags? HideFlags;
-    public List<(EnumReference<Enchantment>? Enchantment, byte? Level)>? Enchantments;
+    public List<(EnumReference<Enchantment>?, short?)>? Enchantments;
     public List<AttributeModifierNBT>? AttributeModifiers;
     
     public JsonText? Name;
@@ -16,7 +16,7 @@ public class ItemNBT : NBTTemplate {
 
     public NBT? AdditionalTag;
 
-    public static List<(EnumReference<Enchantment>? Enchantment, byte? Level)> VisualOnlyEnchants { get; } = new() { (null, null) };
+    public static List<(EnumReference<Enchantment>?, short?)> VisualOnlyEnchants { get; } = new() { (null, null) };
 
     public ItemNBT(EnumReference<Item> item) {
         Item = item;
@@ -43,8 +43,8 @@ public class ItemNBT : NBTTemplate {
             ["Unbreakable"] = Unbreakable,
             ["HideFlags"] = HideFlags,
             ["Enchantments"] = Enchantments?.Select(tuple => new NBT {
-                ["id"] = tuple.Enchantment,
-                ["lvl"] = tuple.Level
+                ["id"] = tuple.Item1,
+                ["lvl"] = tuple.Item2
             }),
             ["AttributeModifiers"] = AttributeModifiers,
             ["display"] = new NBT {

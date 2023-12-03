@@ -145,7 +145,7 @@ public readonly struct Condition {
     /// Checks if a score is within a given range, inclusive.
     /// </summary>
     /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.Comparison,Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
-    public static Condition InRange(
+    public static Condition Matches(
         Argument<Selector> target,
         Reference<Objective> score,
         IntRange range
@@ -157,11 +157,11 @@ public readonly struct Condition {
     /// Checks if a score variable is within a given range, inclusive.
     /// </summary>
     /// <seealso cref="Score(Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective},Lilypad.Comparison,Lilypad.Argument{Lilypad.Selector},Lilypad.Reference{Lilypad.Objective})"/>
-    public static Condition InRange(ScoreVariable variable, IntRange range) {
-        return InRange(variable.Selector, variable.Objective, range);
+    public static Condition Matches(ScoreVariable variable, IntRange range) {
+        return Matches(variable.Selector, variable.Objective, range);
     }
 
-    public static Condition Variable(
+    public static Condition Compare(
         Function function, 
         IVariable a, 
         Comparison comparison, 
@@ -170,12 +170,12 @@ public readonly struct Condition {
         return Score(function.ToScore(a, "#compare0"), comparison, function.ToScore(b, "#compare1"));
     }
     
-    public static Condition InRange(
+    public static Condition Matches(
         Function function, 
         IVariable variable, 
         IntRange range
     ) {
-        return InRange(function.ToScore(variable, "#compare0"), range);
+        return Matches(function.ToScore(variable, "#compare0"), range);
     }
     
     /// <summary>

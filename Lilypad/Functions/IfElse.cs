@@ -25,7 +25,7 @@ public class IfElse {
     /// <param name="build">Builder method for the if branch. Will be executed immediately.</param>
     public IfElse(Function function, Condition[] conditions, Action<Function> build) {
         _function = function;
-        CreateBranch(conditions, build);
+        CreateInitialBranch(conditions, build);
     }
     
     /// <summary>
@@ -56,15 +56,33 @@ public class IfElse {
         return this;
     }
 
-    void CreateBranch(Condition[] conditions, Action<Function> build) {
+    void CreateInitialBranch(Condition[] conditions, Action<Function> build) {
         var execute = _function.Execute();
         foreach (var condition in conditions) {
             execute.If(condition);
         }
-        foreach (var condition in _allConditions) {
-            execute.Unless(condition);
-        }
         execute.Run(build);
+        _allConditions.AddRange(conditions);
+    }
+
+    void CreateBranch(Condition[] conditions, Action<Function> build) {
+        var name = Names.Get($"{_function.Name}/branch/");
+        var function = _function.Datapack.Functions.Create(name, build, _function.Namespace);
+
+        for (var i = 0; i < _allConditions.Count; i++) {
+            var oldCondition = _allConditions[i];
+            
+            var execute = _function.Execute();
+            for (var j = 0; j < i; j++) {
+                execute.If(_allConditions[j]);
+            }
+            execute.Unless(oldCondition);
+            foreach (var condition in conditions) {
+                execute.If(condition);
+            }
+            execute.Run(function);
+        }
+
         _allConditions.AddRange(conditions);
     }
 }

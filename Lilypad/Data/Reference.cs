@@ -55,4 +55,24 @@ public readonly struct Reference<T> : ISerializeInnerJson where T : Resource {
     public override string ToString() => Location;
 
     object ISerializeInnerJson.SerializedData => Location;
+
+    public override int GetHashCode() {
+        return Location.GetHashCode();
+    }
+    
+    public override bool Equals(object? obj) {
+        return obj is Reference<T> other && Equals(other);
+    }
+    
+    public bool Equals(Reference<T> other) {
+        return Location == other.Location;
+    }
+    
+    public static bool operator ==(Reference<T> left, Reference<T> right) {
+        return left.Equals(right);
+    }
+    
+    public static bool operator !=(Reference<T> left, Reference<T> right) {
+        return !left.Equals(right);
+    }
 }

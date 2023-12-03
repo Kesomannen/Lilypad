@@ -8,11 +8,13 @@ namespace Lilypad;
 /// Represents a target selector.
 /// </summary>
 public class Selector {
-    readonly char _name;
+    public char Character { get; set; }
     
     readonly List<(string, string)> _arguments = new();
 
-    public Selector(char name) { _name = name; }
+    public Selector(char character) {
+        Character = character;
+    }
     
     /// <summary>
     /// Selects every player, alive or not.
@@ -146,7 +148,7 @@ public class Selector {
     }
 
     public Selector Between(Vector3Range range) {
-        Assert.IsTrue(range is { Min: { }, Max: { } }, "Range must have both min and max values.");
+        Assert.IsFinite(range, nameof(range));
         return Between(range.Min!.Value, range.Max!.Value);
     }
 
@@ -167,7 +169,6 @@ public class Selector {
     }
 
     public Selector Rotation(Vector2Range rotation) {
-        
         return Pitch((rotation.Min?.X.Value, rotation.Max?.X.Value)).Yaw((rotation.Min?.Y.Value, rotation.Max?.Y.Value));
     }
     
@@ -247,7 +248,7 @@ public class Selector {
 
     public override string ToString() {
         _builder.Clear();
-        _builder.Append($"@{_name}");
+        _builder.Append($"@{Character}");
 
         if (_arguments.Count == 0) {
             return _builder.ToString();
@@ -260,8 +261,8 @@ public class Selector {
             if (!first) {
                 _builder.Append(',');
             }
-            _builder.Append($"{key}={value}");
             first = false;
+            _builder.Append($"{key}={value}");
         }
             
         _builder.Append(']');

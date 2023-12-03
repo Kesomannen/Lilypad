@@ -27,7 +27,7 @@ public class CloneCommand : CloneCommand.ILevel0, CloneCommand.ILevel1, CloneCom
     public interface ILevel2 {
         void Clone();
         void Clone(EnumReference<CloneFilter> filter, EnumReference<CloneMode>? mode = null);
-        void Filtered(BlockPredicate filter, EnumReference<CloneMode>? mode = null);
+        void Filtered(BlockData filter, EnumReference<CloneMode>? mode = null);
     }
 
     public ILevel1 From(EnumReference<Dimension> dimension, Vector3 begin, Vector3 end) {
@@ -35,7 +35,7 @@ public class CloneCommand : CloneCommand.ILevel0, CloneCommand.ILevel1, CloneCom
     }
 
     public ILevel1 From(EnumReference<Dimension> dimension, Vector3Range range) {
-        Assert.NotInfinite(range, nameof(range));
+        Assert.IsFinite(range, nameof(range));
         return Add($"from {dimension} {range.Min} {range.Max}");
     }
 
@@ -44,7 +44,7 @@ public class CloneCommand : CloneCommand.ILevel0, CloneCommand.ILevel1, CloneCom
     }
 
     public ILevel1 From(Vector3Range range) {
-        Assert.NotInfinite(range, nameof(range));
+        Assert.IsFinite(range, nameof(range));
         return Add($"from {range.Min} {range.Max}");
     }
 
@@ -66,7 +66,7 @@ public class CloneCommand : CloneCommand.ILevel0, CloneCommand.ILevel1, CloneCom
         _function.Add(_command);
     }
 
-    public void Filtered(BlockPredicate filter, EnumReference<CloneMode>? mode = null) {
+    public void Filtered(BlockData filter, EnumReference<CloneMode>? mode = null) {
         mode ??= CloneMode.Normal;
         Add($"filtered {filter} {mode}");
         _function.Add(_command);

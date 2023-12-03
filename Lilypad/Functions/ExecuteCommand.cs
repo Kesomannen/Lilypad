@@ -109,6 +109,10 @@ public class ExecuteCommand {
     public ExecuteCommand At(Argument<Selector> selector) {
         return AddSubCommand($"at {selector}");
     }
+    
+    public ExecuteCommand AsAt(Argument<Selector> selector) {
+        return As(selector).At(Selector.Self);
+    }
 
     public ExecuteCommand Align(params EnumReference<Axis>[] axes) {
         return AddSubCommand($"align {string.Join("", axes)}");

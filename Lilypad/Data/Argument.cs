@@ -5,7 +5,7 @@ namespace Lilypad;
 /// <summary>
 /// Can either be a string or a value of type <typeparamref name="T"/>.
 /// </summary>
-public readonly struct Argument<T> : ISerializeInnerJson {
+public readonly struct Argument<T> : ISerializeInnerJson, IEquatable<Argument<T>> {
     public string Text { get; }
 
     /// <summary>
@@ -31,4 +31,24 @@ public readonly struct Argument<T> : ISerializeInnerJson {
     public override string ToString() => Text;
     
     public object? SerializedData => Text;
+    
+    public bool Equals(Argument<T> other) {
+        return Text == other.Text;
+    }
+    
+    public override bool Equals(object? obj) {
+        return obj is Argument<T> other && Equals(other);
+    }
+    
+    public override int GetHashCode() {
+        return Text.GetHashCode();
+    }
+    
+    public static bool operator ==(Argument<T> left, Argument<T> right) {
+        return left.Equals(right);
+    }
+    
+    public static bool operator !=(Argument<T> left, Argument<T> right) {
+        return !left.Equals(right);
+    }
 }

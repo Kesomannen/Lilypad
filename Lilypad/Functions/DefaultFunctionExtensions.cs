@@ -137,9 +137,9 @@ public static class DefaultFunctionExtensions {
     public static Function Give(
         this Function function,
         Argument<Selector> selector,
-        ItemNBT nbt
+        ItemNBT item
     ) {
-        return function.Add($"give {selector} {nbt.Item}{nbt.GetTag()} {nbt.Count}");
+        return function.Add($"give {selector} {item.Item}{item.GetTag()} {item.Count}");
     }
     
     public static Function ModifyItem(
@@ -175,6 +175,15 @@ public static class DefaultFunctionExtensions {
         this Function function,
         ItemSource target,
         Slot slot,
+        ItemNBT item
+    ) {
+        return function.Add($"item replace {target} {slot} with {item.Item}{item.GetTag()} {item.Count}");
+    }
+    
+    public static Function ReplaceItem(
+        this Function function,
+        ItemSource target,
+        Slot slot,
         ItemSource source,
         Slot sourceSlot,
         Reference<ItemModifier>? modifier = null
@@ -203,7 +212,7 @@ public static class DefaultFunctionExtensions {
     }
     
     public static Function Schedule(this Function function, float seconds, Reference<Function> functionRef) {
-        return function.Add($"schedule function {functionRef} {seconds * 20:0}t");
+        return function.Add($"schedule function {functionRef} {seconds.ToTicks()}t");
     }
     
     public static Function Gamerule(this Function function, string gamerule, object value) {
