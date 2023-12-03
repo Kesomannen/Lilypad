@@ -8,9 +8,9 @@
 ```cs
 var datapack = new Datapack();
 
-var nbt = new NBTCompound {
-    ["display"] = new NBTCompound {
-        ["Name"] = (RichText) "<gold></i>God Sword" // raw JSON text parsing
+var nbt = new NBT {
+    ["display"] = new NBT {
+        ["Name"] = (JsonText) "<gold></i>God Sword" // raw JSON text parsing
     }
 };
 
