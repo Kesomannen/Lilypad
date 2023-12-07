@@ -1,22 +1,5 @@
 ﻿namespace Lilypad.Helpers;
 
-public static class RaycastHelper {
-    public static Raycast RaycastEntity(
-        this Function function,
-        Selector hitSelector, 
-        Action<Function, Selector> hitBuilder,
-        bool ignoreSelf = true,
-        EntityRaycastOptions options = EntityRaycastOptions.AsAt
-    ) {
-        return function.DoRaycast(Raycast.Entity(function, hitSelector, hitBuilder, ignoreSelf, options));
-    }
-
-    public static Raycast DoRaycast(this Function function, Raycast raycast) {
-        function.Call(raycast.Function);
-        return raycast;
-    }
-}
-
 public class Raycast {
     public int MaxSteps { get; set; } = 10;
     public Vector3 Step { get; set; } = Vector3.Forward;
@@ -55,49 +38,6 @@ public class Raycast {
         });
     }
 
-    public static Raycast Entity(
-        Resource resource,
-        Selector hitSelector, 
-        Action<Function, Selector> hitBuilder, 
-        bool ignoreSelf = true,
-        EntityRaycastOptions options = EntityRaycastOptions.AsAt
-    ) {
-        var raycast = new Raycast(resource);
-
-        var tag = Names.Get("raycast_ignore");
-        raycast.SetupBuilder = f => f.AddTag(tag);
-        raycast.CleanupBuilder = f => f.RemoveTag(tag);
-        
-        if (ignoreSelf) {
-            hitSelector.NotTag(tag);
-        }
-        
-        raycast.LoopBuilder = (f, loop) => {
-            Selector raycasterSelector;
-            var condition = Condition.Entity(hitSelector);
-            
-            var execute = f.Execute();
-            if (options.HasFlag(EntityRaycastOptions.As)) {
-                raycasterSelector = Selector.Entites.Tag(tag).Sort(Sort.Nearest).Single();
-                execute.As(hitSelector);
-                
-                if (options.HasFlag(EntityRaycastOptions.At)) {
-                    execute.At("@s");
-                }
-            } else if (options.HasFlag(EntityRaycastOptions.At)) {
-                raycasterSelector = Selector.Self;
-                execute.At(hitSelector);
-            } else {
-                raycasterSelector = Selector.Self;
-                execute.If(condition);
-            }
-            
-            execute.Run(f => hitBuilder(f, raycasterSelector));
-            f.Execute().Unless(condition).Positioned(raycast.Step).Run(loop);
-        };
-        return raycast;
-    }
-    
     public Raycast StepForward(double stepDistance) {
         Step = Vector3.Forward * stepDistance;
         return this;
@@ -150,12 +90,4 @@ public class Raycast {
         Anchor = anchor;
         return this;
     }
-}
-
-[Flags]
-public enum EntityRaycastOptions {
-    None = 0,
-    At = 1,
-    As = 2,
-    AsAt = At | As
 }

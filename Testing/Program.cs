@@ -1,22 +1,41 @@
 ﻿using Lilypad;
 using Lilypad.Helpers;
-using Lilypad.Text;
 
-const string outputPath = @"C:\Users\bobbo\AppData\Roaming\PrismLauncher\instances\Default 1.20.1\.minecraft\saves\Testing\datapacks\lilypad-test";
+const string outputPath = @"C:\Users\22boro\AppData\Roaming\.minecraft\saves\Datapack\datapacks\lilypad-test";
 
 var datapack = new Datapack("test");
 
+new Gamerules {
+    DoEntityDrops = false,
+    CommandBlockOutput = false
+}.Generate(datapack);
+
 datapack.Functions.Create(f => {
-    f.Execute().As(Selector.All).At("@s").Run(f => {
-        f.RaycastEntity(Selector.Entites.Distance((0, 2)), (f, player) => {
-                player.Type(Entity.Player);
-                f.Title(player, TitleType.Actionbar, "<green>You're looking at <entity @s>!");
-            }).OnMiss(f => {
-                f.Title("@s", TitleType.Actionbar, "<red>You're not looking at anything!");
-            })
-            .StepForward(1, 12)
-            .BlockedBySolids();
+    f.Execute().AsAt(Selector.All.Conditions(f, new EntityConditions {
+        Equipment = new EquipmentTags("mainhand", new ItemConditions {
+            Nbt = ("kill_wand", true)
+        })
+    })).Run(f => {
+        f.DoRaycast(new EntityRaycast(f)
+            .SetDetectDistance(3)
+            .SetCancelOnHit(false)
+            .OnHit((f, _) => f.Kill())
+            .BlockedBySolids()
+            .StepForward(2, 12)
+            .Visualize(Particle.Portal)
+        );
     });
-}).SetLoop(0.2f);
+}).SetTick();
+
+datapack.Functions.Create("give", f => {
+    f.Give("@s", new ItemNBT(Item.Stick) {
+        Name = "</i><dark_purple>Kill Wand",
+        Lore = new() {
+            "</i><gray>Kills everything in its path"
+        },
+        Enchantments = ItemNBT.VisualOnlyEnchants,
+        AdditionalTag = ("kill_wand", true)
+    });
+});
 
 datapack.Transpile(outputPath);

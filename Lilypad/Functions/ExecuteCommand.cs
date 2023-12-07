@@ -58,12 +58,21 @@ public class ExecuteCommand {
         function.Generate();
         
         var commands = function.Commands.ToArray();
-        if (commands.Length == 1) {
-            function.Datapack.Functions.Remove(function);
-            AddSubCommand($"run {commands[0]}");
-            Generate();
-        } else {
-            Run(function);
+
+        switch (commands.Length) {
+            case 0:
+                function.Datapack.Functions.Remove(function);
+                break;
+                
+            case 1:
+                function.Datapack.Functions.Remove(function);
+                AddSubCommand($"run {commands[0]}");
+                Generate();
+                break;
+            
+            default:
+                Run(function);
+                break;
         }
     }
 

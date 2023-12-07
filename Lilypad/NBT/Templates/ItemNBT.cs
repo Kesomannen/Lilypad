@@ -9,7 +9,7 @@ public class ItemNBT : NBTTemplate {
     public bool? Unbreakable;
     public HideFlags? HideFlags;
     public List<(EnumReference<Enchantment>?, short?)>? Enchantments;
-    public List<AttributeModifierNBT>? AttributeModifiers;
+    public List<AttributeNBT>? AttributeModifiers;
     
     public JsonText? Name;
     public List<JsonText>? Lore;

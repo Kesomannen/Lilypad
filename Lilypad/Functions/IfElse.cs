@@ -66,9 +66,6 @@ public class IfElse {
     }
 
     void CreateBranch(Condition[] conditions, Action<Function> build) {
-        var name = Names.Get($"{_function.Name}/branch/");
-        var function = _function.Datapack.Functions.Create(name, build, _function.Namespace);
-
         for (var i = 0; i < _allConditions.Count; i++) {
             var oldCondition = _allConditions[i];
             
@@ -80,7 +77,7 @@ public class IfElse {
             foreach (var condition in conditions) {
                 execute.If(condition);
             }
-            execute.Run(function);
+            execute.Run(build);
         }
 
         _allConditions.AddRange(conditions);

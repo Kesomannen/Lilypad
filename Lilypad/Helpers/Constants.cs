@@ -13,8 +13,7 @@ public static class Constants {
         _objective ??= datapack.Objectives.GetOrCreate("constants");
         var variable = new ScoreVariable($"#{value}", _objective);
         if (_values.Add(value)) {
-            datapack.GetInstallFunction()
-                .Scoreboard(variable.Objective).Set(variable.Selector, value);
+            datapack.GetInstallFunction().SetVariable(variable, value);
         }
         return variable;
     }

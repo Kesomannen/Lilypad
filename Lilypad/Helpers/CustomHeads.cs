@@ -16,7 +16,7 @@ public static class CustomHeads {
             ["SkullOwner"] = new NBT {
                 ["Id"] = Uuid.New(),
                 ["Properties"] = new NBT {
-                    ["textures"] = new NBT[] {
+                    ["textures"] = new[] {
                         ("Value", texture)
                     }
                 }

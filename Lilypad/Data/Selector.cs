@@ -47,32 +47,77 @@ public class Selector {
     /// <remarks>Does not select anything if the command was run by a command block or server console.</remarks>
     public static Selector Self => new('s');
     
-    public static Selector Predicates(params PredicateResource[] predicates) {
+    /// <summary>
+    /// Creates a selector which selects entites that pass all of the given predicates.
+    /// </summary>
+    public static Selector Predicates(params Reference<PredicateResource>[] predicates) {
         return predicates.Aggregate(Entites, (current, predicate) => current.Predicate(predicate));
     }
     
+    /// <summary>
+    /// Creates a selector which selects entites that pass all of the given predicates.
+    /// Adds the predicates as resources in the same datapack and namespace as the given resource
+    /// (see <see cref="PredicateResource"/>).
+    /// </summary>
     public static Selector Predicates(Resource resource, params Predicate[] predicates) {
-        return Predicates(predicates.Select(p => resource.Datapack.Predicates.Add(p)).ToArray());
+        return predicates.Aggregate(Entites, (current, predicate) => current.Predicate(resource, predicate));
     }
-    
+
     static readonly StringBuilder _builder = new();
     
+    /// <summary>
+    /// Select players in the given gamemode. Cannot be applied multiple times.
+    /// </summary>
     public Selector Gamemode(EnumReference<Gamemode> gamemode) {
         return Add("gamemode", gamemode);
     }
     
+    /// <summary>
+    /// Select players not in the given gamemode. Can be applied multiple times.
+    /// </summary>
     public Selector NotGamemode(EnumReference<Gamemode> gamemode) {
         return Add("gamemode", $"!{gamemode}", true);
     }
-    
+
+    /// <summary>
+    /// Filters the search to entites that pass the given predicate.
+    /// Can be applied multiple times.
+    /// </summary>
     public Selector Predicate(Reference<PredicateResource> predicate) {
         return Add("predicate", predicate, true);
     }
     
+    /// <summary>
+    /// Filters the search to entites that don't pass the given predicate.
+    /// Can be applied multiple times.
+    /// </summary>
     public Selector NotPredicate(Reference<PredicateResource> predicate) {
         return Add("predicate", $"!{predicate}", true);
     }
     
+    public Selector Predicate(Resource resource, Predicate predicate) {
+        return Predicate(ConvertPredicate(predicate, resource));
+    }
+    
+    public Selector NotPredicate(Resource resource, Predicate predicate) {
+        return NotPredicate(ConvertPredicate(predicate, resource));
+    }
+    
+    public Selector Conditions(Resource resource, EntityConditions conditions) {
+        return Predicate(resource, new EntityProperties { Predicate = conditions });
+    }
+    
+    Reference<PredicateResource> ConvertPredicate(Predicate predicate, Resource resource) {
+        return resource.Datapack.Predicates.Add(predicate, resource.Namespace);
+    }
+
+    /// <summary>
+    /// Filters the search based on score values.
+    /// </summary>
+    /// <param name="scores">
+    /// An array of objectives and ranges. An entity must match all filters to be selected.
+    /// If they don't have a score in an objective, they are considered to have a score of 0.
+    /// </param>
     public Selector Scores(params (Reference<Objective>, IntRange)[] scores) {
         return AddCompound("scores", scores);
     }
@@ -271,9 +316,29 @@ public class Selector {
     }
 }
 
+/// <summary>
+/// Entity sorting options for selectors.
+/// </summary>
 public enum Sort {
+    /// <summary>
+    /// Do not sort. This will often return the oldest entities
+    /// first due to how the game stores entities internally,
+    /// but no order is guaranteed.
+    /// </summary>
     Arbitrary,
+    
+    /// <summary>
+    /// Sort by descending distance.
+    /// </summary>
     Furthest,
+    
+    /// <summary>
+    /// Sort by ascending distance.
+    /// </summary>
     Nearest,
+    
+    /// <summary>
+    /// Sort randomly.
+    /// </summary>
     Random
 }

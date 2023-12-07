@@ -1,6 +1,6 @@
 ﻿namespace Lilypad;
 
-public class AttributeModifierNBT : NBTTemplate {
+public class AttributeNBT : NBTTemplate {
     public EnumReference<AttributeSlot> Slot;
     public int Amount;
     public string Attribute;
@@ -8,7 +8,7 @@ public class AttributeModifierNBT : NBTTemplate {
     public string Name;
     public Uuid Uuid;
 
-    public AttributeModifierNBT(string attribute, int amount, EnumReference<AttributeSlot> slot) {
+    public AttributeNBT(string attribute, int amount, EnumReference<AttributeSlot> slot) {
         Slot = slot;
         Amount = amount;
         Attribute = attribute;
